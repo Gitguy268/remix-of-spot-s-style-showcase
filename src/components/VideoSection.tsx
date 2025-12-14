@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import AnimatedSection from "@/components/AnimatedSection";
 
 const VideoSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -28,36 +29,40 @@ const VideoSection = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-background overflow-hidden">
       <div className="section-container">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Spot in <span className="text-gradient">Motion</span>
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Playful vibes, everyday wear.
-          </p>
-        </div>
+        <AnimatedSection animation="fade-up">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Spot in <span className="text-gradient">Motion</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Playful vibes, everyday wear.
+            </p>
+          </div>
+        </AnimatedSection>
 
         {/* Video Container */}
-        <div
-          ref={containerRef}
-          className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto"
-        >
-          <video
-            ref={videoRef}
-            src="/videos/spot-video.mp4"
-            className="w-full h-full object-cover"
-            muted
-            loop
-            playsInline
-            preload="metadata"
-          />
-          
-          {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent pointer-events-none" />
-        </div>
+        <AnimatedSection animation="scale-in" delay={200} parallax parallaxSpeed={0.15}>
+          <div
+            ref={containerRef}
+            className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto"
+          >
+            <video
+              ref={videoRef}
+              src="/videos/spot-video.mp4"
+              className="w-full h-full object-cover"
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+            
+            {/* Overlay gradient */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent pointer-events-none" />
+          </div>
+        </AnimatedSection>
       </div>
     </section>
   );

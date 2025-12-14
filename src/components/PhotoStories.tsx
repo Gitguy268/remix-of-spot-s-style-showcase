@@ -1,3 +1,4 @@
+import AnimatedSection from "@/components/AnimatedSection";
 import spotCozy from "@/assets/spot-cozy.png";
 import spotFestive from "@/assets/spot-festive.png";
 import spotSweater from "@/assets/spot-sweater.png";
@@ -19,14 +20,16 @@ const PhotoStories = () => {
   ];
 
   return (
-    <section id="story" className="py-24 bg-secondary/5">
+    <section id="story" className="py-24 bg-secondary/5 overflow-hidden">
       <div className="section-container">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            Why Spot's Gear Feels <span className="text-gradient">Better</span>
-          </h2>
-        </div>
+        <AnimatedSection animation="fade-up">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+              Why Spot's Gear Feels <span className="text-gradient">Better</span>
+            </h2>
+          </div>
+        </AnimatedSection>
 
         {/* Stories Grid */}
         <div className="space-y-24">
@@ -38,7 +41,12 @@ const PhotoStories = () => {
               } gap-8 lg:gap-16 items-center`}
             >
               {/* Image */}
-              <div className="w-full lg:w-1/2">
+              <AnimatedSection
+                animation={index % 2 === 0 ? "slide-left" : "slide-right"}
+                className="w-full lg:w-1/2"
+                parallax
+                parallaxSpeed={0.2}
+              >
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
                   <img
                     src={story.image}
@@ -47,14 +55,18 @@ const PhotoStories = () => {
                     loading="lazy"
                   />
                 </div>
-              </div>
+              </AnimatedSection>
 
               {/* Text */}
-              <div className="w-full lg:w-1/2">
+              <AnimatedSection
+                animation={index % 2 === 0 ? "slide-right" : "slide-left"}
+                delay={200}
+                className="w-full lg:w-1/2"
+              >
                 <p className="text-2xl md:text-3xl font-medium text-foreground leading-relaxed">
                   {story.text}
                 </p>
-              </div>
+              </AnimatedSection>
             </div>
           ))}
         </div>

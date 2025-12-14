@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Celebs from "@/components/Celebs";
 import Products from "@/components/Products";
+import Spot3DViewer from "@/components/Spot3DViewer";
 import VideoSection from "@/components/VideoSection";
 import PhotoStories from "@/components/PhotoStories";
 import Reviews from "@/components/Reviews";
@@ -40,6 +41,7 @@ const Index = () => {
           <Hero />
           <Celebs />
           <Products />
+          <Spot3DViewer />
           <VideoSection />
           <PhotoStories />
           <Reviews />
