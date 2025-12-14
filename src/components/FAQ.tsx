@@ -4,6 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import AnimatedSection from "@/components/AnimatedSection";
 
 const FAQ = () => {
   const faqs = [
@@ -30,32 +31,36 @@ const FAQ = () => {
   ];
 
   return (
-    <section id="faq" className="py-24 bg-background">
+    <section id="faq" className="py-24 bg-background overflow-hidden">
       <div className="section-container max-w-3xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
-            Common <span className="text-gradient">Questions</span>
-          </h2>
-        </div>
+        <AnimatedSection animation="fade-up">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+              Common <span className="text-gradient">Questions</span>
+            </h2>
+          </div>
+        </AnimatedSection>
 
         {/* Accordion */}
-        <Accordion type="single" collapsible className="space-y-4">
-          {faqs.map((faq, index) => (
-            <AccordionItem
-              key={index}
-              value={`item-${index}`}
-              className="bg-card rounded-xl border border-border px-6 data-[state=open]:glow-border"
-            >
-              <AccordionTrigger className="text-left text-foreground font-semibold hover:text-primary py-5">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground pb-5">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <AnimatedSection animation="fade-in" delay={200}>
+          <Accordion type="single" collapsible className="space-y-4">
+            {faqs.map((faq, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className="bg-card rounded-xl border border-border px-6 data-[state=open]:glow-border"
+              >
+                <AccordionTrigger className="text-left text-foreground font-semibold hover:text-primary py-5">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground pb-5">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </AnimatedSection>
       </div>
     </section>
   );
