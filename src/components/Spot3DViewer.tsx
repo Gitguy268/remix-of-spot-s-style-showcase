@@ -243,6 +243,7 @@ interface ModelConfig {
 
 const defaultModels: ModelConfig[] = [
   { id: "spot", name: "Spot", type: "glb", url: "/models/spot-model.glb" },
+  { id: "spot2", name: "Spot Alt", type: "glb", url: "/models/spot-model-2.glb" },
   { id: "tshirt", name: "Spot TEE", type: "placeholder", component: TShirtModel },
   { id: "hoodie", name: "Spot Hoodie", type: "placeholder", component: HoodieModel },
 ];
