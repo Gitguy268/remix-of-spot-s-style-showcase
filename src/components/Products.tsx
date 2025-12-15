@@ -107,10 +107,12 @@ const Products = () => {
         {/* CTA */}
         <AnimatedSection animation="fade-in" delay={400}>
           <div className="text-center">
-            <Button variant="outline" size="lg">
-              View All Products
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <a href="https://blacklabspotsshop.printify.me/" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="lg">
+                View All Products
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </a>
           </div>
         </AnimatedSection>
       </div>

@@ -7,9 +7,16 @@ interface ProductCardProps {
   badge?: string;
 }
 
+const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+
 const ProductCard = ({ name, price, image, badge }: ProductCardProps) => {
   return (
-    <div className="group relative bg-card rounded-xl overflow-hidden border border-border card-hover cursor-pointer">
+    <a 
+      href={SHOP_URL} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="group relative bg-card rounded-xl overflow-hidden border border-border card-hover cursor-pointer block"
+    >
       {/* Image Container */}
       <div className="aspect-square overflow-hidden bg-muted/5">
         <img
@@ -37,7 +44,7 @@ const ProductCard = ({ name, price, image, badge }: ProductCardProps) => {
 
       {/* Hover Overlay */}
       <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-    </div>
+    </a>
   );
 };
 
