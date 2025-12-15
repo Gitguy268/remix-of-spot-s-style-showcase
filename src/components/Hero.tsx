@@ -52,11 +52,17 @@ const Hero = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Button variant="hero" size="xl">
-              <ShoppingBag className="w-5 h-5" />
-              Shop Spot's Collection
-            </Button>
-            <Button variant="hero-outline" size="xl">
+            <a href="https://blacklabspotsshop.printify.me/" target="_blank" rel="noopener noreferrer">
+              <Button variant="hero" size="xl">
+                <ShoppingBag className="w-5 h-5" />
+                Shop Spot's Collection
+              </Button>
+            </a>
+            <Button 
+              variant="hero-outline" 
+              size="xl"
+              onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               See the Story
               <ArrowRight className="w-5 h-5" />
             </Button>
