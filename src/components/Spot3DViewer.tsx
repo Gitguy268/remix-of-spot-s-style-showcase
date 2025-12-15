@@ -1,9 +1,9 @@
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows, Html, useProgress } from "@react-three/drei";
+import { OrbitControls, Environment, ContactShadows, Html, useProgress, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Maximize2, Box } from "lucide-react";
+import { RotateCcw, Box, Upload, X } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 
 // Loading component
@@ -19,6 +19,40 @@ const Loader = () => {
   );
 };
 
+// GLB Model component
+const GLBModel = ({ url, isRotating }: { url: string; isRotating: boolean }) => {
+  const groupRef = useRef<THREE.Group>(null);
+  const { scene } = useGLTF(url);
+  
+  useFrame((state) => {
+    if (groupRef.current && isRotating) {
+      groupRef.current.rotation.y += 0.005;
+    }
+    if (groupRef.current) {
+      groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.03;
+    }
+  });
+
+  // Clone the scene to avoid issues with reusing
+  const clonedScene = scene.clone();
+  
+  // Auto-center and scale the model
+  const box = new THREE.Box3().setFromObject(clonedScene);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const scale = 2 / maxDim;
+  
+  clonedScene.position.sub(center);
+  clonedScene.scale.setScalar(scale);
+
+  return (
+    <group ref={groupRef} position={[0, -0.3, 0]}>
+      <primitive object={clonedScene} />
+    </group>
+  );
+};
+
 // Animated dog model placeholder (geometric representation)
 const SpotModel = ({ isRotating }: { isRotating: boolean }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -27,7 +61,6 @@ const SpotModel = ({ isRotating }: { isRotating: boolean }) => {
     if (groupRef.current && isRotating) {
       groupRef.current.rotation.y += 0.005;
     }
-    // Gentle floating animation
     if (groupRef.current) {
       groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
     }
@@ -200,17 +233,90 @@ const HoodieModel = ({ isRotating }: { isRotating: boolean }) => {
   );
 };
 
-const models = [
-  { id: "spot", name: "Spot", component: SpotModel },
-  { id: "tshirt", name: "Spot TEE", component: TShirtModel },
-  { id: "hoodie", name: "Spot Hoodie", component: HoodieModel },
+interface ModelConfig {
+  id: string;
+  name: string;
+  type: "placeholder" | "glb";
+  component?: React.ComponentType<{ isRotating: boolean }>;
+  url?: string;
+}
+
+const defaultModels: ModelConfig[] = [
+  { id: "spot", name: "Spot", type: "glb", url: "/models/spot-model.glb" },
+  { id: "tshirt", name: "Spot TEE", type: "placeholder", component: TShirtModel },
+  { id: "hoodie", name: "Spot Hoodie", type: "placeholder", component: HoodieModel },
 ];
 
 const Spot3DViewer = () => {
+  const [models, setModels] = useState<ModelConfig[]>(defaultModels);
   const [activeModel, setActiveModel] = useState("spot");
   const [isRotating, setIsRotating] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
   
-  const ActiveModelComponent = models.find(m => m.id === activeModel)?.component || SpotModel;
+  const activeModelConfig = models.find(m => m.id === activeModel);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    const modelFile = files.find(f => 
+      f.name.endsWith('.glb') || f.name.endsWith('.gltf') || f.name.endsWith('.usdz')
+    );
+
+    if (modelFile) {
+      const url = URL.createObjectURL(modelFile);
+      const fileName = modelFile.name.replace(/\.(glb|gltf|usdz)$/, '');
+      const newModelId = `custom-${Date.now()}`;
+      
+      setModels(prev => [
+        ...prev,
+        { id: newModelId, name: fileName, type: "glb", url }
+      ]);
+      setActiveModel(newModelId);
+    }
+  }, []);
+
+  const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files?.length) return;
+
+    const modelFile = Array.from(files).find(f => 
+      f.name.endsWith('.glb') || f.name.endsWith('.gltf') || f.name.endsWith('.usdz')
+    );
+
+    if (modelFile) {
+      const url = URL.createObjectURL(modelFile);
+      const fileName = modelFile.name.replace(/\.(glb|gltf|usdz)$/, '');
+      const newModelId = `custom-${Date.now()}`;
+      
+      setModels(prev => [
+        ...prev,
+        { id: newModelId, name: fileName, type: "glb", url }
+      ]);
+      setActiveModel(newModelId);
+    }
+  }, []);
+
+  const removeCustomModel = useCallback((modelId: string) => {
+    setModels(prev => prev.filter(m => m.id !== modelId));
+    if (activeModel === modelId) {
+      setActiveModel("spot");
+    }
+  }, [activeModel]);
 
   return (
     <section className="py-24 bg-gradient-to-b from-card to-background">
@@ -228,8 +334,26 @@ const Spot3DViewer = () => {
 
         <AnimatedSection animation="scale-in" delay={200}>
           <div className="relative max-w-4xl mx-auto">
-            {/* 3D Canvas */}
-            <div className="aspect-square md:aspect-video rounded-2xl overflow-hidden glow-border bg-card">
+            {/* 3D Canvas with drag-drop zone */}
+            <div 
+              className={`aspect-square md:aspect-video rounded-2xl overflow-hidden glow-border bg-card relative transition-all duration-200 ${
+                isDragging ? "ring-4 ring-primary ring-opacity-50" : ""
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              {/* Drag overlay */}
+              {isDragging && (
+                <div className="absolute inset-0 z-20 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                  <div className="text-center">
+                    <Upload className="w-16 h-16 text-primary mx-auto mb-4" />
+                    <p className="text-xl font-semibold">Drop your GLB/USDZ file here</p>
+                    <p className="text-muted-foreground">Supports .glb, .gltf, and .usdz formats</p>
+                  </div>
+                </div>
+              )}
+
               <Canvas
                 camera={{ position: [3, 2, 3], fov: 45 }}
                 shadows
@@ -252,7 +376,13 @@ const Spot3DViewer = () => {
                     intensity={0.5}
                   />
                   
-                  <ActiveModelComponent isRotating={isRotating} />
+                  {activeModelConfig?.type === "glb" && activeModelConfig.url ? (
+                    <GLBModel url={activeModelConfig.url} isRotating={isRotating} />
+                  ) : activeModelConfig?.component ? (
+                    <activeModelConfig.component isRotating={isRotating} />
+                  ) : (
+                    <SpotModel isRotating={isRotating} />
+                  )}
                   
                   <ContactShadows 
                     position={[0, -1, 0]} 
@@ -276,6 +406,25 @@ const Spot3DViewer = () => {
 
             {/* Controls */}
             <div className="absolute top-4 right-4 flex gap-2">
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept=".glb,.gltf,.usdz"
+                  className="hidden"
+                  onChange={handleFileInput}
+                />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="bg-background/80 backdrop-blur-sm pointer-events-none"
+                  aria-label="Upload 3D model"
+                  asChild
+                >
+                  <span>
+                    <Upload className="w-4 h-4" />
+                  </span>
+                </Button>
+              </label>
               <Button
                 variant="outline"
                 size="icon"
@@ -288,7 +437,7 @@ const Spot3DViewer = () => {
             </div>
 
             {/* Model selector */}
-            <div className="flex justify-center gap-3 mt-6">
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
               {models.map((model) => (
                 <button
                   key={model.id}
@@ -301,13 +450,22 @@ const Spot3DViewer = () => {
                 >
                   <Box className="w-4 h-4" />
                   {model.name}
+                  {model.id.startsWith("custom-") && (
+                    <X 
+                      className="w-3 h-3 ml-1 hover:text-destructive" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeCustomModel(model.id);
+                      }}
+                    />
+                  )}
                 </button>
               ))}
             </div>
 
-            {/* Placeholder notice */}
+            {/* Instructions */}
             <p className="text-center text-sm text-muted-foreground mt-6">
-              Placeholder models shown. Drop your GLB/USDZ files to replace.
+              Drag and drop GLB/USDZ files onto the viewer or click the upload button.
             </p>
           </div>
         </AnimatedSection>
