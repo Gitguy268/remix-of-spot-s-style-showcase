@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShoppingBag } from "lucide-react";
+import { ArrowRight, ShoppingBag, Star, Truck, Shield } from "lucide-react";
+
+const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const Hero = () => {
   const unicornRef = useRef<HTMLDivElement>(null);
@@ -10,7 +12,7 @@ const Hero = () => {
     if (!(window as any).UnicornStudio) {
       (window as any).UnicornStudio = { isInitialized: false };
       const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.2/dist/unicornStudio.umd.js";
+      script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
       script.onload = () => {
         const us = (window as any).UnicornStudio;
         if (us && !us.isInitialized) {
@@ -23,38 +25,68 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" aria-labelledby="hero-heading">
       {/* Unicorn Studio Animation Background */}
       <div 
         ref={unicornRef}
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 0 }}
+        aria-hidden="true"
       >
         <div 
-          data-us-project="YD8z0qjl8ze8msKKYKTf" 
+          data-us-project="zOOIKKQwMoVqxDLdOYAi" 
           style={{ width: '100%', height: '100%', minHeight: '100vh' }}
         />
       </div>
 
       {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10" aria-hidden="true" />
 
       {/* Content Overlay */}
       <div className="relative z-20 section-container text-center py-24">
-        <div className="max-w-3xl mx-auto space-y-8 animate-fade-up">
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+        <div className="max-w-3xl mx-auto space-y-6 animate-fade-up">
+          {/* Average Rating Badge */}
+          <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-full px-4 py-2">
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-4 h-4 fill-primary text-primary" aria-hidden="true" />
+              ))}
+            </div>
+            <span className="text-sm font-medium text-foreground">4.9/5</span>
+            <span className="text-sm text-muted-foreground">from 200+ reviews</span>
+          </div>
+
+          <h1 id="hero-heading" className="text-5xl md:text-7xl font-bold leading-tight">
             <span className="text-gradient">Spot</span>
             <span className="text-foreground">-powered style.</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-xl mx-auto">
-            Playful, premium designs inspired by a real black Labrador.
+            Premium 100% cotton tees featuring Spot, the beloved black Labrador. 
+            Soft fabrics, bold designs, fast worldwide shipping.
           </p>
 
+          {/* Value Props */}
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Shield className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span>Premium fabrics</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Truck className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span>5-7 day delivery</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="w-4 h-4 text-primary" aria-hidden="true" />
+              <span>30-day returns</span>
+            </div>
+          </div>
+
+          {/* Primary CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <a href="https://blacklabspotsshop.printify.me/" target="_blank" rel="noopener noreferrer">
+            <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="hero" size="xl">
-                <ShoppingBag className="w-5 h-5" />
+                <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                 Shop Spot's Collection
               </Button>
             </a>
@@ -64,14 +96,42 @@ const Hero = () => {
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
             >
               See the Story
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Button>
+          </div>
+
+          {/* Secondary Links */}
+          <div className="flex flex-wrap justify-center gap-6 pt-2">
+            <a 
+              href={SHOP_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              Explore Hoodies
+            </a>
+            <a 
+              href={SHOP_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              Kids Collection
+            </a>
+            <a 
+              href={SHOP_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+            >
+              Accessories
+            </a>
           </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce" aria-hidden="true">
         <div className="w-6 h-10 border-2 border-secondary/50 rounded-full flex justify-center pt-2">
           <div className="w-1 h-3 bg-primary rounded-full" />
         </div>
@@ -79,6 +139,5 @@ const Hero = () => {
     </section>
   );
 };
-
 
 export default Hero;
