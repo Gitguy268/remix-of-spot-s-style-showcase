@@ -34,7 +34,7 @@ const Hero = () => {
         aria-hidden="true"
       >
         <div 
-          data-us-project="zOOIKKQwMoVqxDLdOYAi" 
+          data-us-project="YD8z0qjl8ze8msKKYKTf" 
           style={{ width: '100%', height: '100%', minHeight: '100vh' }}
         />
       </div>
