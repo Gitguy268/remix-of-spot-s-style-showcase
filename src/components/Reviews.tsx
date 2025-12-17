@@ -1,5 +1,37 @@
 import { Star, Quote } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
+import { GlassFilter } from "@/components/GlassDock";
+
+const GlassCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div
+    className={`relative flex flex-col overflow-hidden cursor-pointer transition-all duration-700 hover:scale-[1.02] ${className}`}
+    style={{
+      boxShadow: "0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)",
+      transitionTimingFunction: "cubic-bezier(0.175, 0.885, 0.32, 2.2)",
+    }}
+  >
+    <div
+      className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
+      style={{
+        backdropFilter: "blur(8px)",
+        filter: "url(#glass-distortion)",
+        isolation: "isolate",
+      }}
+    />
+    <div
+      className="absolute inset-0 z-10 rounded-3xl"
+      style={{ background: "rgba(44, 187, 195, 0.08)" }}
+    />
+    <div
+      className="absolute inset-0 z-20 rounded-3xl overflow-hidden"
+      style={{
+        boxShadow:
+          "inset 2px 2px 1px 0 rgba(255, 255, 255, 0.3), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.2)",
+      }}
+    />
+    <div className="relative z-30 h-full">{children}</div>
+  </div>
+);
 
 const Reviews = () => {
   const reviews = [
@@ -13,6 +45,7 @@ const Reviews = () => {
 
   return (
     <section id="reviews" className="py-24 bg-background overflow-hidden" aria-labelledby="reviews-heading">
+      <GlassFilter />
       <div className="section-container">
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">
@@ -27,16 +60,18 @@ const Reviews = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reviews.map((review, index) => (
             <AnimatedSection key={index} animation="fade-up" delay={index * 100}>
-              <article className="bg-card rounded-xl p-6 border border-border h-full flex flex-col">
-                <Quote className="w-8 h-8 text-primary/30 mb-4" />
-                <blockquote className="text-foreground mb-4 flex-grow">"{review.quote}"</blockquote>
-                <p className="text-xs text-muted-foreground mb-3 bg-muted/10 px-2 py-1 rounded inline-block w-fit">{review.product}</p>
-                <div className="flex items-center gap-1 mb-3">{[...Array(5)].map((_, i) => <Star key={i} className={`w-4 h-4 ${i < review.rating ? "fill-primary text-primary" : "fill-muted text-muted"}`} />)}</div>
-                <div className="flex items-center justify-between">
-                  <div><p className="font-semibold text-foreground">{review.name}</p><p className="text-xs text-muted-foreground">{review.date}</p></div>
-                  {review.verified && <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded">Verified</span>}
-                </div>
-              </article>
+              <GlassCard className="rounded-3xl bg-card/30 border border-primary/20 h-full">
+                <article className="p-6 flex flex-col h-full">
+                  <Quote className="w-8 h-8 text-primary/50 mb-4" />
+                  <blockquote className="text-foreground mb-4 flex-grow">"{review.quote}"</blockquote>
+                  <p className="text-xs text-muted-foreground mb-3 bg-primary/10 px-2 py-1 rounded-full inline-block w-fit">{review.product}</p>
+                  <div className="flex items-center gap-1 mb-3">{[...Array(5)].map((_, i) => <Star key={i} className={`w-4 h-4 ${i < review.rating ? "fill-primary text-primary" : "fill-muted text-muted"}`} />)}</div>
+                  <div className="flex items-center justify-between">
+                    <div><p className="font-semibold text-foreground">{review.name}</p><p className="text-xs text-muted-foreground">{review.date}</p></div>
+                    {review.verified && <span className="text-xs text-primary bg-primary/20 px-2 py-1 rounded-full">Verified</span>}
+                  </div>
+                </article>
+              </GlassCard>
             </AnimatedSection>
           ))}
         </div>

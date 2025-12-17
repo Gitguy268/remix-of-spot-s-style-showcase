@@ -85,13 +85,13 @@ const Hero = () => {
           {/* Primary CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="hero" size="xl">
+              <Button variant="glass" size="xl">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                 Shop Spot's Collection
               </Button>
             </a>
             <Button 
-              variant="hero-outline" 
+              variant="glass-outline" 
               size="xl"
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
             >
