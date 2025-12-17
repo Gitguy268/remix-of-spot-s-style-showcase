@@ -159,7 +159,7 @@ const Products = () => {
         <AnimatedSection animation="fade-in" delay={400}>
           <div className="text-center">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg">
+              <Button variant="glass-outline" size="xl">
                 View All Products
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Button>
