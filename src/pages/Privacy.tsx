@@ -1,6 +1,15 @@
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const Privacy = () => {
   return (
@@ -15,6 +24,22 @@ const Privacy = () => {
         <main className="py-24">
           <div className="section-container max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-8 text-foreground">Privacy Policy</h1>
+            
+            {/* Breadcrumb */}
+            <Breadcrumb className="mb-8">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link to="/">Home</Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Privacy Policy</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            
             <p className="text-muted-foreground mb-8">Last updated: December 17, 2024</p>
 
             <div className="prose prose-invert max-w-none space-y-8">

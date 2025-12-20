@@ -1,9 +1,11 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
+import spotTeeProduct from "@/assets/spot-tee-product.png";
 
 const VideoSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -49,15 +51,25 @@ const VideoSection = () => {
             ref={containerRef}
             className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto"
           >
-            <video
-              ref={videoRef}
-              src="/videos/spot-video.mp4"
-              className="w-full h-full object-cover"
-              muted
-              loop
-              playsInline
-              preload="metadata"
-            />
+            {hasError ? (
+              <img
+                src={spotTeeProduct}
+                alt="Spot collection preview"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <video
+                ref={videoRef}
+                src="/videos/spot-video.mp4"
+                className="w-full h-full object-cover"
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster={spotTeeProduct}
+                onError={() => setHasError(true)}
+              />
+            )}
             
             {/* Overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent pointer-events-none" />

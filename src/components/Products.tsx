@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
+import ProductSkeleton from "@/components/ProductSkeleton";
 import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
@@ -12,6 +13,7 @@ const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 const Products = () => {
   const categories = ["All", "T-Shirts", "Hoodies", "Accessories", "Kids"];
   const [activeCategory, setActiveCategory] = useState("All");
+  const [isLoading, setIsLoading] = useState(false);
 
   const products = [
     {
@@ -84,6 +86,13 @@ const Products = () => {
     },
   ];
 
+  const handleCategoryChange = (category: string) => {
+    setIsLoading(true);
+    setActiveCategory(category);
+    // Simulate loading for smooth transition
+    setTimeout(() => setIsLoading(false), 300);
+  };
+
   const filteredProducts =
     activeCategory === "All"
       ? products
@@ -126,7 +135,7 @@ const Products = () => {
             {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => handleCategoryChange(category)}
                 role="tab"
                 aria-selected={activeCategory === category}
                 aria-controls="products-grid"
@@ -144,15 +153,23 @@ const Products = () => {
 
         {/* Product Grid */}
         <div id="products-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" role="tabpanel">
-          {filteredProducts.map((product, index) => (
-            <AnimatedSection
-              key={product.name + index}
-              animation="fade-up"
-              delay={index * 100}
-            >
-              <ProductCard {...product} />
-            </AnimatedSection>
-          ))}
+          {isLoading ? (
+            <>
+              {[...Array(6)].map((_, i) => (
+                <ProductSkeleton key={i} />
+              ))}
+            </>
+          ) : (
+            filteredProducts.map((product, index) => (
+              <AnimatedSection
+                key={product.name + index}
+                animation="fade-up"
+                delay={index * 100}
+              >
+                <ProductCard {...product} />
+              </AnimatedSection>
+            ))
+          )}
         </div>
 
         {/* CTA */}

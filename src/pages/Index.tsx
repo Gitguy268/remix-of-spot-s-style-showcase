@@ -10,6 +10,9 @@ import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
+import ScrollProgress from "@/components/ScrollProgress";
+import FloatingShopButton from "@/components/FloatingShopButton";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -122,7 +125,7 @@ const Index = () => {
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
-
+      <ScrollProgress />
       <div className="min-h-screen bg-background">
         <Navbar />
         <main>
@@ -137,6 +140,8 @@ const Index = () => {
           <Newsletter />
         </main>
         <Footer />
+        <BackToTop />
+        <FloatingShopButton />
       </div>
     </>
   );
