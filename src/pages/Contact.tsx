@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
+import { Link } from "react-router-dom";
 import { Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,14 @@ import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { z } from "zod";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
@@ -89,6 +98,22 @@ const Contact = () => {
           <div className="section-container">
             <div className="text-center mb-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Get in Touch</h1>
+              
+              {/* Breadcrumb */}
+              <Breadcrumb className="justify-center mb-4">
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink asChild>
+                      <Link to="/">Home</Link>
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage>Contact</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">
                 Have a question about an order or want to collaborate? We'd love to hear from you.
               </p>

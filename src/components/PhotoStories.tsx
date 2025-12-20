@@ -7,14 +7,17 @@ const PhotoStories = () => {
   const stories = [
     {
       image: spotCozy,
+      alt: "Premium Spot hoodie showcasing cozy fabric and relaxed fit",
       text: "Premium fabrics, cozy on cool days, breathable when it matters.",
     },
     {
       image: spotFestive,
+      alt: "Close-up of Spot embroidery showing crisp edges and quality stitching",
       text: "Thoughtful embroidery—crisp edges and durable stitching for long-term wear.",
     },
     {
       image: spotSweater,
+      alt: "Spot sweater in everyday setting demonstrating durability and style",
       text: "Designed for real life: playful, resilient, and always photogenic.",
     },
   ];
@@ -50,7 +53,7 @@ const PhotoStories = () => {
                 <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
                   <img
                     src={story.image}
-                    alt={`Story ${index + 1}`}
+                    alt={story.alt}
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
