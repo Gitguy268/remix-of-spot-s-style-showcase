@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import ScrollProgress from "@/components/ScrollProgress";
 import FloatingShopButton from "@/components/FloatingShopButton";
+import SpotTeeGenerator from "@/components/SpotTeeGenerator";
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -132,6 +133,7 @@ const Index = () => {
           <Hero />
           <Celebs />
           <Products />
+          <SpotTeeGenerator />
           <Spot3DViewer />
           <VideoSection />
           <PhotoStories />
