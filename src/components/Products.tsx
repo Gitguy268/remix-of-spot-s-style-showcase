@@ -6,7 +6,9 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 import spotTeeModel from "@/assets/spot-tee-model.png";
-import spotCozy from "@/assets/spot-cozy.png";
+import spotHoodie from "@/assets/spot-hoodie.png";
+import spotCap from "@/assets/spot-cap.png";
+import spotNecklace from "@/assets/spot-necklace.png";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
@@ -31,23 +33,35 @@ const Products = () => {
     {
       name: "Minimal Spot Hoodie",
       price: "$40.60 – $52.00",
-      image: spotTeeModel,
+      image: spotHoodie,
       badge: "Bestseller",
       category: "Hoodies",
       fabric: "80% cotton / 20% polyester, 320 GSM",
       fit: "Regular fit with kangaroo pocket",
-      colors: ["Black", "Charcoal", "Forest Green"],
+      colors: ["Black", "Charcoal", "Forest Green", "Royal Blue"],
       delivery: "Ships in 5-7 days",
       sizes: "S – 2XL",
     },
     {
       name: "Spot Dad Hat",
       price: "$36.43 – $39.00",
-      image: spotCozy,
+      image: spotCap,
       category: "Accessories",
       fabric: "Cotton twill, embroidered logo",
       fit: "Adjustable strap, one size fits most",
-      colors: ["Black", "Khaki", "Navy"],
+      colors: ["Black", "Khaki", "Navy", "Charcoal"],
+      delivery: "Ships in 5-7 days",
+      sizes: "One Size",
+    },
+    {
+      name: "Spot Heart Necklace",
+      price: "$24.99 – $32.00",
+      image: spotNecklace,
+      badge: "New",
+      category: "Accessories",
+      fabric: "Gold-plated stainless steel",
+      fit: "18-inch chain with 2-inch extender",
+      colors: ["Gold", "Silver", "Rose Gold"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
     },
@@ -65,22 +79,22 @@ const Products = () => {
     {
       name: "Classic Spot Hoodie",
       price: "$45.00 – $55.00",
-      image: spotTeeModel,
+      image: spotHoodie,
       category: "Hoodies",
       fabric: "80% cotton / 20% polyester, 320 GSM",
       fit: "Oversized fit with drawstring hood",
-      colors: ["Black", "Grey Heather"],
+      colors: ["Black", "Grey Heather", "Royal Blue"],
       delivery: "Ships in 5-7 days",
       sizes: "S – 3XL",
     },
     {
       name: "Spot Snapback",
       price: "$32.00 – $36.00",
-      image: spotCozy,
+      image: spotCap,
       category: "Accessories",
       fabric: "Acrylic wool blend",
       fit: "Flat brim, adjustable snap closure",
-      colors: ["Black", "Navy"],
+      colors: ["Black", "Navy", "Charcoal"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
     },
