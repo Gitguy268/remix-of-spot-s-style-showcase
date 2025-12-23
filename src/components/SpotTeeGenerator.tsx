@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, Loader2, Download, Sparkles, ShoppingBag } from "lucide-react";
+import { Upload, Loader2, Download, Sparkles, ShoppingBag, LogIn } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 import AnimatedSection from "./AnimatedSection";
 
 const COLORS = [
@@ -33,6 +35,7 @@ const COLORS = [
 const SIZES = ["S", "M", "L", "XL", "2XL"];
 
 const SpotTeeGenerator = () => {
+  const { user, loading: authLoading } = useAuth();
   const [selectedColor, setSelectedColor] = useState("White");
   const [selectedSize, setSelectedSize] = useState("L");
   const [customPrompt, setCustomPrompt] = useState("");
@@ -69,6 +72,11 @@ const SpotTeeGenerator = () => {
       return;
     }
 
+    if (!user) {
+      toast.error("Please sign in to use the AI Try-On feature");
+      return;
+    }
+
     setIsGenerating(true);
     setGeneratedImage(null);
 
@@ -84,6 +92,10 @@ const SpotTeeGenerator = () => {
 
       if (error) {
         console.error("Function error:", error);
+        if (error.message?.includes('401') || error.message?.includes('Unauthorized')) {
+          toast.error("Please sign in to use this feature");
+          return;
+        }
         throw new Error(error.message || "Failed to generate image");
       }
 
@@ -115,6 +127,55 @@ const SpotTeeGenerator = () => {
     link.click();
     document.body.removeChild(link);
   };
+
+  // Show auth prompt if not logged in
+  if (!authLoading && !user) {
+    return (
+      <section id="try-on" className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <AnimatedSection>
+            <div className="text-center max-w-2xl mx-auto">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+                <Sparkles className="w-4 h-4" />
+                AI-Powered Try-On
+              </span>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                See Yourself in a Spot Tee
+              </h2>
+              <p className="text-muted-foreground mb-8">
+                Upload a full-body photo and our AI will show you wearing the Spot Tee in your chosen color and size
+              </p>
+              
+              <Card className="border-border/50 max-w-md mx-auto">
+                <CardContent className="p-8 text-center space-y-4">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+                    <LogIn className="w-8 h-8 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-foreground mb-2">Sign in to try on</h3>
+                    <p className="text-muted-foreground text-sm">
+                      Create a free account to use the AI Try-On feature
+                    </p>
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Button asChild size="lg">
+                      <Link to="/auth">
+                        <LogIn className="w-4 h-4 mr-2" />
+                        Sign In
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="lg">
+                      <Link to="/auth">Create Account</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="try-on" className="py-20 bg-muted/30">
@@ -228,7 +289,9 @@ const SpotTeeGenerator = () => {
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     className="resize-none"
                     rows={3}
+                    maxLength={500}
                   />
+                  <p className="text-xs text-muted-foreground">{customPrompt.length}/500 characters</p>
                 </div>
 
                 {/* Generate Button */}
