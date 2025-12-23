@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import AnimatedSection from "@/components/AnimatedSection";
+import ProductQuickView from "@/components/ProductQuickView";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 import spotTeeModel from "@/assets/spot-tee-model.png";
@@ -12,10 +13,25 @@ import spotNecklace from "@/assets/spot-necklace.png";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
+interface Product {
+  name: string;
+  price: string;
+  image: string;
+  badge?: string;
+  category: string;
+  fabric: string;
+  fit: string;
+  colors: string[];
+  delivery: string;
+  sizes: string;
+}
+
 const Products = () => {
   const categories = ["All", "T-Shirts", "Hoodies", "Accessories", "Kids"];
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const products = [
     {
@@ -103,8 +119,12 @@ const Products = () => {
   const handleCategoryChange = (category: string) => {
     setIsLoading(true);
     setActiveCategory(category);
-    // Simulate loading for smooth transition
     setTimeout(() => setIsLoading(false), 300);
+  };
+
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
+    setQuickViewOpen(true);
   };
 
   const filteredProducts =
@@ -180,7 +200,7 @@ const Products = () => {
                 animation="fade-up"
                 delay={index * 100}
               >
-                <ProductCard {...product} />
+                <ProductCard {...product} onQuickView={() => handleQuickView(product)} />
               </AnimatedSection>
             ))
           )}
@@ -198,6 +218,15 @@ const Products = () => {
           </div>
         </AnimatedSection>
       </div>
+
+      {/* Quick View Modal */}
+      {selectedProduct && (
+        <ProductQuickView 
+          open={quickViewOpen} 
+          onClose={() => setQuickViewOpen(false)} 
+          product={selectedProduct} 
+        />
+      )}
     </section>
   );
 };
