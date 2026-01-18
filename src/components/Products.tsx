@@ -4,6 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import AnimatedSection from "@/components/AnimatedSection";
 import ProductQuickView from "@/components/ProductQuickView";
+import ParticleBackground from "@/components/ParticleBackground";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 import spotTeeModel from "@/assets/spot-tee-model.png";
@@ -133,8 +134,9 @@ const Products = () => {
       : products.filter((p) => p.category === activeCategory);
 
   return (
-    <section id="products" className="py-24 bg-gradient-to-b from-background to-card overflow-hidden" aria-labelledby="products-heading">
-      <div className="section-container">
+    <section id="products" className="py-24 overflow-hidden relative" aria-labelledby="products-heading">
+      <ParticleBackground />
+      <div className="section-container relative z-10">
         {/* Header */}
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-8">

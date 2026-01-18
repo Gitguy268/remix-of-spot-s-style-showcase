@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import AnimatedSection from "./AnimatedSection";
+import ParticleBackground from "./ParticleBackground";
 
 const COLORS = [
   { name: "White", hex: "#FFFFFF" },
@@ -131,8 +132,9 @@ const SpotTeeGenerator = () => {
   // Show auth prompt if not logged in
   if (!authLoading && !user) {
     return (
-      <section id="try-on" className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section id="try-on" className="py-20 relative">
+        <ParticleBackground />
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection>
             <div className="text-center max-w-2xl mx-auto">
               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
@@ -178,8 +180,9 @@ const SpotTeeGenerator = () => {
   }
 
   return (
-    <section id="try-on" className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <section id="try-on" className="py-20 relative">
+      <ParticleBackground />
+      <div className="container mx-auto px-4 relative z-10">
         <AnimatedSection>
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">

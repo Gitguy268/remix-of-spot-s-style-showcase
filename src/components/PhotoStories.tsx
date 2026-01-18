@@ -1,4 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
+import ParticleBackground from "@/components/ParticleBackground";
 import spotCozy from "@/assets/spot-cozy.png";
 import spotFestive from "@/assets/spot-festive.png";
 import spotSweater from "@/assets/spot-sweater.png";
@@ -23,8 +24,9 @@ const PhotoStories = () => {
   ];
 
   return (
-    <section id="story" className="py-24 bg-secondary/5 overflow-hidden">
-      <div className="section-container">
+    <section id="story" className="py-24 overflow-hidden relative">
+      <ParticleBackground />
+      <div className="section-container relative z-10">
         {/* Header */}
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-16">

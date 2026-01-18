@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
+import ParticleBackground from "@/components/ParticleBackground";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 
 const VideoSection = () => {
@@ -31,8 +32,9 @@ const VideoSection = () => {
   }, []);
 
   return (
-    <section className="py-24 bg-background overflow-hidden">
-      <div className="section-container">
+    <section className="py-24 overflow-hidden relative">
+      <ParticleBackground />
+      <div className="section-container relative z-10">
         {/* Header */}
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">
