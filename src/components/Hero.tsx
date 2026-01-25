@@ -44,9 +44,9 @@ const Hero = () => {
 
       {/* Content Overlay */}
       <div className="relative z-20 section-container text-center py-24">
-        <div className="max-w-3xl mx-auto space-y-6 animate-fade-up">
+        <div className="max-w-3xl mx-auto liquid-glass-card p-8 md:p-12 space-y-6 animate-fade-up">
           {/* Average Rating Badge */}
-          <div className="inline-flex items-center gap-2 bg-card/80 backdrop-blur-sm border border-border rounded-full px-4 py-2">
+          <div className="inline-flex items-center gap-2 bg-background/40 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2">
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="w-4 h-4 fill-primary text-primary" aria-hidden="true" />
@@ -85,7 +85,7 @@ const Hero = () => {
           {/* Primary CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="glass" size="xl">
+              <Button variant="glass" size="xl" className="liquid-glass-button">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                 Shop Spot's Collection
               </Button>
