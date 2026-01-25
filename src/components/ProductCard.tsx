@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LiquidGlassCard } from "@/components/ui/liquid-glass-card";
 import { Star, Truck, Eye } from "lucide-react";
 
 interface ProductCardProps {
@@ -19,14 +20,14 @@ const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery, sizes, onQuickView }: ProductCardProps) => {
   return (
-    <div className="group relative bg-card rounded-xl overflow-hidden border border-border card-hover">
+    <LiquidGlassCard className="group relative">
       <a 
         href={SHOP_URL} 
         target="_blank" 
         rel="noopener noreferrer"
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >
-        <div className="aspect-square overflow-hidden bg-muted/5 relative">
+        <div className="aspect-square overflow-hidden bg-muted/5 relative rounded-t-xl">
           <img src={image} alt={`${name} - ${fabric || 'Premium apparel'}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
         </div>
         {badge && <Badge variant={badge === "New" ? "default" : "secondary"} className="absolute top-3 left-3">{badge}</Badge>}
@@ -38,7 +39,6 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
           {delivery && <div className="flex items-center gap-1.5 text-xs text-muted-foreground"><Truck className="w-3 h-3" /><span>{delivery}</span></div>}
           <div className="flex items-center gap-1">{[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-primary text-primary" />)}<span className="text-xs text-muted-foreground ml-1">(4.9)</span></div>
         </div>
-        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       </a>
       
       {/* Quick View Button */}
@@ -57,7 +57,7 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
           Quick View
         </Button>
       )}
-    </div>
+    </LiquidGlassCard>
   );
 };
 
