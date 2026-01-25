@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { LiquidGlassButton } from "@/components/ui/liquid-glass-button";
 import { ArrowRight, ShoppingBag, Star, Truck, Shield } from "lucide-react";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
@@ -85,10 +86,10 @@ const Hero = () => {
           {/* Primary CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="glass" size="xl" className="liquid-glass-button">
+              <LiquidGlassButton size="xl">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
                 Shop Spot's Collection
-              </Button>
+              </LiquidGlassButton>
             </a>
             <Button 
               variant="glass-outline" 
