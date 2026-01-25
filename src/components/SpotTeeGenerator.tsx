@@ -148,7 +148,7 @@ const SpotTeeGenerator = () => {
                 Upload a full-body photo and our AI will show you wearing the Spot Tee in your chosen color and size
               </p>
               
-              <Card className="border-border/50 max-w-md mx-auto">
+              <Card className="liquid-glass-card border-border/50 max-w-md mx-auto">
                 <CardContent className="p-8 text-center space-y-4">
                   <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
                     <LogIn className="w-8 h-8 text-primary" />
