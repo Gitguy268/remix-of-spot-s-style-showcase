@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { LiquidGlassButton } from "@/components/ui/liquid-glass-button";
 import { Gamepad2, Cookie, Ghost, Timer, ExternalLink } from "lucide-react";
 import spotGameScreenshot from "@/assets/spot-game-screenshot.png";
 
@@ -76,22 +77,17 @@ const SpotGameShowcase = () => {
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button 
-            variant="glass" 
-            size="xl"
-            asChild
+          <a 
+            href="https://019b4b76-8bc8-77ea-847c-154dc36744df.arena.site/" 
+            target="_blank" 
+            rel="noopener noreferrer"
           >
-            <a 
-              href="https://019b4b76-8bc8-77ea-847c-154dc36744df.arena.site/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center gap-2"
-            >
+            <LiquidGlassButton size="xl">
               <Gamepad2 className="w-5 h-5" />
               Play Now
               <ExternalLink className="w-4 h-4" />
-            </a>
-          </Button>
+            </LiquidGlassButton>
+          </a>
           <Button 
             variant="ghost" 
             size="lg"

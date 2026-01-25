@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Star, Truck, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassButton } from '@/components/ui/liquid-glass-button';
 import { Badge } from '@/components/ui/badge';
 
 interface ProductQuickViewProps {
@@ -168,10 +169,10 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
             {/* CTA */}
             <div className="mt-auto pt-4">
               <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="block">
-                <Button className="w-full" size="lg">
+                <LiquidGlassButton size="lg" className="w-full">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Shop Now
-                </Button>
+                </LiquidGlassButton>
               </a>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { LiquidGlassButton } from "@/components/ui/liquid-glass-button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
@@ -160,12 +161,12 @@ const SpotTeeGenerator = () => {
                     </p>
                   </div>
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Button asChild size="lg">
-                      <Link to="/auth">
+                    <Link to="/auth">
+                      <LiquidGlassButton size="lg">
                         <LogIn className="w-4 h-4 mr-2" />
                         Sign In
-                      </Link>
-                    </Button>
+                      </LiquidGlassButton>
+                    </Link>
                     <Button asChild variant="outline" size="lg">
                       <Link to="/auth">Create Account</Link>
                     </Button>
