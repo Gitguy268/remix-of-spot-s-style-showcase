@@ -136,7 +136,7 @@ const Spot3DViewer = () => {
   const [activeModel, setActiveModel] = useState("spot");
   const [isRotating, setIsRotating] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<typeof OrbitControls | null>(null);
   
   const activeModelConfig = defaultModels.find(m => m.id === activeModel);
 

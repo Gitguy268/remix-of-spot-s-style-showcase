@@ -89,7 +89,7 @@ serve(async (req) => {
         );
       }
       // Remove potentially harmful characters
-      sanitizedPrompt = customPrompt.replace(/[<>\"'`\\]/g, '').trim();
+      sanitizedPrompt = customPrompt.replace(/[<>'"`\\]/g, '').trim();
     }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');

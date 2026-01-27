@@ -35,8 +35,12 @@ const AnimatedSection = ({
   return (
     <div
       ref={(el) => {
-        (ref as any).current = el;
-        if (parallax) (parallaxRef as any).current = el;
+        if (typeof ref === 'function') ref(el);
+        else if (ref) ref.current = el;
+        if (parallax) {
+          if (typeof parallaxRef === 'function') parallaxRef(el);
+          else if (parallaxRef) parallaxRef.current = el;
+        }
       }}
       className={cn(
         "transition-all duration-700 ease-out",

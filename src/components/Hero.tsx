@@ -10,12 +10,23 @@ const Hero = () => {
 
   useEffect(() => {
     // Load Unicorn Studio script
-    if (!(window as any).UnicornStudio) {
-      (window as any).UnicornStudio = { isInitialized: false };
+    interface UnicornStudio {
+      isInitialized: boolean;
+      init?: () => void;
+    }
+    
+    interface WindowWithUnicorn extends Window {
+      UnicornStudio?: UnicornStudio;
+    }
+    
+    const win = window as WindowWithUnicorn;
+    
+    if (!win.UnicornStudio) {
+      win.UnicornStudio = { isInitialized: false };
       const script = document.createElement("script");
       script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
       script.onload = () => {
-        const us = (window as any).UnicornStudio;
+        const us = win.UnicornStudio;
         if (us && !us.isInitialized) {
           us.init?.();
           us.isInitialized = true;
