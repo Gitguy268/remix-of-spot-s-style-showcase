@@ -1,5 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import AnimatedSection from "@/components/AnimatedSection";
+import { LiquidGlassCard } from "@/components/ui/liquid-glass-card";
 
 const FAQ = () => {
   const faqs = [
@@ -25,10 +26,16 @@ const FAQ = () => {
           <div className="max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
-                <AccordionItem key={index} value={`item-${index}`} className="bg-background rounded-lg border border-border px-6">
-                  <AccordionTrigger className="text-left hover:no-underline py-4"><span className="font-semibold text-foreground">{faq.question}</span></AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-4 leading-relaxed">{faq.answer}</AccordionContent>
-                </AccordionItem>
+                <LiquidGlassCard key={index} className="overflow-hidden">
+                  <AccordionItem value={`item-${index}`} className="border-none">
+                    <AccordionTrigger className="text-left hover:no-underline py-4 px-6">
+                      <span className="font-semibold text-foreground">{faq.question}</span>
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground pb-4 px-6 leading-relaxed">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </LiquidGlassCard>
               ))}
             </Accordion>
           </div>
