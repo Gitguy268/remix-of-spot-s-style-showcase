@@ -8,41 +8,29 @@ import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { z } from "zod";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Please enter a valid email"),
   subject: z.string().min(1, "Subject is required").max(200),
-  message: z.string().min(10, "Message must be at least 10 characters").max(1000),
+  message: z.string().min(10, "Message must be at least 10 characters").max(1000)
 });
-
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: "",
+    message: ""
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "success">("idle");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
-
     const result = contactSchema.safeParse(formData);
-    
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach(err => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = err.message;
         }
@@ -50,14 +38,16 @@ const Contact = () => {
       setErrors(fieldErrors);
       return;
     }
-
     setStatus("success");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setFormData({
+      name: "",
+      email: "",
+      subject: "",
+      message: ""
+    });
   };
-
   if (status === "success") {
-    return (
-      <>
+    return <>
         <Helmet>
           <title>Contact Us — Blacklabspotsshop</title>
           <meta name="description" content="Contact Blacklabspotsshop for questions about orders, products, or collaborations." />
@@ -81,12 +71,9 @@ const Contact = () => {
           </main>
           <Footer />
         </div>
-      </>
-    );
+      </>;
   }
-
-  return (
-    <>
+  return <>
       <Helmet>
         <title>Contact Us — Blacklabspotsshop</title>
         <meta name="description" content="Contact Blacklabspotsshop for questions about orders, products, or collaborations. We typically respond within 24-48 hours." />
@@ -132,9 +119,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="font-medium text-foreground">Email</p>
-                        <a href="mailto:hello@blacklabspotsshop.com" className="text-muted-foreground hover:text-primary transition-colors">
-                          hello@blacklabspotsshop.com
-                        </a>
+                        <a href="mailto:hello@blacklabspotsshop.com" className="text-muted-foreground hover:text-primary transition-colors">hitlijsten_demping_7b@icloud.com</a>
                       </div>
                     </div>
 
@@ -181,13 +166,10 @@ const Contact = () => {
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
                     Name
                   </label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={errors.name ? "border-destructive" : ""}
-                    placeholder="Your name"
-                  />
+                  <Input id="name" value={formData.name} onChange={e => setFormData({
+                  ...formData,
+                  name: e.target.value
+                })} className={errors.name ? "border-destructive" : ""} placeholder="Your name" />
                   {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
                 </div>
 
@@ -195,14 +177,10 @@ const Contact = () => {
                   <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
                     Email
                   </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={errors.email ? "border-destructive" : ""}
-                    placeholder="you@example.com"
-                  />
+                  <Input id="email" type="email" value={formData.email} onChange={e => setFormData({
+                  ...formData,
+                  email: e.target.value
+                })} className={errors.email ? "border-destructive" : ""} placeholder="you@example.com" />
                   {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                 </div>
 
@@ -210,13 +188,10 @@ const Contact = () => {
                   <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
                     Subject
                   </label>
-                  <Input
-                    id="subject"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className={errors.subject ? "border-destructive" : ""}
-                    placeholder="Order inquiry, collaboration, etc."
-                  />
+                  <Input id="subject" value={formData.subject} onChange={e => setFormData({
+                  ...formData,
+                  subject: e.target.value
+                })} className={errors.subject ? "border-destructive" : ""} placeholder="Order inquiry, collaboration, etc." />
                   {errors.subject && <p className="text-sm text-destructive mt-1">{errors.subject}</p>}
                 </div>
 
@@ -224,13 +199,10 @@ const Contact = () => {
                   <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
                     Message
                   </label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className={`min-h-[150px] ${errors.message ? "border-destructive" : ""}`}
-                    placeholder="How can we help?"
-                  />
+                  <Textarea id="message" value={formData.message} onChange={e => setFormData({
+                  ...formData,
+                  message: e.target.value
+                })} className={`min-h-[150px] ${errors.message ? "border-destructive" : ""}`} placeholder="How can we help?" />
                   {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
                 </div>
 
@@ -244,8 +216,6 @@ const Contact = () => {
         </main>
         <Footer />
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Contact;
