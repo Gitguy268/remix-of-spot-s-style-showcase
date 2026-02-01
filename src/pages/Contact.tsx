@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { Mail, MapPin, Clock, Send, CheckCircle, Loader2 } from "lucide-react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,6 +31,8 @@ const Contact = () => {
   const [honeypot, setHoneypot] = useState(""); // Spam protection
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,13 +50,19 @@ const Contact = () => {
       return;
     }
 
+    if (!turnstileToken) {
+      setErrors({ turnstile: "Please complete the verification" });
+      return;
+    }
+
     setStatus("submitting");
 
     try {
       const { data, error } = await supabase.functions.invoke("send-contact-email", {
         body: {
           ...formData,
-          honeypot // Include honeypot for spam check
+          honeypot, // Include honeypot for spam check
+          turnstileToken // Include Turnstile token for verification
         }
       });
 
@@ -62,6 +71,8 @@ const Contact = () => {
       if (data?.success) {
         setStatus("success");
         setFormData({ name: "", email: "", subject: "", message: "" });
+        setTurnstileToken(null);
+        turnstileRef.current?.reset();
         toast({
           title: "Message sent!",
           description: "We'll get back to you within 24-48 hours.",
@@ -253,7 +264,21 @@ const Contact = () => {
                   />
                 </div>
 
-                <Button 
+                {/* Cloudflare Turnstile CAPTCHA */}
+                <div className="flex flex-col items-start">
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey="0x4AAAAAACWXvG9bwj5-U_wm"
+                    onSuccess={setTurnstileToken}
+                    onError={() => setTurnstileToken(null)}
+                    onExpire={() => setTurnstileToken(null)}
+                  />
+                  {errors.turnstile && (
+                    <p className="text-sm text-destructive mt-1">{errors.turnstile}</p>
+                  )}
+                </div>
+
+                <Button
                   type="submit" 
                   variant="glass" 
                   size="xl" 

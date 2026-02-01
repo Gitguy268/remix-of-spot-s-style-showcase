@@ -56,7 +56,35 @@ interface ContactRequest {
   subject: string;
   message: string;
   honeypot?: string; // Spam protection
+  turnstileToken?: string; // Cloudflare Turnstile token
 }
+
+// Verify Turnstile token with Cloudflare
+const verifyTurnstileToken = async (token: string, ip: string): Promise<boolean> => {
+  const secretKey = Deno.env.get("TURNSTILE_SECRET_KEY");
+  if (!secretKey) {
+    console.error("TURNSTILE_SECRET_KEY is not configured");
+    return false;
+  }
+
+  try {
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: secretKey,
+        response: token,
+        remoteip: ip,
+      }),
+    });
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (error) {
+    console.error("Turnstile verification error:", error);
+    return false;
+  }
+};
 
 const handler = async (req: Request): Promise<Response> => {
   const origin = req.headers.get("origin");
@@ -99,7 +127,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const body: ContactRequest = await req.json();
-    const { name, email, subject, message, honeypot } = body;
+    const { name, email, subject, message, honeypot, turnstileToken } = body;
 
     // Honeypot spam check - if filled, it's a bot
     if (honeypot) {
@@ -109,6 +137,29 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
+    }
+
+    // Verify Turnstile token
+    if (!turnstileToken) {
+      return new Response(
+        JSON.stringify({ success: false, error: "Verification required. Please complete the CAPTCHA." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    const isValidToken = await verifyTurnstileToken(turnstileToken, clientIp);
+    if (!isValidToken) {
+      console.warn(`Invalid Turnstile token from IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ success: false, error: "Verification failed. Please try again." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     // Server-side validation
