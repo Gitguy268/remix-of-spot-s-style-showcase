@@ -2,18 +2,9 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 const Terms = () => {
-  return (
-    <>
+  return <>
       <Helmet>
         <title>Terms & Conditions — Blacklabspotsshop</title>
         <meta name="description" content="Terms and Conditions for Blacklabspotsshop. Read our terms of service, return policy, and user agreement." />
@@ -117,7 +108,7 @@ const Terms = () => {
                 <p className="text-muted-foreground">For questions about these terms:</p>
                 <div className="mt-4 p-4 bg-card rounded-lg border border-border">
                   <p className="text-foreground font-medium">Blacklabspotsshop</p>
-                  <p className="text-muted-foreground">Email: hello@blacklabspotsshop.com</p>
+                  <p className="text-muted-foreground">Email: hitlijsten_demping_7b@icloud.com</p>
                 </div>
               </section>
             </div>
@@ -125,8 +116,6 @@ const Terms = () => {
         </main>
         <Footer />
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Terms;
