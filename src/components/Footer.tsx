@@ -13,14 +13,12 @@ const Footer = () => {
     {
       src: "https://cdn-icons-png.flaticon.com/128/3670/3670151.png",
       alt: "Instagram",
+      href: "https://www.instagram.com/lucasvandeweerd/",
     },
     {
-      src: "https://cdn-icons-png.flaticon.com/128/5969/5969020.png",
-      alt: "TikTok",
-    },
-    {
-      src: "https://cdn-icons-png.flaticon.com/128/5968/5968958.png",
-      alt: "Twitter/X",
+      src: "https://cdn-icons-png.flaticon.com/128/1384/1384060.png",
+      alt: "YouTube",
+      href: "https://www.youtube.com/@LucasVanDeWeerd",
     },
   ];
 
@@ -40,8 +38,8 @@ const Footer = () => {
             <div className="space-y-2 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-primary" />
-                <a href="mailto:hello@blacklabspotsshop.com" className="hover:text-primary transition-colors">
-                  hello@blacklabspotsshop.com
+                <a href="mailto:hitlijsten_demping_7b@icloud.com" className="hover:text-primary transition-colors">
+                  hitlijsten_demping_7b@icloud.com
                 </a>
               </p>
             </div>
@@ -99,7 +97,7 @@ const Footer = () => {
 
         {/* Social Links with Glass Effect */}
         <div className="flex justify-center mb-8">
-          <GlassDock icons={socialIcons} href="https://instagram.com" />
+          <GlassDock icons={socialIcons} />
         </div>
 
         {/* Payment & Security */}
