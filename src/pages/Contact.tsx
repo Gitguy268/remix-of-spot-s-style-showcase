@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Clock, Send, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,24 +9,32 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { z } from "zod";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Please enter a valid email"),
   subject: z.string().min(1, "Subject is required").max(200),
   message: z.string().min(10, "Message must be at least 10 characters").max(1000)
 });
+
 const Contact = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: ""
   });
+  const [honeypot, setHoneypot] = useState(""); // Spam protection
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "success">("idle");
-  const handleSubmit = (e: React.FormEvent) => {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+
     const result = contactSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
@@ -38,13 +46,38 @@ const Contact = () => {
       setErrors(fieldErrors);
       return;
     }
-    setStatus("success");
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: ""
-    });
+
+    setStatus("submitting");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          ...formData,
+          honeypot // Include honeypot for spam check
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        toast({
+          title: "Message sent!",
+          description: "We'll get back to you within 24-48 hours.",
+        });
+      } else {
+        throw new Error(data?.error || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setStatus("error");
+      toast({
+        title: "Failed to send message",
+        description: "Please try again or email us directly.",
+        variant: "destructive",
+      });
+    }
   };
   if (status === "success") {
     return <>
@@ -64,7 +97,7 @@ const Contact = () => {
               <p className="text-lg text-muted-foreground mb-8">
                 Thank you for reaching out. We'll get back to you within 24-48 hours.
               </p>
-              <Button variant="outline" onClick={() => setStatus("idle")}>
+              <Button variant="glass" onClick={() => setStatus("idle")}>
                 Send Another Message
               </Button>
             </div>
@@ -206,9 +239,38 @@ const Contact = () => {
                   {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
                 </div>
 
-                <Button type="submit" variant="glass" size="xl" className="w-full">
-                  <Send className="w-4 h-4" />
-                  Send Message
+                {/* Honeypot field - hidden from users, catches bots */}
+                <div className="absolute -left-[9999px]" aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <Input 
+                    type="text" 
+                    id="website" 
+                    name="website" 
+                    value={honeypot}
+                    onChange={e => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
+                <Button 
+                  type="submit" 
+                  variant="glass" 
+                  size="xl" 
+                  className="w-full"
+                  disabled={status === "submitting"}
+                >
+                  {status === "submitting" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
