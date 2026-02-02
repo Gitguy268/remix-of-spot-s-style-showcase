@@ -2,3 +2,6 @@ project_id = "xwtlinfnkeyskrfxikbf"
 
 [functions.send-contact-email]
 verify_jwt = false
+
+[functions.generate-birthday-music]
+verify_jwt = false
