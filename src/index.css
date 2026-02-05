@@ -107,6 +107,16 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
+  /* Subtle premium dot pattern for light mode */
+  :root body {
+    background-image: radial-gradient(circle at 1px 1px, hsl(183 30% 80% / 0.3) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  .dark body {
+    background-image: none;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
   }
