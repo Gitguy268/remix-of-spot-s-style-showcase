@@ -174,7 +174,7 @@ const LiquidGlassButton = React.forwardRef<HTMLButtonElement, LiquidGlassButtonP
         />
 
         {/* Content */}
-        <span className="relative z-10 text-primary-foreground drop-shadow-sm">
+        <span className="relative z-10 flex items-center justify-center gap-2 text-primary-foreground drop-shadow-sm">
           {children}
         </span>
       </Comp>

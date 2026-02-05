@@ -88,15 +88,16 @@ const Hero = () => {
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <LiquidGlassButton size="xl">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                Shop Spot's Collection
+                <span>Shop Spot's Collection</span>
               </LiquidGlassButton>
             </a>
             <Button 
               variant="glass-outline" 
               size="xl"
+              className="gap-2"
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              See the Story
+              <span>See the Story</span>
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Button>
           </div>
