@@ -53,7 +53,7 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
             onQuickView();
           }}
         >
-          <Eye className="w-4 h-4 mr-1" />
+          <Eye className="w-4 h-4" />
           Quick View
         </Button>
       )}

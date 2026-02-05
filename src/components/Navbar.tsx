@@ -81,9 +81,9 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="default" size="sm">
+              <Button variant="default" size="sm" className="gap-2">
                 <ShoppingBag className="w-4 h-4" />
-                Shop Now
+                <span>Shop Now</span>
               </Button>
             </a>
           </div>
@@ -129,9 +129,9 @@ const Navbar = () => {
                 )
               ))}
               <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-                <Button variant="default" className="mt-2 w-full">
+                <Button variant="default" className="mt-2 w-full gap-2">
                   <ShoppingBag className="w-4 h-4" />
-                  Shop Now
+                  <span>Shop Now</span>
                 </Button>
               </a>
             </div>
