@@ -3,6 +3,9 @@ import { X, Star, Truck, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassButton } from '@/components/ui/liquid-glass-button';
 import { Badge } from '@/components/ui/badge';
+import { LazyImage } from '@/components/ui/lazy-image';
+import WishlistButton from '@/components/WishlistButton';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 interface ProductQuickViewProps {
   open: boolean;
@@ -26,6 +29,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const { formatPrice } = useCurrency();
 
   const sizeOptions = product.sizes?.includes('–') 
     ? product.sizes.split('–').map(s => s.trim())
@@ -84,12 +88,22 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
 
         <div className="grid md:grid-cols-2 gap-0">
           {/* Image */}
-          <div className="aspect-square bg-muted/10 overflow-hidden">
-            <img 
+          <div className="aspect-square bg-muted/10 overflow-hidden relative">
+            <LazyImage 
               src={product.image} 
               alt={`${product.name} - ${product.fabric || 'Premium apparel'}`}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
+            <div className="absolute top-4 left-4">
+              <WishlistButton 
+                product={{ 
+                  name: product.name, 
+                  price: product.price, 
+                  image: product.image, 
+                  category: "Products" 
+                }} 
+              />
+            </div>
           </div>
 
           {/* Details */}
@@ -107,7 +121,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
               </div>
             </div>
 
-            <p className="text-2xl font-bold text-primary mb-4">{product.price}</p>
+            <p className="text-2xl font-bold text-primary mb-4">{formatPrice(product.price)}</p>
 
             {/* Rating */}
             <div className="flex items-center gap-1 mb-4">

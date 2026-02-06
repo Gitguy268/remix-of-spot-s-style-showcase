@@ -5,9 +5,12 @@ import ProductSkeleton from "@/components/ProductSkeleton";
 import AnimatedSection from "@/components/AnimatedSection";
 import ProductQuickView from "@/components/ProductQuickView";
 import ParticleBackground from "@/components/ParticleBackground";
+import ProductComparison from "@/components/ProductComparison";
+import MobileProductCarousel from "@/components/MobileProductCarousel";
+import BirthdayCountdown from "@/components/BirthdayCountdown";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
-import spotTeeModel from "@/assets/spot-tee-model.png";
 import spotHoodie from "@/assets/spot-hoodie.png";
 import spotCap from "@/assets/spot-cap.png";
 import spotNecklace from "@/assets/spot-necklace.png";
@@ -33,8 +36,10 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [compareProducts, setCompareProducts] = useState<string[]>([]);
+  const isMobile = useIsMobile();
 
-  const products = [
+  const products: Product[] = [
     {
       name: "Spot Tee",
       price: "$41.47 – $45.99",
@@ -128,15 +133,43 @@ const Products = () => {
     setQuickViewOpen(true);
   };
 
+  const handleToggleCompare = (productName: string) => {
+    setCompareProducts((prev) => {
+      if (prev.includes(productName)) {
+        return prev.filter((name) => name !== productName);
+      }
+      if (prev.length >= 3) return prev;
+      return [...prev, productName];
+    });
+  };
+
   const filteredProducts =
     activeCategory === "All"
       ? products
       : products.filter((p) => p.category === activeCategory);
 
+  const renderProductCard = (product: Product, index: number) => (
+    <ProductCard
+      key={product.name + index}
+      {...product}
+      onQuickView={() => handleQuickView(product)}
+      isCompareSelected={compareProducts.includes(product.name)}
+      onToggleCompare={() => handleToggleCompare(product.name)}
+      compareDisabled={compareProducts.length >= 3}
+    />
+  );
+
   return (
     <section id="products" className="py-24 overflow-hidden relative" aria-labelledby="products-heading">
       <ParticleBackground />
       <div className="section-container relative z-10">
+        {/* Birthday Countdown */}
+        <AnimatedSection animation="fade-up">
+          <div className="mb-12">
+            <BirthdayCountdown />
+          </div>
+        </AnimatedSection>
+
         {/* Header */}
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-8">
@@ -187,24 +220,34 @@ const Products = () => {
           </div>
         </AnimatedSection>
 
-        {/* Product Grid */}
-        <div id="products-grid" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12" role="tabpanel">
+        {/* Product Grid - Mobile Carousel / Desktop Grid */}
+        <div id="products-grid" role="tabpanel">
           {isLoading ? (
-            <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
               {[...Array(6)].map((_, i) => (
                 <ProductSkeleton key={i} />
               ))}
-            </>
+            </div>
+          ) : isMobile ? (
+            <MobileProductCarousel className="mb-12">
+              {filteredProducts.map((product, index) => (
+                <div key={product.name + index} className="min-w-[280px] snap-center">
+                  {renderProductCard(product, index)}
+                </div>
+              ))}
+            </MobileProductCarousel>
           ) : (
-            filteredProducts.map((product, index) => (
-              <AnimatedSection
-                key={product.name + index}
-                animation="fade-up"
-                delay={index * 100}
-              >
-                <ProductCard {...product} onQuickView={() => handleQuickView(product)} />
-              </AnimatedSection>
-            ))
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {filteredProducts.map((product, index) => (
+                <AnimatedSection
+                  key={product.name + index}
+                  animation="fade-up"
+                  delay={index * 100}
+                >
+                  {renderProductCard(product, index)}
+                </AnimatedSection>
+              ))}
+            </div>
           )}
         </div>
 
@@ -213,7 +256,7 @@ const Products = () => {
           <div className="text-center">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="glass-outline" size="xl">
-                View All Products
+                <span>View All Products</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Button>
             </a>
@@ -229,6 +272,14 @@ const Products = () => {
           product={selectedProduct} 
         />
       )}
+
+      {/* Product Comparison */}
+      <ProductComparison
+        products={products}
+        selectedProducts={compareProducts}
+        onToggleProduct={handleToggleCompare}
+        onClearComparison={() => setCompareProducts([])}
+      />
     </section>
   );
 };
