@@ -1,6 +1,10 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LiquidGlassCard } from "@/components/ui/liquid-glass-card";
+import { LazyImage } from "@/components/ui/lazy-image";
+import WishlistButton from "@/components/WishlistButton";
+import { CompareButton } from "@/components/ProductComparison";
+import { useCurrency } from "@/contexts/CurrencyContext";
 import { Star, Truck, Eye } from "lucide-react";
 
 interface ProductCardProps {
@@ -13,12 +17,33 @@ interface ProductCardProps {
   colors?: string[];
   delivery?: string;
   sizes?: string;
+  category?: string;
   onQuickView?: () => void;
+  isCompareSelected?: boolean;
+  onToggleCompare?: () => void;
+  compareDisabled?: boolean;
 }
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
-const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery, sizes, onQuickView }: ProductCardProps) => {
+const ProductCard = ({ 
+  name, 
+  price, 
+  image, 
+  badge, 
+  fabric, 
+  fit, 
+  colors, 
+  delivery, 
+  sizes, 
+  category = "Products",
+  onQuickView,
+  isCompareSelected,
+  onToggleCompare,
+  compareDisabled,
+}: ProductCardProps) => {
+  const { formatPrice } = useCurrency();
+
   return (
     <LiquidGlassCard className="group relative">
       <a 
@@ -28,12 +53,32 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >
         <div className="aspect-square overflow-hidden bg-muted/5 relative rounded-t-xl">
-          <img src={image} alt={`${name} - ${fabric || 'Premium apparel'}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+          <LazyImage 
+            src={image} 
+            alt={`${name} - ${fabric || 'Premium apparel'}`} 
+            className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+          />
         </div>
         {badge && <Badge variant={badge === "New" ? "default" : "secondary"} className="absolute top-3 left-3">{badge}</Badge>}
+        
+        {/* Action buttons - Wishlist & Compare */}
+        <div className="absolute top-3 right-3 flex flex-col gap-2">
+          <WishlistButton 
+            product={{ name, price, image, category }} 
+          />
+          {onToggleCompare && (
+            <CompareButton
+              productName={name}
+              isSelected={isCompareSelected || false}
+              onToggle={onToggleCompare}
+              disabled={compareDisabled}
+            />
+          )}
+        </div>
+
         <div className="p-4 space-y-2">
           <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">{name}</h3>
-          <p className="text-primary font-bold">{price}</p>
+          <p className="text-primary font-bold">{formatPrice(price)}</p>
           {fabric && <p className="text-xs text-muted-foreground line-clamp-1">{fabric}</p>}
           {sizes && <p className="text-xs text-muted-foreground">Sizes: {sizes}</p>}
           {delivery && <div className="flex items-center gap-1.5 text-xs text-muted-foreground"><Truck className="w-3 h-3" /><span>{delivery}</span></div>}
@@ -46,7 +91,7 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
         <Button
           variant="secondary"
           size="sm"
-          className="absolute bottom-20 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+          className="absolute bottom-20 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 gap-2"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -54,7 +99,7 @@ const ProductCard = ({ name, price, image, badge, fabric, fit, colors, delivery,
           }}
         >
           <Eye className="w-4 h-4" />
-          Quick View
+          <span>Quick View</span>
         </Button>
       )}
     </LiquidGlassCard>
