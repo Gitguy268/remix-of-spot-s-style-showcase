@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { toast } from "sonner";
 
 export interface Currency {
   code: string;
@@ -20,7 +21,13 @@ export const currencies: Currency[] = [
   { code: "MXN", symbol: "MX$", name: "Mexican Peso", rate: 17.15 },
 ];
 
-export const languages = [
+export interface Language {
+  code: string;
+  name: string;
+  flag: string;
+}
+
+export const languages: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
@@ -32,8 +39,8 @@ export const languages = [
 interface CurrencyContextType {
   currency: Currency;
   setCurrency: (currency: Currency) => void;
-  language: typeof languages[0];
-  setLanguage: (language: typeof languages[0]) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
   convertPrice: (usdPrice: number) => string;
   formatPrice: (usdPriceRange: string) => string;
 }
@@ -42,7 +49,7 @@ const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined
 
 export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>(currencies[0]);
-  const [language, setLanguageState] = useState(languages[0]);
+  const [language, setLanguageState] = useState<Language>(languages[0]);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -56,18 +63,29 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
     if (savedLanguage) {
       const found = languages.find((l) => l.code === savedLanguage);
-      if (found) setLanguageState(found);
+      if (found) {
+        setLanguageState(found);
+        document.documentElement.lang = found.code;
+      }
     }
   }, []);
 
   const setCurrency = (newCurrency: Currency) => {
     setCurrencyState(newCurrency);
     localStorage.setItem("preferred-currency", newCurrency.code);
+    toast.success(`Currency changed to ${newCurrency.name} (${newCurrency.symbol})`, {
+      duration: 2000,
+    });
   };
 
-  const setLanguage = (newLanguage: typeof languages[0]) => {
+  const setLanguage = (newLanguage: Language) => {
     setLanguageState(newLanguage);
     localStorage.setItem("preferred-language", newLanguage.code);
+    document.documentElement.lang = newLanguage.code;
+    toast.success(`${newLanguage.flag} Language set to ${newLanguage.name}`, {
+      description: "Content language preference saved.",
+      duration: 2000,
+    });
   };
 
   const convertPrice = (usdPrice: number): string => {

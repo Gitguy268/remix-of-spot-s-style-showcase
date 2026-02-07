@@ -41,7 +41,7 @@ const Hero = () => {
       </div>
 
       {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30 dark:to-transparent z-10" aria-hidden="true" />
 
       {/* Content Overlay */}
       <div className="relative z-20 section-container text-center py-24">
