@@ -24,7 +24,7 @@ const CurrencySelector = () => {
           className="gap-1.5 text-muted-foreground hover:text-foreground"
         >
           <Globe className="w-4 h-4" />
-          <span className="hidden sm:inline">{language.flag}</span>
+          <span>{language.flag}</span>
           <span className="text-xs font-medium">{currency.code}</span>
           <ChevronDown className="w-3 h-3" />
         </Button>
@@ -35,7 +35,11 @@ const CurrencySelector = () => {
           {currencies.map((c) => (
             <DropdownMenuItem
               key={c.code}
-              onClick={() => setCurrency(c)}
+              onSelect={(e) => {
+                e.preventDefault();
+                setCurrency(c);
+                setIsOpen(false);
+              }}
               className="flex items-center justify-between cursor-pointer"
             >
               <span>
@@ -55,7 +59,11 @@ const CurrencySelector = () => {
           {languages.map((l) => (
             <DropdownMenuItem
               key={l.code}
-              onClick={() => setLanguage(l)}
+              onSelect={(e) => {
+                e.preventDefault();
+                setLanguage(l);
+                setIsOpen(false);
+              }}
               className="flex items-center justify-between cursor-pointer"
             >
               <span>

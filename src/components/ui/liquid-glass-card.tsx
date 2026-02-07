@@ -45,10 +45,10 @@ const LiquidGlassCard = React.forwardRef<HTMLDivElement, LiquidGlassCardProps>(
         }}
         className={cn(
           "relative overflow-hidden rounded-xl transition-all duration-300 ease-out",
-          "bg-card/60 backdrop-blur-xl",
-          "border border-primary/20",
-          "shadow-[0_8px_32px_hsl(183_63%_47%/0.15)]",
-          isHovering && "shadow-[0_16px_48px_hsl(183_63%_47%/0.25)]",
+          "bg-card/60 dark:bg-card/60 bg-card backdrop-blur-xl",
+          "border border-primary/20 dark:border-primary/20 border-border",
+          "shadow-[0_4px_24px_hsl(216_28%_12%/0.08)] dark:shadow-[0_8px_32px_hsl(183_63%_47%/0.15)]",
+          isHovering && "shadow-[0_12px_32px_hsl(216_28%_12%/0.12)] dark:shadow-[0_16px_48px_hsl(183_63%_47%/0.25)]",
           className
         )}
         style={{

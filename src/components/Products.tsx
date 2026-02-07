@@ -211,7 +211,7 @@ const Products = () => {
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background ${
                   activeCategory === category
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted/10 text-muted-foreground hover:bg-muted/20 hover:text-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
                 }`}
               >
                 {category}
