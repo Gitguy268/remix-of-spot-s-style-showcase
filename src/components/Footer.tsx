@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Mail, Shield, Instagram, Twitter } from "lucide-react";
+import { Mail, Shield } from "lucide-react";
 import { GlassDock, GlassFilter, DockIcon } from "@/components/GlassDock";
+import MinecraftModeToggle from "@/components/MinecraftModeToggle";
 
 const Footer = () => {
   const links = [
@@ -122,8 +123,13 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Minecraft Mode Toggle */}
+        <div className="border-t border-border/50 pt-4">
+          <MinecraftModeToggle />
+        </div>
+
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-border/50">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-border/50">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} Blacklabspotsshop. All rights reserved.
           </p>

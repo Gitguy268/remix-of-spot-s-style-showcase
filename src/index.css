@@ -234,3 +234,284 @@
     }
   }
 }
+
+/* ============================================
+   Yeezus CD Pull-to-Refresh Loader
+   ============================================ */
+
+.pull-to-refresh__overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #888;
+  overflow: hidden;
+  width: 100%;
+  z-index: 9999;
+}
+
+.yeezus-loader {
+  --yl-size: 48px;
+  --yl-bg: #000000;
+  --yl-tape-red: #ff0000;
+  --yl-cd-base: #111111;
+  --yl-border-clr: #2a2a2a;
+  --yl-text-clr: #555555;
+  --yl-hinge-clr: rgba(255, 255, 255, 0.07);
+}
+
+.yeezus-loader .yeezus-loader__box {
+  position: relative;
+  width: var(--yl-size);
+  height: var(--yl-size);
+  border: 1px solid var(--yl-border-clr);
+  border-radius: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  transform: translateZ(0);
+}
+
+.yeezus-loader .yeezus-loader__box::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--yl-hinge-clr);
+  z-index: 2;
+}
+
+.yeezus-loader .yeezus-loader__disc {
+  width: 82%;
+  height: 82%;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--yl-bg) 14%,
+    #333 15%,
+    #333 16%,
+    var(--yl-cd-base) 17%,
+    var(--yl-cd-base) 32%,
+    #222 33%,
+    var(--yl-cd-base) 34%
+  );
+  position: relative;
+  border: 0.5px solid #1a1a1a;
+  will-change: transform;
+  animation: yeezus-spin 1s linear infinite;
+}
+
+.yeezus-loader .yeezus-loader__disc::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 15%,
+    transparent 30%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.08) 65%,
+    transparent 80%
+  );
+  pointer-events: none;
+}
+
+.yeezus-loader .yeezus-loader__tape {
+  position: absolute;
+  right: -1px;
+  width: 32%;
+  height: 32%;
+  background: var(--yl-tape-red);
+  z-index: 10;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.yeezus-loader .yeezus-loader__branding {
+  position: absolute;
+  bottom: 3.5px;
+  left: calc(50% + 2.5px);
+  transform: translateX(-50%);
+  color: var(--yl-text-clr);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 4.5px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 11;
+  pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes yeezus-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Minecraft Mode Toggle Icon
+   ============================================ */
+
+.minecraft-toggle__icon {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #5a3a1a;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.minecraft-toggle__grass-top {
+  height: 40%;
+  background: #5ea832;
+}
+
+.minecraft-toggle__dirt {
+  height: 60%;
+  background: #8b5e3c;
+}
+
+/* ============================================
+   Minecraft Mode — Global Overrides
+   ============================================ */
+
+.minecraft-mode {
+  cursor: crosshair;
+}
+
+.minecraft-mode,
+.minecraft-mode body {
+  font-family: "Press Start 2P", monospace !important;
+}
+
+.minecraft-mode * {
+  border-radius: 0 !important;
+}
+
+.minecraft-mode img,
+.minecraft-mode video {
+  image-rendering: pixelated;
+}
+
+.minecraft-mode h1,
+.minecraft-mode h2,
+.minecraft-mode h3,
+.minecraft-mode h4,
+.minecraft-mode h5,
+.minecraft-mode h6 {
+  font-family: "Press Start 2P", monospace !important;
+  letter-spacing: 0 !important;
+}
+
+.minecraft-mode p,
+.minecraft-mode span,
+.minecraft-mode a,
+.minecraft-mode li,
+.minecraft-mode label,
+.minecraft-mode button,
+.minecraft-mode input,
+.minecraft-mode textarea,
+.minecraft-mode select {
+  font-family: "Press Start 2P", monospace !important;
+}
+
+/* Minecraft color palette overrides */
+.minecraft-mode {
+  --background: 30 30% 12%;
+  --foreground: 80 40% 85%;
+
+  --card: 30 25% 15%;
+  --card-foreground: 80 40% 85%;
+
+  --popover: 30 25% 15%;
+  --popover-foreground: 80 40% 85%;
+
+  --primary: 100 55% 40%;
+  --primary-foreground: 30 30% 10%;
+
+  --secondary: 30 40% 25%;
+  --secondary-foreground: 80 40% 85%;
+
+  --muted: 30 20% 20%;
+  --muted-foreground: 80 20% 60%;
+
+  --accent: 100 45% 35%;
+  --accent-foreground: 30 30% 10%;
+
+  --border: 30 30% 28%;
+  --input: 30 25% 20%;
+  --ring: 100 55% 40%;
+
+  --destructive: 0 70% 45%;
+  --destructive-foreground: 80 40% 85%;
+}
+
+/* Blocky card & button styles */
+.minecraft-mode .card-hover,
+.minecraft-mode [class*="card"],
+.minecraft-mode [class*="Card"] {
+  border: 2px solid hsl(var(--border)) !important;
+  box-shadow: 4px 4px 0 hsl(var(--border)) !important;
+}
+
+.minecraft-mode button,
+.minecraft-mode [role="button"] {
+  border: 2px solid hsl(var(--border)) !important;
+  box-shadow: 3px 3px 0 hsl(var(--border)) !important;
+  font-size: 0.65rem !important;
+  line-height: 1.4 !important;
+}
+
+.minecraft-mode button:active,
+.minecraft-mode [role="button"]:active {
+  box-shadow: 1px 1px 0 hsl(var(--border)) !important;
+  transform: translate(2px, 2px) !important;
+}
+
+/* Remove the dot background pattern */
+.minecraft-mode body {
+  background-image: none !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+/* Reduce font sizes so pixel font fits */
+.minecraft-mode {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.minecraft-mode h1 { font-size: 1.4rem !important; }
+.minecraft-mode h2 { font-size: 1.1rem !important; }
+.minecraft-mode h3 { font-size: 0.9rem !important; }
+.minecraft-mode p, .minecraft-mode span, .minecraft-mode a, .minecraft-mode li {
+  font-size: 0.7rem !important;
+  line-height: 1.8 !important;
+}
+
+/* Liquid glass overrides — make them solid and blocky */
+.minecraft-mode .liquid-glass-card,
+.minecraft-mode .liquid-glass-button {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: hsl(var(--card)) !important;
+  border: 2px solid hsl(var(--border)) !important;
+  box-shadow: 4px 4px 0 hsl(var(--border)) !important;
+}
+
+/* Text gradient override */
+.minecraft-mode .text-gradient {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary)) !important;
+}
