@@ -34,9 +34,9 @@ const AnimatedSection = ({
 
   const combinedRef = useCallback(
     (el: HTMLDivElement | null) => {
-      (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      ref.current = el;
       if (parallax) {
-        (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        parallaxRef.current = el;
       }
     },
     [parallax, ref, parallaxRef]
