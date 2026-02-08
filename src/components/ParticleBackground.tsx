@@ -255,7 +255,10 @@ const ParticleBackground = () => {
         o.draw(ctx, state.width, state.height, state.time, state.blend);
       });
       
-      state.particles.sort((a, b) => b.z - a.z);
+      // Sort particles by depth only every 10 frames to reduce overhead
+      if (state.time % 10 === 0) {
+        state.particles.sort((a, b) => b.z - a.z);
+      }
       state.particles.forEach(p => {
         p.update(state.time, state.mouseX, state.mouseY);
         p.draw(ctx, state.width, state.height, state.blend);

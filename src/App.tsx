@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,14 +10,15 @@ import { WishlistProvider } from "./contexts/WishlistContext";
 import { MinecraftModeProvider } from "./contexts/MinecraftModeContext";
 import PageTransition from "./components/PageTransition";
 import PullToRefresh from "./components/PullToRefresh";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Contact from "./pages/Contact";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
 import CookieConsent from "./components/CookieConsent";
+
+const Index = lazy(() => import("./pages/Index"));
+const About = lazy(() => import("./pages/About"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Auth = lazy(() => import("./pages/Auth"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -32,16 +34,18 @@ const App = () => (
               <BrowserRouter>
                 <PullToRefresh>
                   <PageTransition>
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/privacy" element={<Privacy />} />
-                      <Route path="/terms" element={<Terms />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/auth" element={<Auth />} />
-                      {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
+                    <Suspense fallback={<div className="min-h-screen" />}>
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/auth" element={<Auth />} />
+                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </Suspense>
                   </PageTransition>
                   <CookieConsent />
                 </PullToRefresh>

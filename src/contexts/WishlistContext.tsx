@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -48,61 +48,63 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(storageKey, JSON.stringify(items));
   }, [items, user]);
 
-  const addItem = (item: Omit<WishlistItem, "addedAt">) => {
-    if (isInWishlist(item.name)) return;
-    
-    const newItem: WishlistItem = {
-      ...item,
-      addedAt: new Date().toISOString(),
-    };
-    
-    setItems((prev) => [...prev, newItem]);
+  const addItem = useCallback((item: Omit<WishlistItem, "addedAt">) => {
+    setItems((prev) => {
+      if (prev.some((i) => i.name === item.name)) return prev;
+      
+      const newItem: WishlistItem = {
+        ...item,
+        addedAt: new Date().toISOString(),
+      };
+      
+      return [...prev, newItem];
+    });
     toast({
       title: "Added to Wishlist",
       description: `${item.name} has been saved to your wishlist.`,
     });
-  };
+  }, [toast]);
 
-  const removeItem = (name: string) => {
+  const removeItem = useCallback((name: string) => {
     setItems((prev) => prev.filter((item) => item.name !== name));
     toast({
       title: "Removed from Wishlist",
       description: "Item has been removed from your wishlist.",
     });
-  };
+  }, [toast]);
 
-  const isInWishlist = (name: string) => {
+  const isInWishlist = useCallback((name: string) => {
     return items.some((item) => item.name === name);
-  };
+  }, [items]);
 
-  const toggleItem = (item: Omit<WishlistItem, "addedAt">) => {
-    if (isInWishlist(item.name)) {
+  const toggleItem = useCallback((item: Omit<WishlistItem, "addedAt">) => {
+    if (items.some((i) => i.name === item.name)) {
       removeItem(item.name);
     } else {
       addItem(item);
     }
-  };
+  }, [items, addItem, removeItem]);
 
-  const clearWishlist = () => {
+  const clearWishlist = useCallback(() => {
     setItems([]);
     toast({
       title: "Wishlist Cleared",
       description: "All items have been removed from your wishlist.",
     });
-  };
+  }, [toast]);
+
+  const value = useMemo(() => ({
+    items,
+    addItem,
+    removeItem,
+    isInWishlist,
+    toggleItem,
+    clearWishlist,
+    itemCount: items.length,
+  }), [items, addItem, removeItem, isInWishlist, toggleItem, clearWishlist]);
 
   return (
-    <WishlistContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        isInWishlist,
-        toggleItem,
-        clearWishlist,
-        itemCount: items.length,
-      }}
-    >
+    <WishlistContext.Provider value={value}>
       {children}
     </WishlistContext.Provider>
   );
