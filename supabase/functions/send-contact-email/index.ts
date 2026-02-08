@@ -1,19 +1,9 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
-// Allowed origins - restrict CORS to known domains
-const allowedOrigins = [
-  "https://id-preview--fb789982-758f-405c-958b-0fc44c02af3b.lovable.app",
-  "http://localhost:8080",
-  "http://localhost:5173",
-];
-
-const getCorsHeaders = (origin: string | null) => {
-  const allowedOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-  };
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // HTML escape function to prevent injection attacks
@@ -30,19 +20,20 @@ const escapeHtml = (str: string): string => {
 
 // Simple in-memory rate limiting (resets on function cold start)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 5; // Max requests per window
+const IP_RATE_LIMIT = 5; // Max requests per IP per window
+const EMAIL_RATE_LIMIT = 3; // Max requests per email per window
 const RATE_WINDOW_MS = 60 * 60 * 1000; // 1 hour window
 
-const isRateLimited = (ip: string): boolean => {
+const isRateLimited = (key: string, limit: number): boolean => {
   const now = Date.now();
-  const entry = rateLimitMap.get(ip);
+  const entry = rateLimitMap.get(key);
   
   if (!entry || now > entry.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW_MS });
+    rateLimitMap.set(key, { count: 1, resetTime: now + RATE_WINDOW_MS });
     return false;
   }
   
-  if (entry.count >= RATE_LIMIT) {
+  if (entry.count >= limit) {
     return true;
   }
   
@@ -87,8 +78,6 @@ const verifyTurnstileToken = async (token: string, ip: string): Promise<boolean>
 };
 
 const handler = async (req: Request): Promise<Response> => {
-  const origin = req.headers.get("origin");
-  const corsHeaders = getCorsHeaders(origin);
 
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -101,8 +90,8 @@ const handler = async (req: Request): Promise<Response> => {
                      req.headers.get("cf-connecting-ip") || 
                      "unknown";
     
-    // Check rate limit
-    if (isRateLimited(clientIp)) {
+    // Check IP rate limit
+    if (isRateLimited(`ip:${clientIp}`, IP_RATE_LIMIT)) {
       console.warn(`Rate limit exceeded for IP: ${clientIp}`);
       return new Response(
         JSON.stringify({ success: false, error: "Too many requests. Please try again later." }),
@@ -177,6 +166,19 @@ const handler = async (req: Request): Promise<Response> => {
         JSON.stringify({ success: false, error: "Please provide a valid email address." }),
         {
           status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Check email-based rate limit (prevents abuse from same sender)
+    const normalizedEmail = email.toLowerCase().trim();
+    if (isRateLimited(`email:${normalizedEmail}`, EMAIL_RATE_LIMIT)) {
+      console.warn(`Email rate limit exceeded for: ${normalizedEmail}`);
+      return new Response(
+        JSON.stringify({ success: false, error: "Too many requests from this email. Please try again later." }),
+        {
+          status: 429,
           headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
