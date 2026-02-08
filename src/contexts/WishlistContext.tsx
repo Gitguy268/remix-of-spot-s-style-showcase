@@ -78,12 +78,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const toggleItem = useCallback((item: Omit<WishlistItem, "addedAt">) => {
-    if (items.some((i) => i.name === item.name)) {
-      removeItem(item.name);
-    } else {
-      addItem(item);
-    }
-  }, [items, addItem, removeItem]);
+    setItems((prev) => {
+      const exists = prev.some((i) => i.name === item.name);
+      if (exists) {
+        return prev.filter((i) => i.name !== item.name);
+      }
+      return [...prev, { ...item, addedAt: new Date().toISOString() }];
+    });
+  }, []);
 
   const clearWishlist = useCallback(() => {
     setItems([]);
