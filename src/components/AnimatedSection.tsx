@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import { useScrollAnimation, useParallax } from "@/hooks/useScrollAnimation";
 import { cn } from "@/lib/utils";
 
@@ -32,12 +32,19 @@ const AnimatedSection = ({
 
   const visibleClasses = "translate-y-0 translate-x-0 scale-100 opacity-100";
 
+  const combinedRef = useCallback(
+    (el: HTMLDivElement | null) => {
+      (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      if (parallax) {
+        (parallaxRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+      }
+    },
+    [parallax, ref, parallaxRef]
+  );
+
   return (
     <div
-      ref={(el) => {
-        (ref as any).current = el;
-        if (parallax) (parallaxRef as any).current = el;
-      }}
+      ref={combinedRef}
       className={cn(
         "transition-all duration-700 ease-out",
         isVisible ? visibleClasses : animationClasses[animation],
