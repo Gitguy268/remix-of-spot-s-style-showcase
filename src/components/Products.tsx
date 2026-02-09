@@ -28,6 +28,7 @@ interface Product {
   colors: string[];
   delivery: string;
   sizes: string;
+  shopUrl: string;
 }
 
 const Products = () => {
@@ -51,6 +52,7 @@ const Products = () => {
       colors: ["Black", "White", "Navy", "Red"],
       delivery: "Ships in 5-7 days",
       sizes: "XS – 3XL",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797138/spot-tee",
     },
     {
       name: "Minimal Spot Hoodie",
@@ -63,6 +65,7 @@ const Products = () => {
       colors: ["Black", "Charcoal", "Forest Green", "Royal Blue"],
       delivery: "Ships in 5-7 days",
       sizes: "S – 2XL",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797139/minimal-spot-hoodie",
     },
     {
       name: "Spot Dad Hat",
@@ -74,6 +77,7 @@ const Products = () => {
       colors: ["Black", "Khaki", "Navy", "Charcoal"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797140/spot-dad-hat",
     },
     {
       name: "Spot Heart Necklace",
@@ -86,6 +90,7 @@ const Products = () => {
       colors: ["Gold", "Silver", "Rose Gold"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797141/spot-heart-necklace",
     },
     {
       name: "Kids Spot Tee",
@@ -97,6 +102,7 @@ const Products = () => {
       colors: ["White", "Light Blue", "Pink"],
       delivery: "Ships in 5-7 days",
       sizes: "2T – 12Y",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797142/kids-spot-tee",
     },
     {
       name: "Classic Spot Hoodie",
@@ -108,6 +114,7 @@ const Products = () => {
       colors: ["Black", "Grey Heather", "Royal Blue"],
       delivery: "Ships in 5-7 days",
       sizes: "S – 3XL",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797143/classic-spot-hoodie",
     },
     {
       name: "Spot Snapback",
@@ -119,6 +126,7 @@ const Products = () => {
       colors: ["Black", "Navy", "Charcoal"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/4797144/spot-snapback",
     },
   ];
 

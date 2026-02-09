@@ -515,3 +515,119 @@
   -webkit-text-fill-color: hsl(var(--primary)) !important;
   color: hsl(var(--primary)) !important;
 }
+
+/* Dirt block background texture */
+.minecraft-mode body {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 16px,
+      hsl(30 40% 18%) 16px,
+      hsl(30 40% 18%) 17px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 16px,
+      hsl(30 40% 18%) 16px,
+      hsl(30 40% 18%) 17px
+    ) !important;
+  background-size: 17px 17px !important;
+  background-color: hsl(30 30% 14%) !important;
+}
+
+/* Minecraft-style button hover — lighten instead of scale */
+.minecraft-mode button:hover,
+.minecraft-mode [role="button"]:hover {
+  filter: brightness(1.3) !important;
+  transform: none !important;
+}
+
+/* Thicker stepped borders on cards */
+.minecraft-mode .card-hover,
+.minecraft-mode [class*="card"],
+.minecraft-mode [class*="Card"] {
+  border: 3px solid hsl(var(--border)) !important;
+  box-shadow: 5px 5px 0 hsl(30 25% 10%) !important;
+}
+
+/* Hotbar-style payment badges */
+.minecraft-mode footer span[class*="bg-card"] {
+  background: hsl(0 0% 15%) !important;
+  border: 2px solid hsl(0 0% 30%) !important;
+  box-shadow:
+    inset 1px 1px 0 hsl(0 0% 40%),
+    inset -1px -1px 0 hsl(0 0% 10%),
+    3px 3px 0 hsl(0 0% 8%) !important;
+  padding: 6px 10px !important;
+  color: hsl(0 0% 80%) !important;
+  font-size: 0.6rem !important;
+}
+
+/* Minecraft-style tooltips */
+.minecraft-mode [data-radix-popper-content-wrapper] [data-state] {
+  background: hsl(260 20% 15%) !important;
+  border: 2px solid hsl(260 30% 40%) !important;
+  color: hsl(0 0% 90%) !important;
+  font-family: "Press Start 2P", monospace !important;
+  font-size: 0.55rem !important;
+  box-shadow: 3px 3px 0 hsl(260 20% 8%) !important;
+}
+
+/* ============================================
+   Axolotl Pet Animations
+   ============================================ */
+
+.axolotl-joy-bounce {
+  animation: axolotlBounce 0.6s ease-out;
+}
+
+@keyframes axolotlBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-15px) scale(1.05); }
+  60% { transform: translateY(5px) scale(0.98); }
+  80% { transform: translateY(-5px) scale(1.02); }
+}
+
+.axolotl-heart {
+  position: absolute;
+  font-size: 24px;
+  color: #ff5c7c;
+  pointer-events: none;
+  opacity: 0;
+  animation: axolotlHeartFloat 1.5s ease-out forwards;
+  z-index: 10;
+}
+
+@keyframes axolotlHeartFloat {
+  0% {
+    transform: translate(-50%, 0) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    transform: translate(-50%, -20px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -100px) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   Yeezy Grill Easter Egg Animations
+   ============================================ */
+
+.yeezy-wobble {
+  animation: yeezyWobble 0.6s ease-in-out;
+}
+
+@keyframes yeezyWobble {
+  0%, 100% { transform: rotate(8deg); }
+  15% { transform: rotate(-12deg) scale(1.05); }
+  30% { transform: rotate(10deg) scale(1.02); }
+  45% { transform: rotate(-6deg); }
+  60% { transform: rotate(6deg); }
+  75% { transform: rotate(-3deg); }
+}
