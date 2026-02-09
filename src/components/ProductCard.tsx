@@ -18,13 +18,14 @@ interface ProductCardProps {
   delivery?: string;
   sizes?: string;
   category?: string;
+  shopUrl?: string;
   onQuickView?: () => void;
   isCompareSelected?: boolean;
   onToggleCompare?: () => void;
   compareDisabled?: boolean;
 }
 
-const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+const DEFAULT_SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const ProductCard = ({ 
   name, 
@@ -37,6 +38,7 @@ const ProductCard = ({
   delivery, 
   sizes, 
   category = "Products",
+  shopUrl,
   onQuickView,
   isCompareSelected,
   onToggleCompare,
@@ -47,8 +49,8 @@ const ProductCard = ({
   return (
     <LiquidGlassCard className="group relative">
       <a 
-        href={SHOP_URL} 
-        target="_blank" 
+        href={shopUrl || DEFAULT_SHOP_URL} 
+        target="_blank"
         rel="noopener noreferrer"
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >

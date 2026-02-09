@@ -20,10 +20,11 @@ interface ProductQuickViewProps {
     colors?: string[];
     delivery?: string;
     sizes?: string;
+    shopUrl?: string;
   };
 }
 
-const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+const DEFAULT_SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -182,7 +183,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
 
             {/* CTA */}
             <div className="mt-auto pt-4">
-              <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="block">
+              <a href={product.shopUrl || DEFAULT_SHOP_URL} target="_blank" rel="noopener noreferrer" className="block">
                 <LiquidGlassButton size="lg" className="w-full">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Shop Now
