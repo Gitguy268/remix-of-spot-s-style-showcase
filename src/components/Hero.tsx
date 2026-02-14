@@ -5,6 +5,15 @@ import { ArrowRight, ShoppingBag, Star, Truck, Shield } from "lucide-react";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
+interface UnicornStudio {
+  isInitialized: boolean;
+  init?: () => void;
+}
+
+interface WindowWithUnicorn extends Window {
+  UnicornStudio?: UnicornStudio;
+}
+
 const Hero = () => {
   const unicornRef = useRef<HTMLDivElement>(null);
 
@@ -19,12 +28,7 @@ const Hero = () => {
     const win = window as WindowWithUnicornStudio;
     
     // Load Unicorn Studio script
-    if (!win.UnicornStudio) {
-      win.UnicornStudio = { isInitialized: false };
-      const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
-      script.onload = () => {
-        const us = win.UnicornStudio;
+
         if (us && !us.isInitialized) {
           us.init?.();
           us.isInitialized = true;

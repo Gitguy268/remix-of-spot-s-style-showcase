@@ -26,6 +26,7 @@ const WISHLIST_KEY = "spot-wishlist";
 
 export function WishlistProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<WishlistItem[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -45,12 +46,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         setItems([]);
       }
     }
-  }, [storageKey]);
 
-  // Save to localStorage when items change
+  // Save to localStorage when items change (only after initial load)
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(items));
-  }, [items, storageKey]);
+
 
   const isInWishlist = useCallback(
     (name: string) => items.some((item) => item.name === name),

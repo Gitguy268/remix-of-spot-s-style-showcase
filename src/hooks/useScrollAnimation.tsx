@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, RefObject } from "react";
+import { useEffect, useRef, useState, MutableRefObject } from "react";
 
 interface ScrollAnimationOptions {
   threshold?: number;
@@ -7,7 +7,7 @@ interface ScrollAnimationOptions {
 }
 
 interface ScrollAnimationReturn {
-  ref: RefObject<HTMLDivElement>;
+  ref: MutableRefObject<HTMLDivElement | null>;
   isVisible: boolean;
   progress: number;
 }
@@ -53,7 +53,7 @@ export const useScrollAnimation = (
 
 // Parallax scroll hook
 export const useParallax = (speed: number = 0.5) => {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
