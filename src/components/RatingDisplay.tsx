@@ -58,7 +58,7 @@ export const RatingDisplay = ({
           "text-muted-foreground"
         )}>
           ({rating})
-          {reviewCount && size !== "sm" && ` • ${reviewCount}+ reviews`}
+          {reviewCount != null && size !== "sm" && ` • ${reviewCount}+ reviews`}
         </span>
       )}
     </div>

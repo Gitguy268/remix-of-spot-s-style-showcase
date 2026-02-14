@@ -12,7 +12,7 @@ export const ANIMATION_DURATIONS = {
 
 export const ANIMATION_EASING = {
   out: "ease-out",
-  linear: "ease-linear",
+  linear: "linear",
   in: "ease-in",
   inOut: "ease-in-out",
 } as const;
