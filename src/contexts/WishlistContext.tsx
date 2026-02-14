@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from "react";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -50,52 +50,6 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   // Save to localStorage when items change (only after initial load)
   useEffect(() => {
 
-
-  const isInWishlist = useCallback(
-    (name: string) => items.some((item) => item.name === name),
-    [items]
-  );
-
-  const addItem = useCallback(
-    (item: Omit<WishlistItem, "addedAt">) => {
-      if (isInWishlist(item.name)) return;
-      
-      const newItem: WishlistItem = {
-        ...item,
-        addedAt: new Date().toISOString(),
-      };
-      
-      setItems((prev) => [...prev, newItem]);
-      toast({
-        title: "Added to Wishlist",
-        description: `${item.name} has been saved to your wishlist.`,
-      });
-    },
-    [isInWishlist, toast]
-  );
-
-  const removeItem = useCallback(
-    (name: string) => {
-      setItems((prev) => prev.filter((item) => item.name !== name));
-      toast({
-        title: "Removed from Wishlist",
-        description: "Item has been removed from your wishlist.",
-      });
-    },
-    [toast]
-  );
-
-  const toggleItem = useCallback(
-    (item: Omit<WishlistItem, "addedAt">) => {
-      if (isInWishlist(item.name)) {
-        removeItem(item.name);
-      } else {
-        addItem(item);
-      }
-    },
-    [isInWishlist, addItem, removeItem]
-  );
-
   const clearWishlist = useCallback(() => {
     setItems([]);
     toast({
@@ -104,18 +58,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     });
   }, [toast]);
 
-  const value = useMemo(
-    () => ({
-      items,
-      addItem,
-      removeItem,
-      isInWishlist,
-      toggleItem,
-      clearWishlist,
-      itemCount: items.length,
-    }),
-    [items, addItem, removeItem, isInWishlist, toggleItem, clearWishlist]
-  );
+
 
   return (
     <WishlistContext.Provider value={value}>

@@ -38,8 +38,13 @@ export const useBirthdayMusic = () => {
   const audioContextRef = useRef<AudioContext | null>(null);
   const scheduledNotesRef = useRef<OscillatorNode[]>([]);
   const isPlayingRef = useRef(false);
+  const loopTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const stopAllNotes = useCallback(() => {
+    if (loopTimeoutRef.current !== null) {
+      clearTimeout(loopTimeoutRef.current);
+      loopTimeoutRef.current = null;
+    }
     scheduledNotesRef.current.forEach(osc => {
       try {
         osc.stop();
@@ -93,7 +98,7 @@ export const useBirthdayMusic = () => {
       
       // Loop the melody
       const melodyDuration = BIRTHDAY_MELODY.reduce((sum, n) => sum + n.dur, 0);
-      setTimeout(() => {
+      loopTimeoutRef.current = setTimeout(() => {
         if (isPlayingRef.current) {
           time = ctx.currentTime;
           playLoop();

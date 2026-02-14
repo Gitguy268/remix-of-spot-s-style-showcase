@@ -1,9 +1,9 @@
+
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollVisibility } from "@/hooks/useScrollUtils";
 
 const BackToTop = () => {
-  const isVisible = useScrollVisibility(500);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

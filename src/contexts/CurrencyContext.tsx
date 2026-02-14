@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from "react";
+
 import { toast } from "sonner";
 
 export interface Currency {
@@ -70,15 +70,15 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const setCurrency = (newCurrency: Currency) => {
+  const setCurrency = useCallback((newCurrency: Currency) => {
     setCurrencyState(newCurrency);
     localStorage.setItem("preferred-currency", newCurrency.code);
     toast.success(`Currency changed to ${newCurrency.name} (${newCurrency.symbol})`, {
       duration: 2000,
     });
-  };
+  }, []);
 
-  const setLanguage = (newLanguage: Language) => {
+  const setLanguage = useCallback((newLanguage: Language) => {
     setLanguageState(newLanguage);
     localStorage.setItem("preferred-language", newLanguage.code);
     document.documentElement.lang = newLanguage.code;
@@ -86,7 +86,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
       description: "Content language preference saved.",
       duration: 2000,
     });
-  };
+  }, []);
 
   const convertPrice = useCallback((usdPrice: number): string => {
     const converted = usdPrice * currency.rate;
@@ -119,17 +119,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return usdPriceRange;
   }, [convertPrice]);
 
-  const value = useMemo(
-    () => ({
-      currency,
-      setCurrency,
-      language,
-      setLanguage,
-      convertPrice,
-      formatPrice,
-    }),
-    [currency, language, convertPrice, formatPrice]
-  );
 
   return (
     <CurrencyContext.Provider value={value}>

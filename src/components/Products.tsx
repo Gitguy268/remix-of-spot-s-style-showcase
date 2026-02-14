@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import ProductCard from "@/components/ProductCard";
 import ProductSkeleton from "@/components/ProductSkeleton";
@@ -130,18 +130,18 @@ const Products = () => {
     },
   ];
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = useCallback((category: string) => {
     setIsLoading(true);
     setActiveCategory(category);
     setTimeout(() => setIsLoading(false), 300);
-  };
+  }, []);
 
-  const handleQuickView = (product: Product) => {
+  const handleQuickView = useCallback((product: Product) => {
     setSelectedProduct(product);
     setQuickViewOpen(true);
-  };
+  }, []);
 
-  const handleToggleCompare = (productName: string) => {
+  const handleToggleCompare = useCallback((productName: string) => {
     setCompareProducts((prev) => {
       if (prev.includes(productName)) {
         return prev.filter((name) => name !== productName);
@@ -149,12 +149,14 @@ const Products = () => {
       if (prev.length >= 3) return prev;
       return [...prev, productName];
     });
-  };
+  }, []);
 
-  const filteredProducts =
+  const filteredProducts = useMemo(() =>
     activeCategory === "All"
       ? products
-      : products.filter((p) => p.category === activeCategory);
+      : products.filter((p) => p.category === activeCategory),
+    [activeCategory, products]
+  );
 
   const renderProductCard = (product: Product, index: number) => (
     <ProductCard

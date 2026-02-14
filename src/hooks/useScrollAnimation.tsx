@@ -55,22 +55,29 @@ export const useScrollAnimation = (
 export const useParallax = (speed: number = 0.5) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [offset, setOffset] = useState(0);
+  const rafId = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (!ref.current) return;
-      
-      const rect = ref.current.getBoundingClientRect();
-      const scrolled = window.innerHeight - rect.top;
-      const parallaxOffset = scrolled * speed * 0.1;
-      
-      setOffset(parallaxOffset);
+      cancelAnimationFrame(rafId.current);
+      rafId.current = requestAnimationFrame(() => {
+        if (!ref.current) return;
+        
+        const rect = ref.current.getBoundingClientRect();
+        const scrolled = window.innerHeight - rect.top;
+        const parallaxOffset = scrolled * speed * 0.1;
+        
+        setOffset(parallaxOffset);
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, [speed]);
 
   return { ref, offset };
