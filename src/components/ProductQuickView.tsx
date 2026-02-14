@@ -101,7 +101,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
                   name: product.name, 
                   price: product.price, 
                   image: product.image, 
-                  category: product.category || "Products" 
+                  category: product.category
                 }} 
               />
             </div>

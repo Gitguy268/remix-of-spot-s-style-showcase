@@ -57,7 +57,8 @@ export const RatingDisplay = ({
           spacingClasses[size],
           "text-muted-foreground"
         )}>
-          ({rating}){reviewCount && size !== "sm" ? ` • ${reviewCount}+ reviews` : ""}
+          ({rating})
+          {reviewCount && size !== "sm" && ` • ${reviewCount}+ reviews`}
         </span>
       )}
     </div>
