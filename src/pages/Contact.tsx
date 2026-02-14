@@ -1,48 +1,48 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
+import { Mail, MapPin, Clock, Send, CheckCircle, Loader2 } from "lucide-react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import YeezyGrillEasterEgg from "@/components/YeezyGrillEasterEgg";
 import { z } from "zod";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Please enter a valid email"),
   subject: z.string().min(1, "Subject is required").max(200),
-  message: z.string().min(10, "Message must be at least 10 characters").max(1000),
+  message: z.string().min(10, "Message must be at least 10 characters").max(1000)
 });
 
 const Contact = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
-    message: "",
+    message: ""
   });
+  const [honeypot, setHoneypot] = useState(""); // Spam protection
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "success">("idle");
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
     const result = contactSchema.safeParse(formData);
-    
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach(err => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as string] = err.message;
         }
@@ -51,13 +51,48 @@ const Contact = () => {
       return;
     }
 
-    setStatus("success");
-    setFormData({ name: "", email: "", subject: "", message: "" });
-  };
+    if (!turnstileToken) {
+      setErrors({ turnstile: "Please complete the verification" });
+      return;
+    }
 
+    setStatus("submitting");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          ...formData,
+          honeypot, // Include honeypot for spam check
+          turnstileToken // Include Turnstile token for verification
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        setStatus("success");
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        setTurnstileToken(null);
+        turnstileRef.current?.reset();
+        toast({
+          title: "Message sent!",
+          description: "We'll get back to you within 24-48 hours.",
+        });
+      } else {
+        throw new Error(data?.error || "Failed to send message");
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setStatus("error");
+      toast({
+        title: "Failed to send message",
+        description: "Please try again or email us directly.",
+        variant: "destructive",
+      });
+    }
+  };
   if (status === "success") {
-    return (
-      <>
+    return <>
         <Helmet>
           <title>Contact Us — Blacklabspotsshop</title>
           <meta name="description" content="Contact Blacklabspotsshop for questions about orders, products, or collaborations." />
@@ -74,19 +109,16 @@ const Contact = () => {
               <p className="text-lg text-muted-foreground mb-8">
                 Thank you for reaching out. We'll get back to you within 24-48 hours.
               </p>
-              <Button variant="outline" onClick={() => setStatus("idle")}>
+              <Button variant="glass" onClick={() => setStatus("idle")}>
                 Send Another Message
               </Button>
             </div>
           </main>
           <Footer />
         </div>
-      </>
-    );
+      </>;
   }
-
-  return (
-    <>
+  return <>
       <Helmet>
         <title>Contact Us — Blacklabspotsshop</title>
         <meta name="description" content="Contact Blacklabspotsshop for questions about orders, products, or collaborations. We typically respond within 24-48 hours." />
@@ -132,9 +164,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="font-medium text-foreground">Email</p>
-                        <a href="mailto:hello@blacklabspotsshop.com" className="text-muted-foreground hover:text-primary transition-colors">
-                          hello@blacklabspotsshop.com
-                        </a>
+                        <a href="mailto:hello@blacklabspotsshop.com" className="text-muted-foreground hover:text-primary transition-colors">hitlijsten_demping_7b@icloud.com</a>
                       </div>
                     </div>
 
@@ -181,13 +211,10 @@ const Contact = () => {
                   <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
                     Name
                   </label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={errors.name ? "border-destructive" : ""}
-                    placeholder="Your name"
-                  />
+                  <Input id="name" value={formData.name} onChange={e => setFormData({
+                  ...formData,
+                  name: e.target.value
+                })} className={errors.name ? "border-destructive" : ""} placeholder="Your name" />
                   {errors.name && <p className="text-sm text-destructive mt-1">{errors.name}</p>}
                 </div>
 
@@ -195,14 +222,10 @@ const Contact = () => {
                   <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
                     Email
                   </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={errors.email ? "border-destructive" : ""}
-                    placeholder="you@example.com"
-                  />
+                  <Input id="email" type="email" value={formData.email} onChange={e => setFormData({
+                  ...formData,
+                  email: e.target.value
+                })} className={errors.email ? "border-destructive" : ""} placeholder="you@example.com" />
                   {errors.email && <p className="text-sm text-destructive mt-1">{errors.email}</p>}
                 </div>
 
@@ -210,13 +233,10 @@ const Contact = () => {
                   <label htmlFor="subject" className="block text-sm font-medium text-foreground mb-2">
                     Subject
                   </label>
-                  <Input
-                    id="subject"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className={errors.subject ? "border-destructive" : ""}
-                    placeholder="Order inquiry, collaboration, etc."
-                  />
+                  <Input id="subject" value={formData.subject} onChange={e => setFormData({
+                  ...formData,
+                  subject: e.target.value
+                })} className={errors.subject ? "border-destructive" : ""} placeholder="Order inquiry, collaboration, etc." />
                   {errors.subject && <p className="text-sm text-destructive mt-1">{errors.subject}</p>}
                 </div>
 
@@ -224,28 +244,67 @@ const Contact = () => {
                   <label htmlFor="message" className="block text-sm font-medium text-foreground mb-2">
                     Message
                   </label>
-                  <Textarea
-                    id="message"
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className={`min-h-[150px] ${errors.message ? "border-destructive" : ""}`}
-                    placeholder="How can we help?"
-                  />
+                  <Textarea id="message" value={formData.message} onChange={e => setFormData({
+                  ...formData,
+                  message: e.target.value
+                })} className={`min-h-[150px] ${errors.message ? "border-destructive" : ""}`} placeholder="How can we help?" />
                   {errors.message && <p className="text-sm text-destructive mt-1">{errors.message}</p>}
                 </div>
 
-                <Button type="submit" variant="glass" size="xl" className="w-full">
-                  <Send className="w-4 h-4" />
-                  Send Message
+                {/* Honeypot field - hidden from users, catches bots */}
+                <div className="absolute -left-[9999px]" aria-hidden="true">
+                  <label htmlFor="website">Website</label>
+                  <Input 
+                    type="text" 
+                    id="website" 
+                    name="website" 
+                    value={honeypot}
+                    onChange={e => setHoneypot(e.target.value)}
+                    tabIndex={-1}
+                    autoComplete="off"
+                  />
+                </div>
+
+                {/* Cloudflare Turnstile CAPTCHA */}
+                <div className="flex flex-col items-start">
+                  <Turnstile
+                    ref={turnstileRef}
+                    siteKey="0x4AAAAAACWXvG9bwj5-U_wm"
+                    onSuccess={setTurnstileToken}
+                    onError={() => setTurnstileToken(null)}
+                    onExpire={() => setTurnstileToken(null)}
+                  />
+                  {errors.turnstile && (
+                    <p className="text-sm text-destructive mt-1">{errors.turnstile}</p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit" 
+                  variant="glass" 
+                  size="xl" 
+                  className="w-full"
+                  disabled={status === "submitting"}
+                >
+                  {status === "submitting" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
               </form>
             </div>
           </div>
         </main>
         <Footer />
+        <YeezyGrillEasterEgg />
       </div>
-    </>
-  );
+    </>;
 };
-
 export default Contact;

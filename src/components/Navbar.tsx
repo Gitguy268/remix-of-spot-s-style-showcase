@@ -3,6 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import CurrencySelector from "@/components/CurrencySelector";
+import WishlistDrawer from "@/components/WishlistDrawer";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
@@ -78,18 +80,22 @@ const Navbar = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2">
+            <CurrencySelector />
+            <WishlistDrawer />
             <ThemeToggle />
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-              <Button variant="default" size="sm">
+              <Button variant="default" size="sm" className="gap-2">
                 <ShoppingBag className="w-4 h-4" />
-                Shop Now
+                <span>Shop Now</span>
               </Button>
             </a>
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
+            <CurrencySelector />
+            <WishlistDrawer />
             <ThemeToggle />
             <button
               className="p-2 text-foreground"
@@ -129,9 +135,9 @@ const Navbar = () => {
                 )
               ))}
               <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
-                <Button variant="default" className="mt-2 w-full">
+                <Button variant="default" className="mt-2 w-full gap-2">
                   <ShoppingBag className="w-4 h-4" />
-                  Shop Now
+                  <span>Shop Now</span>
                 </Button>
               </a>
             </div>

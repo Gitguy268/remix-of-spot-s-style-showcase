@@ -16,6 +16,8 @@ import FloatingShopButton from "@/components/FloatingShopButton";
 import SpotTeeGenerator from "@/components/SpotTeeGenerator";
 import SpotGameShowcase from "@/components/SpotGameShowcase";
 import SpotBook from "@/components/SpotBook";
+import BirthdayCelebration from "@/components/BirthdayCelebration";
+import { isBirthday } from "@/utils/birthdayUtils";
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -98,8 +100,11 @@ const structuredData = {
 };
 
 const Index = () => {
+  const showBirthdayCelebration = isBirthday();
+
   return (
     <>
+      {showBirthdayCelebration && <BirthdayCelebration />}
       <Helmet>
         <title>Blacklabspotsshop — Spot-inspired T-Shirts & Hoodies | Premium Dog Apparel</title>
         <meta

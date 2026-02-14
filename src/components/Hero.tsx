@@ -5,28 +5,30 @@ import { ArrowRight, ShoppingBag, Star, Truck, Shield } from "lucide-react";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
+interface UnicornStudio {
+  isInitialized: boolean;
+  init?: () => void;
+}
+
+interface WindowWithUnicorn extends Window {
+  UnicornStudio?: UnicornStudio;
+}
+
 const Hero = () => {
   const unicornRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    interface WindowWithUnicornStudio extends Window {
+      UnicornStudio?: {
+        isInitialized?: boolean;
+        init?: () => void;
+      };
+    }
+    
+    const win = window as WindowWithUnicornStudio;
+    
     // Load Unicorn Studio script
-    interface UnicornStudio {
-      isInitialized: boolean;
-      init?: () => void;
-    }
-    
-    interface WindowWithUnicorn extends Window {
-      UnicornStudio?: UnicornStudio;
-    }
-    
-    const win = window as WindowWithUnicorn;
-    
-    if (!win.UnicornStudio) {
-      win.UnicornStudio = { isInitialized: false };
-      const script = document.createElement("script");
-      script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
-      script.onload = () => {
-        const us = win.UnicornStudio;
+
         if (us && !us.isInitialized) {
           us.init?.();
           us.isInitialized = true;
@@ -52,7 +54,7 @@ const Hero = () => {
       </div>
 
       {/* Gradient overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30 dark:to-transparent z-10" aria-hidden="true" />
 
       {/* Content Overlay */}
       <div className="relative z-20 section-container text-center py-24">
@@ -99,15 +101,16 @@ const Hero = () => {
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <LiquidGlassButton size="xl">
                 <ShoppingBag className="w-5 h-5" aria-hidden="true" />
-                Shop Spot's Collection
+                <span>Shop Spot's Collection</span>
               </LiquidGlassButton>
             </a>
             <Button 
               variant="glass-outline" 
               size="xl"
+              className="gap-2"
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              See the Story
+              <span>See the Story</span>
               <ArrowRight className="w-5 h-5" aria-hidden="true" />
             </Button>
           </div>

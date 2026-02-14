@@ -1,4 +1,7 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Grid, X } from "lucide-react";
 import ParticleBackground from "@/components/ParticleBackground";
 import spotBook1 from "@/assets/spot-book-1.jpeg";
 import spotBook2 from "@/assets/spot-book-2.jpeg";
@@ -27,6 +30,8 @@ const SpotBook = () => {
   const [rotations, setRotations] = useState<number[]>(
     Array(bookImages.length + 2).fill(0)
   );
+  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+  const [showGallery, setShowGallery] = useState(false);
 
   useEffect(() => {
     const updateBook = (clientX: number) => {
@@ -77,6 +82,38 @@ const SpotBook = () => {
     };
   }, []);
 
+  // Keyboard navigation for fullscreen view
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (selectedPhoto === null) return;
+      if (e.key === "ArrowLeft" && selectedPhoto > 0) {
+        setSelectedPhoto(selectedPhoto - 1);
+      } else if (e.key === "ArrowRight" && selectedPhoto < bookImages.length - 1) {
+        setSelectedPhoto(selectedPhoto + 1);
+      } else if (e.key === "Escape") {
+        setSelectedPhoto(null);
+      }
+    },
+    [selectedPhoto]
+  );
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
+
+  const goToPrev = () => {
+    if (selectedPhoto !== null && selectedPhoto > 0) {
+      setSelectedPhoto(selectedPhoto - 1);
+    }
+  };
+
+  const goToNext = () => {
+    if (selectedPhoto !== null && selectedPhoto < bookImages.length - 1) {
+      setSelectedPhoto(selectedPhoto + 1);
+    }
+  };
+
   const totalPages = bookImages.length + 2;
 
   return (
@@ -88,7 +125,8 @@ const SpotBook = () => {
             Spot's Photo Book
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Move your mouse left and right to flip through Spot's adventures
+            Move your mouse left and right to flip through Spot's adventures.
+            Click any photo to view it full-screen.
           </p>
         </div>
 
@@ -107,7 +145,7 @@ const SpotBook = () => {
             >
               {/* Bottom cover */}
               <div
-                className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border-2 border-primary/60 bg-card"
+                className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border-2 border-primary/60 bg-card shadow-lg"
                 style={{
                   transformOrigin: "left center",
                   transform: `rotateY(${rotations[0]}deg) translateZ(0px)`,
@@ -119,24 +157,31 @@ const SpotBook = () => {
               {bookImages.map((image, index) => (
                 <div
                   key={index}
-                  className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border border-primary/40 overflow-hidden"
+                  className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border border-primary/40 overflow-hidden cursor-pointer group"
                   style={{
                     transformOrigin: "left center",
                     transform: `rotateY(${rotations[index + 1]}deg) translateZ(${index + 1}px)`,
                     backfaceVisibility: "visible",
                   }}
+                  onClick={() => setSelectedPhoto(index)}
                 >
                   <img
                     src={image}
                     alt={`Spot photo ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
+                  {/* Hover overlay */}
+                  <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-200 flex items-center justify-center">
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-background/80 text-foreground text-xs px-3 py-1.5 rounded-full font-medium">
+                      View Full
+                    </span>
+                  </div>
                 </div>
               ))}
 
               {/* Top cover */}
               <div
-                className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border-2 border-primary bg-card flex flex-col justify-center items-center text-center p-6"
+                className="absolute top-0 left-0 w-full h-full rounded-r-2xl rounded-l border-2 border-primary bg-card shadow-xl flex flex-col justify-center items-center text-center p-6"
                 style={{
                   transformOrigin: "left center",
                   transform: `rotateY(${rotations[totalPages - 1]}deg) translateZ(${totalPages - 1}px)`,
@@ -155,7 +200,121 @@ const SpotBook = () => {
             </div>
           </div>
         </div>
+
+        {/* View All Photos button */}
+        <div className="text-center mt-8">
+          <Button
+            variant="outline"
+            size="lg"
+            className="gap-2"
+            onClick={() => setShowGallery(true)}
+          >
+            <Grid className="w-4 h-4" />
+            View All Photos
+          </Button>
+        </div>
       </div>
+
+      {/* Full-Screen Photo Dialog */}
+      <Dialog
+        open={selectedPhoto !== null}
+        onOpenChange={(open) => !open && setSelectedPhoto(null)}
+      >
+        <DialogContent className="max-w-5xl w-[95vw] p-0 bg-background/95 backdrop-blur-xl border-border overflow-hidden">
+          <DialogTitle className="sr-only">
+            Spot Photo {selectedPhoto !== null ? selectedPhoto + 1 : ""} of {bookImages.length}
+          </DialogTitle>
+          {selectedPhoto !== null && (
+            <div className="relative flex items-center justify-center min-h-[50vh] max-h-[85vh]">
+              <img
+                src={bookImages[selectedPhoto]}
+                alt={`Spot photo ${selectedPhoto + 1}`}
+                className="w-full h-full max-h-[85vh] object-contain"
+              />
+
+              {/* Previous button */}
+              {selectedPhoto > 0 && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 hover:bg-background shadow-md"
+                  onClick={goToPrev}
+                  aria-label="Previous photo"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+              )}
+
+              {/* Next button */}
+              {selectedPhoto < bookImages.length - 1 && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-background/80 hover:bg-background shadow-md"
+                  onClick={goToNext}
+                  aria-label="Next photo"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              )}
+
+              {/* Photo counter */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/80 backdrop-blur-sm text-foreground text-sm px-4 py-1.5 rounded-full border border-border">
+                {selectedPhoto + 1} / {bookImages.length}
+              </div>
+
+              {/* View All button in fullscreen */}
+              <Button
+                variant="secondary"
+                size="sm"
+                className="absolute top-4 left-4 gap-2 bg-background/80 hover:bg-background"
+                onClick={() => {
+                  setSelectedPhoto(null);
+                  setShowGallery(true);
+                }}
+              >
+                <Grid className="w-4 h-4" />
+                All Photos
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* All Photos Gallery Dialog */}
+      <Dialog open={showGallery} onOpenChange={setShowGallery}>
+        <DialogContent className="max-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto">
+          <DialogTitle className="text-xl font-bold text-foreground mb-1">
+            All Photos
+          </DialogTitle>
+          <p className="text-sm text-muted-foreground mb-6">
+            Click any photo to view it full-screen
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {bookImages.map((image, index) => (
+              <div
+                key={index}
+                className="relative aspect-[3/4] overflow-hidden rounded-lg cursor-pointer group border border-border hover:border-primary transition-colors"
+                onClick={() => {
+                  setShowGallery(false);
+                  setSelectedPhoto(index);
+                }}
+              >
+                <img
+                  src={image}
+                  alt={`Spot photo ${index + 1}`}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-background/0 group-hover:bg-background/20 transition-colors duration-200 flex items-end">
+                  <span className="w-full text-center pb-3 text-foreground text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 drop-shadow-lg">
+                    Photo {index + 1}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
