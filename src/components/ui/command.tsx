@@ -21,6 +21,8 @@ const Command = React.forwardRef<
 ));
 Command.displayName = CommandPrimitive.displayName;
 
+// Empty interface intentionally extends DialogProps for future extensibility
+// This allows adding custom props later without breaking changes
 interface CommandDialogProps extends DialogProps {}
 
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
