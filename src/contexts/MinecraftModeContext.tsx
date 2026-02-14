@@ -30,7 +30,10 @@ export const MinecraftModeProvider = ({ children }: { children: ReactNode }) => 
     }
     try {
       localStorage.setItem("minecraft-mode", String(isMinecraft));
-    } catch {}
+    } catch (error) {
+      // Silently fail if localStorage is not available
+      console.warn("Failed to save minecraft mode to localStorage:", error);
+    }
   }, [isMinecraft]);
 
   const toggleMinecraft = useCallback(() => setIsMinecraft((prev) => !prev), []);
