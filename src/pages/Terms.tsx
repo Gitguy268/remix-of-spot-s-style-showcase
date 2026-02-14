@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AxolotlPet from "@/components/AxolotlPet";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 const Terms = () => {
   return <>
@@ -115,6 +116,7 @@ const Terms = () => {
           </div>
         </main>
         <Footer />
+        <AxolotlPet />
       </div>
     </>;
 };

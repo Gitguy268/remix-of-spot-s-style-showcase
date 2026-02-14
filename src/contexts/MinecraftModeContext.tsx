@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback, type ReactNode } from "react";
 
 interface MinecraftModeContextType {
   isMinecraft: boolean;
@@ -30,13 +30,21 @@ export const MinecraftModeProvider = ({ children }: { children: ReactNode }) => 
     }
     try {
       localStorage.setItem("minecraft-mode", String(isMinecraft));
-    } catch {}
+    } catch (error) {
+      // Silently fail if localStorage is not available
+      console.warn("Failed to save minecraft mode to localStorage:", error);
+    }
   }, [isMinecraft]);
 
-  const toggleMinecraft = () => setIsMinecraft((prev) => !prev);
+  const toggleMinecraft = useCallback(() => setIsMinecraft((prev) => !prev), []);
+
+  const value = useMemo(
+    () => ({ isMinecraft, toggleMinecraft }),
+    [isMinecraft, toggleMinecraft]
+  );
 
   return (
-    <MinecraftModeContext.Provider value={{ isMinecraft, toggleMinecraft }}>
+    <MinecraftModeContext.Provider value={value}>
       {children}
     </MinecraftModeContext.Provider>
   );

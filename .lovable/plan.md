@@ -1,95 +1,143 @@
 
 
-## Two New Features: Custom Pull-to-Refresh Loader and Minecraft Mode
-
-### Feature 1: Yeezus CD Loader on Pull-to-Refresh
-
-A custom pull-to-refresh experience that shows the "Yeezus Minimal Loader" (spinning CD with red tape and BLSS branding) on a grey background when the user swipes down to reload.
-
-**How it works:**
-
-- A new `PullToRefresh` component wraps the entire app content
-- On touch devices: detects downward swipe gestures when scrolled to the top
-- On desktop: detects mousedown + drag-down gestures when scrolled to the top
-- When the user pulls past a threshold (~80px), the loader appears on a grey overlay at the top of the screen
-- Upon release past the threshold, the page reloads after a brief animation showing the spinning CD
-- The spinning CD loader is built entirely with CSS (matching the provided HTML/CSS exactly), rendered as a React component
-
-**Files to create:**
-- `src/components/YeezusLoader.tsx` -- The spinning CD component (converted from the provided HTML/CSS)
-- `src/components/PullToRefresh.tsx` -- Touch/mouse gesture handler that shows the loader and triggers reload
-
-**Files to modify:**
-- `src/App.tsx` -- Wrap the app content with the `PullToRefresh` component
-- `src/index.css` -- Add the loader-specific CSS (spin animation, disc styling, tape block, branding text)
-
-**Technical approach:**
-- Use `touchstart`, `touchmove`, `touchend` events for mobile, and equivalent mouse events for desktop
-- Only activate when `window.scrollY === 0` (user is at the top of the page)
-- Show a grey (`#888`) full-width bar at the top with the CD loader centered inside
-- After release past threshold, show a brief loading state, then call `window.location.reload()`
-- The loader CSS variables will be scoped under a `.yeezus-loader` class to avoid conflicts with the site's design system
+## Four Enhancements: Axolotl Pet, Product Links, Minecraft Mode, and Yeezy Grill Easter Egg
 
 ---
 
-### Feature 2: Minecraft Mode Toggle
+### 1. Interactive Axolotl Pet on Terms & Conditions Page
 
-A fun toggle switch at the bottom of the website that transforms the entire site into a pixelated, blocky Minecraft aesthetic.
+A reactive, animated axolotl SVG pet that follows the user's mouse cursor and bounces with floating hearts when clicked. It will be placed in the bottom-right corner of the Terms page, overlaying the content as a floating element.
 
 **How it works:**
-
-- A toggle switch is placed in the footer area (above the copyright line)
-- When enabled, a `minecraft-mode` class is added to the `<html>` element
-- CSS rules under `.minecraft-mode` apply the following transformations:
-  - **Pixelated rendering**: `image-rendering: pixelated` on all images
-  - **Blocky font**: Swap to a pixel/bitmap font (using the free "Press Start 2P" Google Font or "Silkscreen")
-  - **Sharp corners**: Override all `border-radius` to `0px` (no rounded corners)
-  - **Stepped borders**: Thicker, solid borders on cards and buttons
-  - **Color palette shift**: Earthy, Minecraft-inspired greens and browns applied via CSS variable overrides
-  - **Pixelate filter**: A subtle CSS `filter` or SVG filter to give backgrounds a blocky feel
-  - **Cursor**: Custom crosshair or pickaxe-style cursor
-- State is persisted in `localStorage` so it survives page reloads
-- A React context (`MinecraftModeContext`) manages the state globally so any component can check if Minecraft mode is active
+- The full SVG axolotl (head, body, gills, eyes) is rendered as a React component
+- The head and pupils track the mouse position using `mousemove` events with smooth lerp-based animation via `requestAnimationFrame`
+- Clicking the axolotl triggers a CSS bounce animation and spawns floating heart elements that fade upward
+- The background is transparent (no white rectangle) -- the axolotl sits naturally on the page's themed background
+- Positioned as a fixed/sticky element in the bottom-right so it doesn't interfere with reading the terms
 
 **Files to create:**
-- `src/contexts/MinecraftModeContext.tsx` -- Context provider with toggle state and localStorage persistence
-- `src/components/MinecraftModeToggle.tsx` -- The toggle switch UI placed in the footer, styled with a Minecraft grass block icon and label
+- `src/components/AxolotlPet.tsx` -- React component converting the provided HTML/CSS/SVG/JS into a self-contained React component with `useRef`, `useEffect`, and `useState`
 
 **Files to modify:**
-- `src/App.tsx` -- Wrap with `MinecraftModeProvider`
-- `src/components/Footer.tsx` -- Add the `MinecraftModeToggle` component above the bottom bar
-- `src/index.css` -- Add comprehensive `.minecraft-mode` CSS rules that override typography, borders, colors, image rendering, and cursors
-- `index.html` -- Add a `<link>` for the "Press Start 2P" Google Font (preconnect already exists)
+- `src/pages/Terms.tsx` -- Add the `AxolotlPet` component at the bottom of the page
+- `src/index.css` -- Add the axolotl-specific CSS (bounce animation, floating hearts keyframes)
+
+---
+
+### 2. Product-Specific Links to Printify Store
+
+Currently, every product card and the Quick View modal link to the generic store homepage (`https://blacklabspotsshop.printify.me/`). Each product should link to its own specific page on the Printify store.
+
+**How it works:**
+- Add a `shopUrl` field to each product definition in `Products.tsx`
+- Each product gets a unique URL pointing to its Printify product page (using Printify's slug-based URL format: `https://blacklabspotsshop.printify.me/product/SLUG`)
+- The `shopUrl` is passed through to `ProductCard` and `ProductQuickView` so all "Shop Now" and card-click actions navigate to the correct product
+- Since exact Printify slugs may need adjustment, each URL is configured per-product and easy to update
+
+**Files to modify:**
+- `src/components/Products.tsx` -- Add `shopUrl` field to the `Product` interface and each product object
+- `src/components/ProductCard.tsx` -- Accept `shopUrl` prop and use it instead of the generic `SHOP_URL` constant
+- `src/components/ProductQuickView.tsx` -- Accept `shopUrl` prop and use it in the "Shop Now" CTA link
+
+---
+
+### 3. Enhanced Minecraft Mode
+
+The current Minecraft mode applies pixel fonts, removes border-radius, and shifts colors. This enhancement makes it feel significantly more Minecraft-like.
+
+**Additions:**
+- **Dirt block background texture**: A CSS-generated repeating pattern that mimics the iconic Minecraft dirt texture using layered gradients
+- **Block-breaking cursor**: A custom pickaxe-style cursor (via CSS `cursor: url(...)` or `crosshair` refinement)
+- **Hotbar-style footer**: The payment method badges in the footer are styled to look like Minecraft inventory slots (dark grey squares with lighter borders, like the hotbar UI)
+- **Health/hunger bar decorations**: Subtle pixel-art heart and drumstick icons in the footer area using CSS pseudo-elements
+- **Creeper face favicon/icon hint**: A tiny creeper face rendered via CSS box-shadow pixel art near the Minecraft toggle
+- **Tooltip styling**: Minecraft-style dark purple/grey tooltips with pixelated borders
+- **Thicker, stepped borders**: 3px solid borders with hard pixel shadows on more elements
+- **Button hover effect**: Buttons lighten in color on hover (like Minecraft menu buttons) instead of scaling
+
+**Files to modify:**
+- `src/index.css` -- Expand the `.minecraft-mode` CSS section with new rules for dirt background, hotbar slots, tooltip overrides, and enhanced button/card styling
+- `src/components/MinecraftModeToggle.tsx` -- Add a small creeper face pixel art next to the toggle, and a fun "Survival Mode" or "Creative Mode" label variation
+
+---
+
+### 4. Yeezy Grill Paper Cutout Easter Egg on Contact Page
+
+An interactive, slightly tilted image of the Yeezy grill paper cutout placed in the bottom-right corner of the Contact page.
+
+**How it works:**
+- The uploaded PNG (`yzygrillpaper1.png`) is copied into `src/assets/`
+- A new `YeezyGrillEasterEgg` component renders the image with:
+  - Fixed positioning in the bottom-right corner
+  - A slight CSS tilt (`rotate(8deg)`) for a "paper cutout" feel
+  - Interactive hover effects: the image scales up slightly, removes tilt (flattens), and applies a subtle glow/shadow
+  - Click interaction: triggers a fun wobble animation and maybe a brief sparkle effect
+  - Drag-to-reposition: users can drag the cutout around the page for a playful feel
+  - The image uses `mix-blend-mode: multiply` to remove the white background from the PNG, making it blend naturally
+
+**Files to create:**
+- `src/components/YeezyGrillEasterEgg.tsx` -- Interactive component with tilt, hover, click, and optional drag behavior
+
+**Files to modify:**
+- `src/pages/Contact.tsx` -- Import and render the `YeezyGrillEasterEgg` component inside the page layout
+- Copy `user-uploads://yzygrillpaper1.png` to `src/assets/yeezy-grill.png`
 
 ---
 
 ### Technical Details
 
-**Pull-to-Refresh gesture detection logic:**
+**Axolotl mouse tracking (React conversion):**
 
 ```text
-touchstart -> record startY
-touchmove  -> if scrollY === 0 and deltaY > 0:
-                show loader overlay
-                translate overlay by min(deltaY, maxPull)
-touchend   -> if deltaY > threshold:
-                trigger reload animation, then window.location.reload()
-              else:
-                snap overlay back to hidden
+useEffect:
+  - addEventListener('mousemove') on document
+  - Calculate dx/dy from component center
+  - Lerp currentX/Y toward targetX/Y in rAF loop
+  - Apply transform to head SVG group via ref
+  - Move pupil cx/cy attributes for "looking" effect
+
+onClick:
+  - Add 'joy-bounce' class to head group
+  - Spawn heart div elements that animate upward and self-remove
 ```
 
-**Minecraft Mode CSS strategy (scoped under `.minecraft-mode`):**
+**Product URL strategy:**
 
 ```text
-.minecraft-mode {
-  * { border-radius: 0 !important; }
-  font-family: "Press Start 2P", monospace;
-  img { image-rendering: pixelated; }
-  --primary: green tones;
-  --background: dirt-brown tones;
-  cursor: crosshair;
+Product Interface:
+  + shopUrl: string  (new field)
+
+Each product definition includes:
+  shopUrl: "https://blacklabspotsshop.printify.me/product/spot-tee"
+  (URL format follows Printify slug convention -- easy to update if slugs differ)
+```
+
+**Minecraft Mode CSS additions:**
+
+```text
+.minecraft-mode body {
+  background-image: repeating dirt-block pattern (CSS gradients);
+}
+
+.minecraft-mode [class*="payment"] {
+  Minecraft hotbar slot styling (dark bg, inset borders)
+}
+
+.minecraft-mode [data-radix-tooltip] {
+  Dark purple tooltip with pixel border
 }
 ```
 
-**Dependency changes:** None -- both features use only CSS and vanilla React (no new npm packages needed). The "Press Start 2P" font loads from Google Fonts CDN via a `<link>` tag.
+**Yeezy Grill interaction:**
+
+```text
+- Position: fixed, bottom: 2rem, right: 2rem
+- Transform: rotate(8deg)
+- Hover: scale(1.1) rotate(0deg)
+- Click: wobble keyframe animation
+- mix-blend-mode: multiply (removes white background)
+- Optional: draggable via mousedown/mousemove/mouseup
+```
+
+**No new npm dependencies** are needed. All features use CSS animations, vanilla React state/refs, and SVG.
 

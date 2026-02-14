@@ -2,19 +2,16 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { cn } from "@/lib/utils";
+import { memo } from "react";
+import type { WishlistProduct } from "@/types/product";
 
 interface WishlistButtonProps {
-  product: {
-    name: string;
-    price: string;
-    image: string;
-    category: string;
-  };
+  product: WishlistProduct;
   variant?: "icon" | "button";
   className?: string;
 }
 
-const WishlistButton = ({ product, variant = "icon", className }: WishlistButtonProps) => {
+const WishlistButton = memo(({ product, variant = "icon", className }: WishlistButtonProps) => {
   const { isInWishlist, toggleItem } = useWishlist();
   const isWishlisted = isInWishlist(product.name);
 
@@ -63,6 +60,8 @@ const WishlistButton = ({ product, variant = "icon", className }: WishlistButton
       />
     </button>
   );
-};
+});
+
+WishlistButton.displayName = 'WishlistButton';
 
 export default WishlistButton;

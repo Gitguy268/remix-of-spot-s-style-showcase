@@ -1,29 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
-import { X, Star, Truck, ShoppingBag } from 'lucide-react';
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { X, Truck, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassButton } from '@/components/ui/liquid-glass-button';
 import { Badge } from '@/components/ui/badge';
 import { LazyImage } from '@/components/ui/lazy-image';
 import WishlistButton from '@/components/WishlistButton';
+import { RatingDisplay } from '@/components/RatingDisplay';
 import { useCurrency } from '@/contexts/CurrencyContext';
+import { getBadgeVariant } from '@/utils/badgeUtils';
+import type { Product } from '@/types/product';
 
 interface ProductQuickViewProps {
   open: boolean;
   onClose: () => void;
-  product: {
-    name: string;
-    price: string;
-    image: string;
-    badge?: string;
-    fabric?: string;
-    fit?: string;
-    colors?: string[];
-    delivery?: string;
-    sizes?: string;
-  };
+  product: Product;
 }
 
-const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+const DEFAULT_SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -34,6 +27,14 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
   const sizeOptions = product.sizes?.includes('–') 
     ? product.sizes.split('–').map(s => s.trim())
     : product.sizes?.split(',').map(s => s.trim()) || [];
+
+  const handleColorSelect = useCallback((color: string) => {
+    setSelectedColor(color);
+  }, []);
+
+  const handleSizeSelect = useCallback((size: string) => {
+    setSelectedSize(size);
+  }, []);
 
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
@@ -100,7 +101,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
                   name: product.name, 
                   price: product.price, 
                   image: product.image, 
-                  category: "Products" 
+                  category: product.category
                 }} 
               />
             </div>
@@ -111,7 +112,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 {product.badge && (
-                  <Badge variant={product.badge === "New" ? "default" : "secondary"} className="mb-2">
+                  <Badge variant={getBadgeVariant(product.badge)} className="mb-2">
                     {product.badge}
                   </Badge>
                 )}
@@ -124,12 +125,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
             <p className="text-2xl font-bold text-primary mb-4">{formatPrice(product.price)}</p>
 
             {/* Rating */}
-            <div className="flex items-center gap-1 mb-4">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-primary text-primary" />
-              ))}
-              <span className="text-sm text-muted-foreground ml-2">(4.9) • 200+ reviews</span>
-            </div>
+            <RatingDisplay size="md" reviewCount={200} />
 
             {/* Product Details */}
             <div className="space-y-3 mb-6 text-sm">
@@ -159,7 +155,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
                   {product.colors.map((color) => (
                     <button
                       key={color}
-                      onClick={() => setSelectedColor(color)}
+                      onClick={() => handleColorSelect(color)}
                       className={`px-3 py-1.5 text-xs rounded-full border transition-all ${
                         selectedColor === color
                           ? 'border-primary bg-primary/10 text-primary'
@@ -182,7 +178,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
 
             {/* CTA */}
             <div className="mt-auto pt-4">
-              <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="block">
+              <a href={product.shopUrl || DEFAULT_SHOP_URL} target="_blank" rel="noopener noreferrer" className="block">
                 <LiquidGlassButton size="lg" className="w-full">
                   <ShoppingBag className="w-4 h-4 mr-2" />
                   Shop Now
