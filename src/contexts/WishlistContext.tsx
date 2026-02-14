@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -29,9 +29,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Load wishlist from localStorage on mount
+  // Memoize storage key to avoid recomputation
+  const storageKey = useMemo(
+    () => (user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY),
+    [user]
+  );
+
+  // Load wishlist from localStorage on mount or when user changes
   useEffect(() => {
-    const storageKey = user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
@@ -40,69 +45,81 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         setItems([]);
       }
     }
-  }, [user]);
+  }, [storageKey]);
 
   // Save to localStorage when items change
   useEffect(() => {
-    const storageKey = user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY;
     localStorage.setItem(storageKey, JSON.stringify(items));
-  }, [items, user]);
+  }, [items, storageKey]);
 
-  const addItem = (item: Omit<WishlistItem, "addedAt">) => {
-    if (isInWishlist(item.name)) return;
-    
-    const newItem: WishlistItem = {
-      ...item,
-      addedAt: new Date().toISOString(),
-    };
-    
-    setItems((prev) => [...prev, newItem]);
-    toast({
-      title: "Added to Wishlist",
-      description: `${item.name} has been saved to your wishlist.`,
-    });
-  };
+  const isInWishlist = useCallback(
+    (name: string) => items.some((item) => item.name === name),
+    [items]
+  );
 
-  const removeItem = (name: string) => {
-    setItems((prev) => prev.filter((item) => item.name !== name));
-    toast({
-      title: "Removed from Wishlist",
-      description: "Item has been removed from your wishlist.",
-    });
-  };
+  const addItem = useCallback(
+    (item: Omit<WishlistItem, "addedAt">) => {
+      if (isInWishlist(item.name)) return;
+      
+      const newItem: WishlistItem = {
+        ...item,
+        addedAt: new Date().toISOString(),
+      };
+      
+      setItems((prev) => [...prev, newItem]);
+      toast({
+        title: "Added to Wishlist",
+        description: `${item.name} has been saved to your wishlist.`,
+      });
+    },
+    [isInWishlist, toast]
+  );
 
-  const isInWishlist = (name: string) => {
-    return items.some((item) => item.name === name);
-  };
+  const removeItem = useCallback(
+    (name: string) => {
+      setItems((prev) => prev.filter((item) => item.name !== name));
+      toast({
+        title: "Removed from Wishlist",
+        description: "Item has been removed from your wishlist.",
+      });
+    },
+    [toast]
+  );
 
-  const toggleItem = (item: Omit<WishlistItem, "addedAt">) => {
-    if (isInWishlist(item.name)) {
-      removeItem(item.name);
-    } else {
-      addItem(item);
-    }
-  };
+  const toggleItem = useCallback(
+    (item: Omit<WishlistItem, "addedAt">) => {
+      if (isInWishlist(item.name)) {
+        removeItem(item.name);
+      } else {
+        addItem(item);
+      }
+    },
+    [isInWishlist, addItem, removeItem]
+  );
 
-  const clearWishlist = () => {
+  const clearWishlist = useCallback(() => {
     setItems([]);
     toast({
       title: "Wishlist Cleared",
       description: "All items have been removed from your wishlist.",
     });
-  };
+  }, [toast]);
+
+  const value = useMemo(
+    () => ({
+      items,
+      addItem,
+      removeItem,
+      isInWishlist,
+      toggleItem,
+      clearWishlist,
+      itemCount: items.length,
+    }),
+    [items, addItem, removeItem, isInWishlist, toggleItem, clearWishlist]
+  );
 
   return (
-    <WishlistContext.Provider
-      value={{
-        items,
-        addItem,
-        removeItem,
-        isInWishlist,
-        toggleItem,
-        clearWishlist,
-        itemCount: items.length,
-      }}
-    >
+    <WishlistContext.Provider value={value}>
       {children}
     </WishlistContext.Provider>
   );
