@@ -1,26 +1,4 @@
-import { useState, useEffect, useRef } from "react";
 
-const ScrollProgress = () => {
-  const [progress, setProgress] = useState(0);
-  const rafId = useRef(0);
-
-  useEffect(() => {
-    const updateProgress = () => {
-      cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(() => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-        setProgress(scrollPercent);
-      });
-    };
-
-    window.addEventListener("scroll", updateProgress, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", updateProgress);
-      cancelAnimationFrame(rafId.current);
-    };
-  }, []);
 
   return (
     <div className="fixed top-0 left-0 right-0 h-1 z-[60] bg-transparent">

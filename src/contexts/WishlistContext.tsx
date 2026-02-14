@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
@@ -29,9 +29,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  // Load wishlist from localStorage on mount
+  // Memoize storage key to avoid recomputation
+  const storageKey = useMemo(
+    () => (user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY),
+    [user]
+  );
+
+  // Load wishlist from localStorage on mount or when user changes
   useEffect(() => {
-    const storageKey = user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
@@ -40,52 +45,11 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         setItems([]);
       }
     }
-  }, [user]);
+  }, [storageKey]);
 
   // Save to localStorage when items change
   useEffect(() => {
-    const storageKey = user ? `${WISHLIST_KEY}-${user.id}` : WISHLIST_KEY;
     localStorage.setItem(storageKey, JSON.stringify(items));
-  }, [items, user]);
-
-  const addItem = useCallback((item: Omit<WishlistItem, "addedAt">) => {
-    setItems((prev) => {
-      if (prev.some((i) => i.name === item.name)) return prev;
-      
-      const newItem: WishlistItem = {
-        ...item,
-        addedAt: new Date().toISOString(),
-      };
-      
-      return [...prev, newItem];
-    });
-    toast({
-      title: "Added to Wishlist",
-      description: `${item.name} has been saved to your wishlist.`,
-    });
-  }, [toast]);
-
-  const removeItem = useCallback((name: string) => {
-    setItems((prev) => prev.filter((item) => item.name !== name));
-    toast({
-      title: "Removed from Wishlist",
-      description: "Item has been removed from your wishlist.",
-    });
-  }, [toast]);
-
-  const isInWishlist = useCallback((name: string) => {
-    return items.some((item) => item.name === name);
-  }, [items]);
-
-  const toggleItem = useCallback((item: Omit<WishlistItem, "addedAt">) => {
-    setItems((prev) => {
-      const exists = prev.some((i) => i.name === item.name);
-      if (exists) {
-        return prev.filter((i) => i.name !== item.name);
-      }
-      return [...prev, { ...item, addedAt: new Date().toISOString() }];
-    });
-  }, []);
 
   const clearWishlist = useCallback(() => {
     setItems([]);
@@ -95,15 +59,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     });
   }, [toast]);
 
-  const value = useMemo(() => ({
-    items,
-    addItem,
-    removeItem,
-    isInWishlist,
-    toggleItem,
-    clearWishlist,
-    itemCount: items.length,
-  }), [items, addItem, removeItem, isInWishlist, toggleItem, clearWishlist]);
+
 
   return (
     <WishlistContext.Provider value={value}>

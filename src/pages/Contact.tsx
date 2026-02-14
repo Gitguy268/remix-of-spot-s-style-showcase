@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import YeezyGrillEasterEgg from "@/components/YeezyGrillEasterEgg";
 import { z } from "zod";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { supabase } from "@/integrations/supabase/client";
@@ -302,6 +303,7 @@ const Contact = () => {
           </div>
         </main>
         <Footer />
+        <YeezyGrillEasterEgg />
       </div>
     </>;
 };

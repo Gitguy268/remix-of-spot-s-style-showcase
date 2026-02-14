@@ -32,12 +32,19 @@ const AnimatedSection = ({
 
   const visibleClasses = "translate-y-0 translate-x-0 scale-100 opacity-100";
 
+  // Helper to safely set ref value
+  const setRef = (el: HTMLDivElement | null) => {
+    if (ref && typeof ref !== 'function' && 'current' in ref) {
+      ref.current = el;
+    }
+    if (parallax && parallaxRef && typeof parallaxRef !== 'function' && 'current' in parallaxRef) {
+      parallaxRef.current = el;
+    }
+  };
+
   return (
     <div
-      ref={(el) => {
-        (ref as any).current = el;
-        if (parallax) (parallaxRef as any).current = el;
-      }}
+      ref={setRef}
       className={cn(
         "transition-all duration-700 ease-out",
         isVisible ? visibleClasses : animationClasses[animation],

@@ -1,11 +1,13 @@
 import { Suspense, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows, Html, useProgress, useGLTF } from "@react-three/drei";
+import { OrbitControls, ContactShadows, Html, useProgress, useGLTF } from "@react-three/drei";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import ParticleBackground from "@/components/ParticleBackground";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 
 // Loading component
@@ -136,7 +138,7 @@ const Spot3DViewer = () => {
   const [activeModel, setActiveModel] = useState("spot");
   const [isRotating, setIsRotating] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<OrbitControlsImpl>(null);
   
   const activeModelConfig = defaultModels.find(m => m.id === activeModel);
 
@@ -212,12 +214,32 @@ const Spot3DViewer = () => {
           <div className="relative max-w-4xl mx-auto">
             {/* 3D Canvas */}
             <div className="aspect-square md:aspect-video rounded-2xl overflow-hidden glow-border bg-card relative">
-              <Canvas
-                camera={{ position: [3, 2, 3], fov: 45 }}
-                shadows
-                dpr={[1, 2]}
-                onError={() => setHasError(true)}
+              <ErrorBoundary
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center bg-muted">
+                    <div className="text-center p-8">
+                      <img 
+                        src={spotTeeProduct} 
+                        alt="Spot Tee Product" 
+                        className="w-full max-w-md mx-auto mb-4 rounded-lg"
+                      />
+                      <p className="text-muted-foreground text-sm">
+                        3D viewer unavailable. Showing product image instead.
+                      </p>
+                    </div>
+                  </div>
+                }
+                onError={(error) => {
+                  console.error('3D Viewer Error:', error);
+                  setHasError(true);
+                }}
               >
+                <Canvas
+                  camera={{ position: [3, 2, 3], fov: 45 }}
+                  shadows
+                  dpr={[1, 2]}
+                  onError={() => setHasError(true)}
+                >
                 <Suspense fallback={<Loader />}>
                   <ambientLight intensity={0.4} />
                   <spotLight 
@@ -248,8 +270,6 @@ const Spot3DViewer = () => {
                     blur={2.5} 
                   />
                   
-                  <Environment preset="studio" />
-                  
                   <OrbitControls 
                     ref={controlsRef}
                     enablePan={false}
@@ -260,6 +280,7 @@ const Spot3DViewer = () => {
                   />
                 </Suspense>
               </Canvas>
+              </ErrorBoundary>
             </div>
 
             {/* Controls */}

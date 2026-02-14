@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react";
+
 import { toast } from "sonner";
 
 export interface Currency {
@@ -119,14 +119,6 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
     return usdPriceRange;
   }, [convertPrice]);
 
-  const value = useMemo(() => ({
-    currency,
-    setCurrency,
-    language,
-    setLanguage,
-    convertPrice,
-    formatPrice,
-  }), [currency, setCurrency, language, setLanguage, convertPrice, formatPrice]);
 
   return (
     <CurrencyContext.Provider value={value}>

@@ -5,27 +5,20 @@ import { LiquidGlassCard } from "@/components/ui/liquid-glass-card";
 import { LazyImage } from "@/components/ui/lazy-image";
 import WishlistButton from "@/components/WishlistButton";
 import { CompareButton } from "@/components/ProductComparison";
+import { RatingDisplay } from "@/components/RatingDisplay";
 import { useCurrency } from "@/contexts/CurrencyContext";
-import { Star, Truck, Eye } from "lucide-react";
+import { getBadgeVariant } from "@/utils/badgeUtils";
+import { Truck, Eye } from "lucide-react";
+import type { Product } from "@/types/product";
 
-interface ProductCardProps {
-  name: string;
-  price: string;
-  image: string;
-  badge?: string;
-  fabric?: string;
-  fit?: string;
-  colors?: string[];
-  delivery?: string;
-  sizes?: string;
-  category?: string;
+interface ProductCardProps extends Product {
   onQuickView?: () => void;
   isCompareSelected?: boolean;
   onToggleCompare?: () => void;
   compareDisabled?: boolean;
 }
 
-const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+const DEFAULT_SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const ProductCard = ({ 
   name, 
@@ -38,6 +31,7 @@ const ProductCard = ({
   delivery, 
   sizes, 
   category = "Products",
+  shopUrl,
   onQuickView,
   isCompareSelected,
   onToggleCompare,
@@ -48,8 +42,8 @@ const ProductCard = ({
   return (
     <LiquidGlassCard className="group relative">
       <a 
-        href={SHOP_URL} 
-        target="_blank" 
+        href={shopUrl || DEFAULT_SHOP_URL} 
+        target="_blank"
         rel="noopener noreferrer"
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >
@@ -60,7 +54,7 @@ const ProductCard = ({
             className="w-full h-full transition-transform duration-500 group-hover:scale-105"
           />
         </div>
-        {badge && <Badge variant={badge === "New" ? "default" : "secondary"} className="absolute top-3 left-3">{badge}</Badge>}
+        {badge && <Badge variant={getBadgeVariant(badge)} className="absolute top-3 left-3">{badge}</Badge>}
         
         {/* Action buttons - Wishlist & Compare */}
         <div className="absolute top-3 right-3 flex flex-col gap-2">
@@ -83,7 +77,7 @@ const ProductCard = ({
           {fabric && <p className="text-xs text-muted-foreground line-clamp-1">{fabric}</p>}
           {sizes && <p className="text-xs text-muted-foreground">Sizes: {sizes}</p>}
           {delivery && <div className="flex items-center gap-1.5 text-xs text-muted-foreground"><Truck className="w-3 h-3" /><span>{delivery}</span></div>}
-          <div className="flex items-center gap-1">{[...Array(5)].map((_, i) => <Star key={i} className="w-3 h-3 fill-primary text-primary" />)}<span className="text-xs text-muted-foreground ml-1">(4.9)</span></div>
+          <RatingDisplay size="sm" />
         </div>
       </a>
       
