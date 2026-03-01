@@ -24,9 +24,11 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const { formatPrice } = useCurrency();
 
-  const sizeOptions = product.sizes?.includes('–') 
-    ? product.sizes.split('–').map(s => s.trim())
-    : product.sizes?.split(',').map(s => s.trim()) || [];
+  const sizeOptions = Array.isArray(product.sizes)
+    ? product.sizes
+    : typeof product.sizes === 'string'
+      ? (product.sizes as string).split(/[–,]/).map((s: string) => s.trim())
+      : [];
 
   const handleColorSelect = useCallback((color: string) => {
     setSelectedColor(color);

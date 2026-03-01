@@ -8,6 +8,7 @@ import { CompareButton } from "@/components/ProductComparison";
 import { RatingDisplay } from "@/components/RatingDisplay";
 import { useCurrency } from "@/contexts/CurrencyContext";
 import { getBadgeVariant } from "@/utils/badgeUtils";
+import { useSound } from "@/hooks/useSound";
 import { Truck, Eye } from "lucide-react";
 import type { Product } from "@/types/product";
 
@@ -38,6 +39,7 @@ const ProductCard = ({
   compareDisabled,
 }: ProductCardProps) => {
   const { formatPrice } = useCurrency();
+  const { playClick } = useSound();
 
   return (
     <LiquidGlassCard className="group relative">
@@ -45,6 +47,7 @@ const ProductCard = ({
         href={shopUrl || DEFAULT_SHOP_URL} 
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => playClick()}
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >
         <div className="aspect-square overflow-hidden bg-muted/5 relative rounded-t-xl">

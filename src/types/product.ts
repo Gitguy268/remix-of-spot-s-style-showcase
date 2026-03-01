@@ -11,7 +11,7 @@ export interface Product {
   fit?: string;
   colors?: string[];
   delivery?: string;
-  sizes?: string[];
+  sizes?: string | string[];
   shopUrl?: string;
 }
 

@@ -1,4 +1,3 @@
-
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useScrollVisibility } from "@/hooks/useScrollUtils";
@@ -6,6 +5,7 @@ import { useScrollVisibility } from "@/hooks/useScrollUtils";
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
 const FloatingShopButton = () => {
+  const isVisible = useScrollVisibility(600);
 
   if (!isVisible) return null;
 
