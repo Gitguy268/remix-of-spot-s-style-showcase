@@ -1,11 +1,11 @@
-
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from "react";
 import { toast } from "sonner";
 
 export interface Currency {
   code: string;
   symbol: string;
   name: string;
-  rate: number; // Rate relative to USD
+  rate: number;
 }
 
 export const currencies: Currency[] = [
@@ -51,74 +51,51 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
   const [currency, setCurrencyState] = useState<Currency>(currencies[0]);
   const [language, setLanguageState] = useState<Language>(languages[0]);
 
-  // Load from localStorage on mount
   useEffect(() => {
     const savedCurrency = localStorage.getItem("preferred-currency");
     const savedLanguage = localStorage.getItem("preferred-language");
-
     if (savedCurrency) {
       const found = currencies.find((c) => c.code === savedCurrency);
       if (found) setCurrencyState(found);
     }
-
     if (savedLanguage) {
       const found = languages.find((l) => l.code === savedLanguage);
-      if (found) {
-        setLanguageState(found);
-        document.documentElement.lang = found.code;
-      }
+      if (found) { setLanguageState(found); document.documentElement.lang = found.code; }
     }
   }, []);
 
   const setCurrency = useCallback((newCurrency: Currency) => {
     setCurrencyState(newCurrency);
     localStorage.setItem("preferred-currency", newCurrency.code);
-    toast.success(`Currency changed to ${newCurrency.name} (${newCurrency.symbol})`, {
-      duration: 2000,
-    });
+    toast.success(`Currency changed to ${newCurrency.name} (${newCurrency.symbol})`, { duration: 2000 });
   }, []);
 
   const setLanguage = useCallback((newLanguage: Language) => {
     setLanguageState(newLanguage);
     localStorage.setItem("preferred-language", newLanguage.code);
     document.documentElement.lang = newLanguage.code;
-    toast.success(`${newLanguage.flag} Language set to ${newLanguage.name}`, {
-      description: "Content language preference saved.",
-      duration: 2000,
-    });
+    toast.success(`${newLanguage.flag} Language set to ${newLanguage.name}`, { description: "Content language preference saved.", duration: 2000 });
   }, []);
 
   const convertPrice = useCallback((usdPrice: number): string => {
     const converted = usdPrice * currency.rate;
-    
-    // Format based on currency
-    if (currency.code === "JPY") {
-      return `${currency.symbol}${Math.round(converted).toLocaleString()}`;
-    }
-    
+    if (currency.code === "JPY") return `${currency.symbol}${Math.round(converted).toLocaleString()}`;
     return `${currency.symbol}${converted.toFixed(2)}`;
   }, [currency]);
 
   const formatPrice = useCallback((usdPriceRange: string): string => {
-    // Handle price ranges like "$41.47 – $45.99"
     const pricePattern = /\$?([\d.]+)/g;
     const matches = usdPriceRange.match(pricePattern);
-    
     if (!matches) return usdPriceRange;
-
     const prices = matches.map((p) => parseFloat(p.replace("$", "")));
-    
-    if (prices.length === 1) {
-      return convertPrice(prices[0]);
-    }
-    
-    if (prices.length === 2) {
-      return `${convertPrice(prices[0])} – ${convertPrice(prices[1])}`;
-    }
-    
+    if (prices.length === 1) return convertPrice(prices[0]);
+    if (prices.length === 2) return `${convertPrice(prices[0])} – ${convertPrice(prices[1])}`;
     return usdPriceRange;
   }, [convertPrice]);
 
+  const value = useMemo(() => ({
+    currency, setCurrency, language, setLanguage, convertPrice, formatPrice,
+  }), [currency, setCurrency, language, setLanguage, convertPrice, formatPrice]);
 
   return (
     <CurrencyContext.Provider value={value}>

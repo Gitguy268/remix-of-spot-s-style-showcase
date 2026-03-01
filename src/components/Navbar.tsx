@@ -5,6 +5,7 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import CurrencySelector from "@/components/CurrencySelector";
 import WishlistDrawer from "@/components/WishlistDrawer";
+import SoundToggle from "@/components/SoundToggle";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
@@ -83,6 +84,7 @@ const Navbar = () => {
           <div className="hidden md:flex items-center gap-2">
             <CurrencySelector />
             <WishlistDrawer />
+            <SoundToggle />
             <ThemeToggle />
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="default" size="sm" className="gap-2">
@@ -96,6 +98,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center gap-2">
             <CurrencySelector />
             <WishlistDrawer />
+            <SoundToggle />
             <ThemeToggle />
             <button
               className="p-2 text-foreground"

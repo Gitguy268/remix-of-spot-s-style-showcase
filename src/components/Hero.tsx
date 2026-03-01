@@ -5,15 +5,6 @@ import { ArrowRight, ShoppingBag, Star, Truck, Shield } from "lucide-react";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
-interface UnicornStudio {
-  isInitialized: boolean;
-  init?: () => void;
-}
-
-interface WindowWithUnicorn extends Window {
-  UnicornStudio?: UnicornStudio;
-}
-
 const Hero = () => {
   const unicornRef = useRef<HTMLDivElement>(null);
 
@@ -24,11 +15,15 @@ const Hero = () => {
         init?: () => void;
       };
     }
-    
-    const win = window as WindowWithUnicornStudio;
-    
-    // Load Unicorn Studio script
 
+    const win = window as WindowWithUnicornStudio;
+
+    if (!win.UnicornStudio) {
+      const script = document.createElement("script");
+      script.src = "https://cdn.unicorn.studio/v1.3.2/unicornStudio.umd.js";
+      script.async = true;
+      script.onload = () => {
+        const us = (window as WindowWithUnicornStudio).UnicornStudio;
         if (us && !us.isInitialized) {
           us.init?.();
           us.isInitialized = true;
@@ -41,25 +36,24 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden" aria-labelledby="hero-heading">
       {/* Unicorn Studio Animation Background */}
-      <div 
+      <div
         ref={unicornRef}
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: 0 }}
         aria-hidden="true"
       >
-        <div 
-          data-us-project="YD8z0qjl8ze8msKKYKTf" 
+        <div
+          data-us-project="YD8z0qjl8ze8msKKYKTf"
           style={{ width: '100%', height: '100%', minHeight: '100vh' }}
         />
       </div>
 
-      {/* Gradient overlay for better text readability */}
+      {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30 dark:to-transparent z-10" aria-hidden="true" />
 
-      {/* Content Overlay */}
+      {/* Content */}
       <div className="relative z-20 section-container text-center py-24">
         <div className="max-w-3xl mx-auto space-y-6 animate-fade-up">
-          {/* Average Rating Badge */}
           <div className="inline-flex items-center gap-2 bg-background/40 backdrop-blur-sm border border-foreground/10 rounded-full px-4 py-2">
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, i) => (
@@ -74,13 +68,12 @@ const Hero = () => {
             <span className="text-gradient">Spot</span>
             <span className="text-foreground">-powered style.</span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-muted-foreground max-w-xl mx-auto">
-            Premium 100% cotton tees featuring Spot, the beloved black Labrador. 
+            Premium 100% cotton tees featuring Spot, the beloved black Labrador.
             Soft fabrics, bold designs, fast worldwide shipping.
           </p>
 
-          {/* Value Props */}
           <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Shield className="w-4 h-4 text-primary" aria-hidden="true" />
@@ -96,7 +89,6 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Primary CTA */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <LiquidGlassButton size="xl">
@@ -104,8 +96,8 @@ const Hero = () => {
                 <span>Shop Spot's Collection</span>
               </LiquidGlassButton>
             </a>
-            <Button 
-              variant="glass-outline" 
+            <Button
+              variant="glass-outline"
               size="xl"
               className="gap-2"
               onClick={() => document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' })}
@@ -115,37 +107,20 @@ const Hero = () => {
             </Button>
           </div>
 
-          {/* Secondary Links */}
           <div className="flex flex-wrap justify-center gap-6 pt-2">
-            <a 
-              href={SHOP_URL} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-            >
+            <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
               Explore Hoodies
             </a>
-            <a 
-              href={SHOP_URL} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-            >
+            <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
               Kids Collection
             </a>
-            <a 
-              href={SHOP_URL} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
-            >
+            <a href={SHOP_URL} target="_blank" rel="noopener noreferrer" className="text-sm text-muted-foreground hover:text-primary transition-colors underline-offset-4 hover:underline">
               Accessories
             </a>
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce" aria-hidden="true">
         <div className="w-6 h-10 border-2 border-secondary/50 rounded-full flex justify-center pt-2">
           <div className="w-1 h-3 bg-primary rounded-full" />
