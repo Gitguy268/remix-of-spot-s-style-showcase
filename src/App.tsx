@@ -9,7 +9,7 @@ import { CurrencyProvider } from "./contexts/CurrencyContext";
 import { WishlistProvider } from "./contexts/WishlistContext";
 import { MinecraftModeProvider } from "./contexts/MinecraftModeContext";
 import PageTransition from "./components/PageTransition";
-import PullToRefresh from "./components/PullToRefresh";
+// import PullToRefresh from "./components/PullToRefresh";
 import CookieConsent from "./components/CookieConsent";
 
 const Index = lazy(() => import("./pages/Index"));
@@ -32,23 +32,20 @@ const App = () => (
               <Toaster />
               <Sonner />
               <BrowserRouter>
-                <PullToRefresh>
-                  <PageTransition>
-                    <Suspense fallback={<div className="min-h-screen" />}>
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/privacy" element={<Privacy />} />
-                        <Route path="/terms" element={<Terms />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/auth" element={<Auth />} />
-                        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </Suspense>
-                  </PageTransition>
-                  <CookieConsent />
-                </PullToRefresh>
+                <PageTransition>
+                  <Suspense fallback={<div className="min-h-screen" />}>
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </Suspense>
+                </PageTransition>
+                <CookieConsent />
               </BrowserRouter>
             </TooltipProvider>
           </MinecraftModeProvider>
