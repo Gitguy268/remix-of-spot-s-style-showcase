@@ -1,9 +1,11 @@
+import React from "react";
 import { useMinecraftMode } from "@/contexts/MinecraftModeContext";
 import { Switch } from "@/components/ui/switch";
 
 /** Tiny 8×8 creeper face rendered via CSS box-shadow pixel art */
-const CreeperFace = () => (
+const CreeperFace = React.forwardRef<HTMLDivElement>((_, ref) => (
   <div
+    ref={ref}
     className="minecraft-creeper-face"
     aria-hidden="true"
     style={{
@@ -35,13 +37,14 @@ const CreeperFace = () => (
       }}
     />
   </div>
-);
+));
+CreeperFace.displayName = "CreeperFace";
 
-const MinecraftModeToggle = () => {
+const MinecraftModeToggle = React.forwardRef<HTMLDivElement>((_, ref) => {
   const { isMinecraft, toggleMinecraft } = useMinecraftMode();
 
   return (
-    <div className="flex items-center justify-center gap-3 py-4">
+    <div ref={ref} className="flex items-center justify-center gap-3 py-4">
       {/* Minecraft grass block icon */}
       <div className="minecraft-toggle__icon" aria-hidden="true">
         <div className="minecraft-toggle__grass-top" />
@@ -66,6 +69,7 @@ const MinecraftModeToggle = () => {
       )}
     </div>
   );
-};
+});
+MinecraftModeToggle.displayName = "MinecraftModeToggle";
 
 export default MinecraftModeToggle;
