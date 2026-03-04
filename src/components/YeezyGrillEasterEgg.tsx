@@ -50,7 +50,7 @@ const YeezyGrillEasterEgg = () => {
 
   const positionStyle = hasCustomPos
     ? { left: position.x, top: position.y, right: "auto", bottom: "auto" }
-    : { right: "1.5rem", bottom: "1.5rem" };
+    : { right: "1.5rem", bottom: "6rem" };
 
   return (
     <div
@@ -61,7 +61,7 @@ const YeezyGrillEasterEgg = () => {
       style={{
         ...positionStyle,
         transform: isDragging ? "none" : "rotate(8deg)",
-        width: 140,
+        width: 180,
       }}
       onMouseDown={handleMouseDown}
       onClick={handleClick}

@@ -99,8 +99,8 @@ const AxolotlPet = () => {
     <div
       ref={containerRef}
       onClick={handleClick}
-      className="fixed bottom-6 right-6 z-40 cursor-pointer select-none"
-      style={{ width: 180, height: 180 }}
+      className="fixed bottom-24 right-6 z-40 cursor-pointer select-none"
+      style={{ width: 220, height: 220 }}
       aria-label="Interactive axolotl pet"
     >
       {/* Floating hearts */}

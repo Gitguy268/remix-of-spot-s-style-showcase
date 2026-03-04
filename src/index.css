@@ -544,6 +544,74 @@
   transform: none !important;
 }
 
+/* Minecraft toolbar/inventory bar at top */
+.minecraft-mode nav {
+  background: hsl(0 0% 12%) !important;
+  border-bottom: 3px solid hsl(0 0% 25%) !important;
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 35%),
+    inset 0 -1px 0 hsl(0 0% 8%),
+    0 4px 0 hsl(0 0% 6%) !important;
+}
+
+/* Minecraft experience bar style progress indicator */
+.minecraft-mode [role="progressbar"],
+.minecraft-mode progress {
+  background: hsl(0 0% 10%) !important;
+  border: 2px solid hsl(0 0% 25%) !important;
+}
+
+.minecraft-mode [role="progressbar"] > div,
+.minecraft-mode progress::-webkit-progress-value {
+  background: hsl(100 80% 45%) !important;
+}
+
+/* Minecraft-style input fields — stone slab look */
+.minecraft-mode input,
+.minecraft-mode textarea,
+.minecraft-mode select {
+  background: hsl(0 0% 15%) !important;
+  border: 2px solid hsl(0 0% 30%) !important;
+  box-shadow:
+    inset 2px 2px 0 hsl(0 0% 10%),
+    inset -1px -1px 0 hsl(0 0% 22%) !important;
+  color: hsl(0 0% 90%) !important;
+}
+
+/* Minecraft-style scrollbar */
+.minecraft-mode ::-webkit-scrollbar {
+  width: 12px;
+}
+
+.minecraft-mode ::-webkit-scrollbar-track {
+  background: hsl(30 20% 12%);
+  border-left: 2px solid hsl(30 15% 18%);
+}
+
+.minecraft-mode ::-webkit-scrollbar-thumb {
+  background: hsl(30 30% 30%);
+  border: 2px solid hsl(30 20% 20%);
+}
+
+/* Heart-style decorative separator */
+.minecraft-mode hr,
+.minecraft-mode [data-orientation="horizontal"] {
+  border-color: hsl(30 30% 28%) !important;
+  border-width: 2px !important;
+  border-style: dashed !important;
+}
+
+/* Enchantment glow on primary buttons */
+.minecraft-mode button[class*="primary"],
+.minecraft-mode [class*="variant-glass"] {
+  animation: minecraftEnchant 2s ease-in-out infinite;
+}
+
+@keyframes minecraftEnchant {
+  0%, 100% { box-shadow: 3px 3px 0 hsl(var(--border)), 0 0 8px hsl(260 60% 50% / 0.3) !important; }
+  50% { box-shadow: 3px 3px 0 hsl(var(--border)), 0 0 16px hsl(260 60% 60% / 0.5) !important; }
+}
+
 /* Thicker stepped borders on cards */
 .minecraft-mode .card-hover,
 .minecraft-mode [class*="card"],
