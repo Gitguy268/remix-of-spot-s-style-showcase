@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 interface RGB { r: number; g: number; b: number; }
 const BASE1: RGB = { r: 44, g: 187, b: 195 };
@@ -89,7 +89,7 @@ class FloatingOrb {
   }
 }
 
-const ParticleBackground = () => {
+const ParticleBackground = React.forwardRef<HTMLCanvasElement>((_, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const stateRef = useRef({
@@ -203,6 +203,8 @@ const ParticleBackground = () => {
   }, [drawBackground, drawVignette]);
 
   return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-auto z-0" style={{ display: 'block' }} />;
-};
+});
+
+ParticleBackground.displayName = "ParticleBackground";
 
 export default ParticleBackground;
