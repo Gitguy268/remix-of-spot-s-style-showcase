@@ -1,10 +1,10 @@
-import { useEffect, useRef, useCallback, useState } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
 
 const MAX_HEAD_MOVE = 15;
 const MAX_PUPIL_MOVE = 4;
 const SMOOTHING = 0.1;
 
-const AxolotlPet = () => {
+const AxolotlPet = React.forwardRef<HTMLDivElement>((_, forwardedRef) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const headTrackerRef = useRef<SVGGElement>(null);
   const headBouncerRef = useRef<SVGGElement>(null);
@@ -188,6 +188,8 @@ const AxolotlPet = () => {
       </svg>
     </div>
   );
-};
+});
+
+AxolotlPet.displayName = "AxolotlPet";
 
 export default AxolotlPet;
