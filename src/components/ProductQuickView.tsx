@@ -91,7 +91,7 @@ const ProductQuickView = ({ open, onClose, product }: ProductQuickViewProps) => 
 
         <div className="grid md:grid-cols-2 gap-0">
           {/* Image */}
-          <div className="aspect-square bg-muted/10 overflow-hidden relative">
+          <div className="aspect-square overflow-hidden relative bg-background dark:bg-muted/10">
             <LazyImage 
               src={product.image} 
               alt={`${product.name} - ${product.fabric || 'Premium apparel'}`}

@@ -50,7 +50,7 @@ const ProductCard = ({
         onClick={() => playClick()}
         className="block focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
       >
-        <div className="aspect-square overflow-hidden bg-muted/5 relative rounded-t-xl">
+        <div className="aspect-square overflow-hidden relative rounded-t-xl bg-background dark:bg-muted/10">
           <LazyImage 
             src={image} 
             alt={`${name} - ${fabric || 'Premium apparel'}`} 

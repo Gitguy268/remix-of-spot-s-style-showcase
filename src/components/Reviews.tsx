@@ -4,8 +4,10 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { GlassFilter } from "@/components/ui/liquid-glass";
 import { LiquidGlassCard } from "@/components/ui/liquid-glass-card";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Reviews = () => {
+  const { t } = useTranslation();
   const reviews = [
     { name: "Sarah M.", rating: 5, quote: "The quality is incredible! Super soft cotton and the Spot design is even better in person.", date: "November 28, 2024", product: "Spot Tee – Black, Size M", verified: true },
     { name: "James R.", rating: 5, quote: "Bought matching hoodies for my family. The fabric feels premium and the embroidery is top-notch!", date: "December 2, 2024", product: "Minimal Spot Hoodie – Charcoal, Size L", verified: true },
@@ -54,11 +56,11 @@ const Reviews = () => {
       <div className="section-container">
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">
-            <h2 id="reviews-heading" className="text-4xl md:text-5xl font-bold mb-4 text-foreground">What Customers Say</h2>
+            <h2 id="reviews-heading" className="text-4xl md:text-5xl font-bold mb-4 text-foreground">{t("reviews.title")}</h2>
             <div className="flex items-center justify-center gap-3">
               <div className="flex items-center gap-1">{[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-primary text-primary" />)}</div>
               <span className="text-lg font-semibold text-foreground">4.9/5</span>
-              <span className="text-muted-foreground">from 200+ reviews</span>
+              <span className="text-muted-foreground">{t("reviews.fromReviews")}</span>
             </div>
           </div>
         </AnimatedSection>
