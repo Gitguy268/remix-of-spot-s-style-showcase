@@ -11,6 +11,7 @@ import { MinecraftModeProvider } from "./contexts/MinecraftModeContext";
 import PageTransition from "./components/PageTransition";
 // import PullToRefresh from "./components/PullToRefresh";
 import CookieConsent from "./components/CookieConsent";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
 
 const Index = lazy(() => import("./pages/Index"));
 const About = lazy(() => import("./pages/About"));
@@ -46,6 +47,7 @@ const App = () => (
                   </Suspense>
                 </PageTransition>
                 <CookieConsent />
+                <PWAInstallPrompt />
               </BrowserRouter>
             </TooltipProvider>
           </MinecraftModeProvider>

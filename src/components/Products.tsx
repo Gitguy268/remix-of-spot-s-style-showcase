@@ -9,6 +9,7 @@ import ProductComparison from "@/components/ProductComparison";
 import MobileProductCarousel from "@/components/MobileProductCarousel";
 import BirthdayCountdown from "@/components/BirthdayCountdown";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowRight, Ruler } from "lucide-react";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 import spotHoodie from "@/assets/spot-hoodie.png";
@@ -32,7 +33,14 @@ interface Product {
 }
 
 const Products = () => {
-  const categories = ["All", "T-Shirts", "Hoodies", "Accessories", "Kids"];
+  const { t } = useTranslation();
+  const categoryKeys = [
+    { key: "All", label: t("products.catAll") },
+    { key: "T-Shirts", label: t("products.catTShirts") },
+    { key: "Hoodies", label: t("products.catHoodies") },
+    { key: "Accessories", label: t("products.catAccessories") },
+    { key: "Kids", label: t("products.catKids") },
+  ];
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -184,10 +192,10 @@ const Products = () => {
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-8">
             <h2 id="products-heading" className="text-4xl md:text-5xl font-bold mb-4">
-              <span className="text-gradient">Spot</span> Collection
+              <span className="text-gradient">Spot</span> {t("products.title")}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Premium apparel featuring Spot, the black Labrador. Soft fabrics, playful designs, worldwide shipping.
+              {t("products.subtitle")}
             </p>
           </div>
         </AnimatedSection>
@@ -202,8 +210,8 @@ const Products = () => {
               className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors"
             >
               <Ruler className="w-4 h-4" aria-hidden="true" />
-              <span>Size Chart & Fit Guide</span>
-              <span className="text-muted-foreground">— Model is 5'10", wearing size M</span>
+              <span>{t("products.sizeChart")}</span>
+              <span className="text-muted-foreground">{t("products.sizeChartNote")}</span>
             </a>
           </div>
         </AnimatedSection>
@@ -211,20 +219,20 @@ const Products = () => {
         {/* Category Tabs */}
         <AnimatedSection animation="fade-in" delay={100}>
           <div className="flex flex-wrap justify-center gap-2 mb-12" role="tablist" aria-label="Product categories">
-            {categories.map((category) => (
+            {categoryKeys.map(({ key, label }) => (
               <button
-                key={category}
-                onClick={() => handleCategoryChange(category)}
+                key={key}
+                onClick={() => handleCategoryChange(key)}
                 role="tab"
-                aria-selected={activeCategory === category}
+                aria-selected={activeCategory === key}
                 aria-controls="products-grid"
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background ${
-                  activeCategory === category
+                  activeCategory === key
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground"
                 }`}
               >
-                {category}
+                {label}
               </button>
             ))}
           </div>
@@ -266,7 +274,7 @@ const Products = () => {
           <div className="text-center">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="glass-outline" size="xl">
-                <span>View All Products</span>
+                <span>{t("products.viewAll")}</span>
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Button>
             </a>
