@@ -1,143 +1,78 @@
 
 
-## Four Enhancements: Axolotl Pet, Product Links, Minecraft Mode, and Yeezy Grill Easter Egg
+## Plan: PWA Support, Multi-language, and Theme-aware Product Images
+
+### 1. PWA Support — Make site installable with offline caching
+
+**Install** `vite-plugin-pwa` package.
+
+**Create** `public/manifest.json` with app name "Blacklabspotsshop", theme color `#2cbbc3`, icons (reuse existing favicon URL as a starting point, plus generate 192x192 and 512x512 placeholder icons).
+
+**Update** `vite.config.ts` to add VitePWA plugin with:
+- `registerType: 'autoUpdate'`
+- Workbox runtime caching for images and fonts
+- `navigateFallbackDenylist: [/^\/~oauth/]`
+- Manifest configuration inline
+
+**Update** `index.html` with PWA meta tags (`apple-mobile-web-app-capable`, `apple-mobile-web-app-status-bar-style`, manifest link).
+
+**Create** `src/components/PWAInstallPrompt.tsx` — a dismissible banner/button that appears on mobile when the `beforeinstallprompt` event fires, prompting users to install. Add it to `App.tsx`.
 
 ---
 
-### 1. Interactive Axolotl Pet on Terms & Conditions Page
+### 2. Multi-language Support — Translate UI strings
 
-A reactive, animated axolotl SVG pet that follows the user's mouse cursor and bounces with floating hearts when clicked. It will be placed in the bottom-right corner of the Terms page, overlaying the content as a floating element.
+The language switcher already exists in `CurrencyContext.tsx` with 6 languages (EN, ES, FR, DE, JA, ZH), but it only saves a preference — no actual translations happen.
 
-**How it works:**
-- The full SVG axolotl (head, body, gills, eyes) is rendered as a React component
-- The head and pupils track the mouse position using `mousemove` events with smooth lerp-based animation via `requestAnimationFrame`
-- Clicking the axolotl triggers a CSS bounce animation and spawns floating heart elements that fade upward
-- The background is transparent (no white rectangle) -- the axolotl sits naturally on the page's themed background
-- Positioned as a fixed/sticky element in the bottom-right so it doesn't interfere with reading the terms
+**Create** `src/i18n/translations.ts` — a translations dictionary keyed by language code, covering all major UI strings (nav labels, hero heading/subheading, product section titles, FAQ questions, footer text, button labels like "Shop Now", "Quick View", "View All Products", etc.).
 
-**Files to create:**
-- `src/components/AxolotlPet.tsx` -- React component converting the provided HTML/CSS/SVG/JS into a self-contained React component with `useRef`, `useEffect`, and `useState`
+**Create** `src/hooks/useTranslation.ts` — a hook that reads the current `language` from `useCurrency()` and returns a `t(key)` function that looks up the translation.
 
-**Files to modify:**
-- `src/pages/Terms.tsx` -- Add the `AxolotlPet` component at the bottom of the page
-- `src/index.css` -- Add the axolotl-specific CSS (bounce animation, floating hearts keyframes)
-
----
-
-### 2. Product-Specific Links to Printify Store
-
-Currently, every product card and the Quick View modal link to the generic store homepage (`https://blacklabspotsshop.printify.me/`). Each product should link to its own specific page on the Printify store.
-
-**How it works:**
-- Add a `shopUrl` field to each product definition in `Products.tsx`
-- Each product gets a unique URL pointing to its Printify product page (using Printify's slug-based URL format: `https://blacklabspotsshop.printify.me/product/SLUG`)
-- The `shopUrl` is passed through to `ProductCard` and `ProductQuickView` so all "Shop Now" and card-click actions navigate to the correct product
-- Since exact Printify slugs may need adjustment, each URL is configured per-product and easy to update
-
-**Files to modify:**
-- `src/components/Products.tsx` -- Add `shopUrl` field to the `Product` interface and each product object
-- `src/components/ProductCard.tsx` -- Accept `shopUrl` prop and use it instead of the generic `SHOP_URL` constant
-- `src/components/ProductQuickView.tsx` -- Accept `shopUrl` prop and use it in the "Shop Now" CTA link
+**Update key components** to use `t()` instead of hardcoded English strings:
+- `Navbar.tsx` — nav link labels, "Shop Now" button
+- `Hero.tsx` — heading, subheading, trust badges
+- `Products.tsx` — section title, category labels, CTA button
+- `FAQ.tsx` — questions and answers
+- `Footer.tsx` — footer text and links
+- `Newsletter.tsx` — heading and placeholder text
+- `Reviews.tsx` — section title
 
 ---
 
-### 3. Enhanced Minecraft Mode
+### 3. Dark/Light Mode-aware Product Images
 
-The current Minecraft mode applies pixel fonts, removes border-radius, and shifts colors. This enhancement makes it feel significantly more Minecraft-like.
+**Approach**: Add a CSS class-based background treatment to product cards so the product image container adapts to the theme.
 
-**Additions:**
-- **Dirt block background texture**: A CSS-generated repeating pattern that mimics the iconic Minecraft dirt texture using layered gradients
-- **Block-breaking cursor**: A custom pickaxe-style cursor (via CSS `cursor: url(...)` or `crosshair` refinement)
-- **Hotbar-style footer**: The payment method badges in the footer are styled to look like Minecraft inventory slots (dark grey squares with lighter borders, like the hotbar UI)
-- **Health/hunger bar decorations**: Subtle pixel-art heart and drumstick icons in the footer area using CSS pseudo-elements
-- **Creeper face favicon/icon hint**: A tiny creeper face rendered via CSS box-shadow pixel art near the Minecraft toggle
-- **Tooltip styling**: Minecraft-style dark purple/grey tooltips with pixelated borders
-- **Thicker, stepped borders**: 3px solid borders with hard pixel shadows on more elements
-- **Button hover effect**: Buttons lighten in color on hover (like Minecraft menu buttons) instead of scaling
+**Update** `src/components/ProductCard.tsx`:
+- Change the image container background from `bg-muted/5` to a theme-aware class: light mode gets a bright white/light gray background, dark mode gets a dark charcoal background.
 
-**Files to modify:**
-- `src/index.css` -- Expand the `.minecraft-mode` CSS section with new rules for dirt background, hotbar slots, tooltip overrides, and enhanced button/card styling
-- `src/components/MinecraftModeToggle.tsx` -- Add a small creeper face pixel art next to the toggle, and a fun "Survival Mode" or "Creative Mode" label variation
+**Add CSS** in `src/index.css`:
+- `.product-image-bg` class with light/dark variants that provide a subtle gradient or solid background matching the theme, so product photos look natural in both modes.
+
+**Update** `src/components/ProductQuickView.tsx` similarly for the quick view modal image area.
 
 ---
 
-### 4. Yeezy Grill Paper Cutout Easter Egg on Contact Page
+### Files to create
+- `public/manifest.json`
+- `src/i18n/translations.ts`
+- `src/hooks/useTranslation.ts`
+- `src/components/PWAInstallPrompt.tsx`
 
-An interactive, slightly tilted image of the Yeezy grill paper cutout placed in the bottom-right corner of the Contact page.
+### Files to modify
+- `vite.config.ts` (add PWA plugin)
+- `index.html` (PWA meta tags)
+- `src/App.tsx` (add PWAInstallPrompt)
+- `src/components/Navbar.tsx` (translations)
+- `src/components/Hero.tsx` (translations)
+- `src/components/Products.tsx` (translations)
+- `src/components/ProductCard.tsx` (theme-aware image bg)
+- `src/components/FAQ.tsx` (translations)
+- `src/components/Footer.tsx` (translations)
+- `src/components/Newsletter.tsx` (translations)
+- `src/components/Reviews.tsx` (translations)
+- `src/index.css` (product image bg classes)
 
-**How it works:**
-- The uploaded PNG (`yzygrillpaper1.png`) is copied into `src/assets/`
-- A new `YeezyGrillEasterEgg` component renders the image with:
-  - Fixed positioning in the bottom-right corner
-  - A slight CSS tilt (`rotate(8deg)`) for a "paper cutout" feel
-  - Interactive hover effects: the image scales up slightly, removes tilt (flattens), and applies a subtle glow/shadow
-  - Click interaction: triggers a fun wobble animation and maybe a brief sparkle effect
-  - Drag-to-reposition: users can drag the cutout around the page for a playful feel
-  - The image uses `mix-blend-mode: multiply` to remove the white background from the PNG, making it blend naturally
-
-**Files to create:**
-- `src/components/YeezyGrillEasterEgg.tsx` -- Interactive component with tilt, hover, click, and optional drag behavior
-
-**Files to modify:**
-- `src/pages/Contact.tsx` -- Import and render the `YeezyGrillEasterEgg` component inside the page layout
-- Copy `user-uploads://yzygrillpaper1.png` to `src/assets/yeezy-grill.png`
-
----
-
-### Technical Details
-
-**Axolotl mouse tracking (React conversion):**
-
-```text
-useEffect:
-  - addEventListener('mousemove') on document
-  - Calculate dx/dy from component center
-  - Lerp currentX/Y toward targetX/Y in rAF loop
-  - Apply transform to head SVG group via ref
-  - Move pupil cx/cy attributes for "looking" effect
-
-onClick:
-  - Add 'joy-bounce' class to head group
-  - Spawn heart div elements that animate upward and self-remove
-```
-
-**Product URL strategy:**
-
-```text
-Product Interface:
-  + shopUrl: string  (new field)
-
-Each product definition includes:
-  shopUrl: "https://blacklabspotsshop.printify.me/product/spot-tee"
-  (URL format follows Printify slug convention -- easy to update if slugs differ)
-```
-
-**Minecraft Mode CSS additions:**
-
-```text
-.minecraft-mode body {
-  background-image: repeating dirt-block pattern (CSS gradients);
-}
-
-.minecraft-mode [class*="payment"] {
-  Minecraft hotbar slot styling (dark bg, inset borders)
-}
-
-.minecraft-mode [data-radix-tooltip] {
-  Dark purple tooltip with pixel border
-}
-```
-
-**Yeezy Grill interaction:**
-
-```text
-- Position: fixed, bottom: 2rem, right: 2rem
-- Transform: rotate(8deg)
-- Hover: scale(1.1) rotate(0deg)
-- Click: wobble keyframe animation
-- mix-blend-mode: multiply (removes white background)
-- Optional: draggable via mousedown/mousemove/mouseup
-```
-
-**No new npm dependencies** are needed. All features use CSS animations, vanilla React state/refs, and SVG.
+### Package to install
+- `vite-plugin-pwa`
 
