@@ -144,6 +144,7 @@ const Index = () => {
           <SpotGameShowcase />
           <Spot3DViewer />
           <VideoSection />
+          <PhotoScanner />
           <PhotoStories />
           <SpotBook />
           <Reviews />
