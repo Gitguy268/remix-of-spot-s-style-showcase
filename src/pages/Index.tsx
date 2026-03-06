@@ -5,6 +5,7 @@ import Celebs from "@/components/Celebs";
 import Products from "@/components/Products";
 import Spot3DViewer from "@/components/Spot3DViewer";
 import VideoSection from "@/components/VideoSection";
+import PhotoScanner from "@/components/PhotoScanner";
 import PhotoStories from "@/components/PhotoStories";
 import Reviews from "@/components/Reviews";
 import FAQ from "@/components/FAQ";
