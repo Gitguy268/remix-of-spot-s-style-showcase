@@ -26,7 +26,7 @@ const Celebs = () => {
   ];
 
   return (
-    <section className="py-24 bg-card overflow-hidden" aria-labelledby="celebs-heading">
+    <section className="py-24 overflow-hidden" aria-labelledby="celebs-heading">
       <div className="section-container">
         {/* Header */}
         <AnimatedSection animation="fade-up">

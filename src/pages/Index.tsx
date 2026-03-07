@@ -2,6 +2,7 @@ import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Celebs from "@/components/Celebs";
+import CombinedBackground from "@/components/CombinedBackground";
 import Products from "@/components/Products";
 import Spot3DViewer from "@/components/Spot3DViewer";
 import VideoSection from "@/components/VideoSection";
@@ -134,7 +135,8 @@ const Index = () => {
         </script>
       </Helmet>
       <ScrollProgress />
-      <div className="min-h-screen bg-background">
+      <CombinedBackground />
+      <div className="min-h-screen relative" style={{ zIndex: 2 }}>
         <Navbar />
         <main>
           <Hero />

@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Grid, X } from "lucide-react";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import spotBook1 from "@/assets/spot-book-1.jpeg";
 import spotBook2 from "@/assets/spot-book-2.jpeg";
 import spotBook3 from "@/assets/spot-book-3.jpeg";
@@ -118,7 +118,6 @@ const SpotBook = () => {
 
   return (
     <section className="py-16 md:py-24 overflow-hidden relative">
-      <ParticleBackground />
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">

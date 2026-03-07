@@ -65,7 +65,6 @@ function rf(a: number, b: number): number {
 const SCOPED_CSS = `
 .ps-scanner-section {
   position: relative;
-  background: #000;
   overflow: hidden;
 }
 .ps-container {

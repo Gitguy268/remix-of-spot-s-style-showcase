@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import ErrorBoundary from "@/components/ErrorBoundary";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 
@@ -157,7 +157,6 @@ const Spot3DViewer = () => {
   if (hasError) {
     return (
       <section className="py-24 relative">
-        <ParticleBackground />
         <div className="section-container relative z-10">
           <AnimatedSection animation="fade-up">
             <div className="text-center mb-12">
@@ -178,7 +177,6 @@ const Spot3DViewer = () => {
 
   return (
     <section className="py-24 relative" aria-labelledby="3d-viewer-heading">
-      <ParticleBackground />
       <div className="section-container relative z-10">
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">
