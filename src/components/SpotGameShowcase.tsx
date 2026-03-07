@@ -24,11 +24,9 @@ const SpotGameShowcase = () => {
       aria-label="Spot's Game showcase section"
     >
       {/* Background with overlay */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${spotGameScreenshot})` }}
-      >
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+      {/* Background overlay — content floats over the global combined background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
       </div>
 
       <div className="relative section-container">
