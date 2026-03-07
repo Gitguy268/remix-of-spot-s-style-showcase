@@ -1,5 +1,5 @@
 import AnimatedSection from "@/components/AnimatedSection";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import spotCozy from "@/assets/spot-cozy.png";
 import spotFestive from "@/assets/spot-festive.png";
 import spotSweater from "@/assets/spot-sweater.png";

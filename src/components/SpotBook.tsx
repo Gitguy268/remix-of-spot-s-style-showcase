@@ -2,7 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Grid, X } from "lucide-react";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import spotBook1 from "@/assets/spot-book-1.jpeg";
 import spotBook2 from "@/assets/spot-book-2.jpeg";
 import spotBook3 from "@/assets/spot-book-3.jpeg";

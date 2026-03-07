@@ -4,7 +4,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductSkeleton from "@/components/ProductSkeleton";
 import AnimatedSection from "@/components/AnimatedSection";
 import ProductQuickView from "@/components/ProductQuickView";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import ProductComparison from "@/components/ProductComparison";
 import MobileProductCarousel from "@/components/MobileProductCarousel";
 import BirthdayCountdown from "@/components/BirthdayCountdown";

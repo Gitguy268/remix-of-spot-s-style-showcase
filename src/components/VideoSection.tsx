@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import AnimatedSection from "@/components/AnimatedSection";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 
 const VideoSection = () => {

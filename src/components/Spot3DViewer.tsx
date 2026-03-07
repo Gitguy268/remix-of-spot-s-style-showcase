@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import ParticleBackground from "@/components/ParticleBackground";
+
 import ErrorBoundary from "@/components/ErrorBoundary";
 import spotTeeProduct from "@/assets/spot-tee-product.png";
 

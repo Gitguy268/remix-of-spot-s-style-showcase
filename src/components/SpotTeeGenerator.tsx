@@ -10,7 +10,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import AnimatedSection from "./AnimatedSection";
-import ParticleBackground from "./ParticleBackground";
+
 
 const COLORS = [
   { name: "White", hex: "#FFFFFF" },
