@@ -157,7 +157,6 @@ const Spot3DViewer = () => {
   if (hasError) {
     return (
       <section className="py-24 relative">
-        <ParticleBackground />
         <div className="section-container relative z-10">
           <AnimatedSection animation="fade-up">
             <div className="text-center mb-12">
@@ -178,7 +177,6 @@ const Spot3DViewer = () => {
 
   return (
     <section className="py-24 relative" aria-labelledby="3d-viewer-heading">
-      <ParticleBackground />
       <div className="section-container relative z-10">
         <AnimatedSection animation="fade-up">
           <div className="text-center mb-12">

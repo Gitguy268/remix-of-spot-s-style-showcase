@@ -134,7 +134,6 @@ const SpotTeeGenerator = () => {
   if (!authLoading && !user) {
     return (
       <section id="try-on" className="py-20 relative">
-        <ParticleBackground />
         <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection>
             <div className="text-center max-w-2xl mx-auto">
@@ -182,7 +181,6 @@ const SpotTeeGenerator = () => {
 
   return (
     <section id="try-on" className="py-20 relative">
-      <ParticleBackground />
       <div className="container mx-auto px-4 relative z-10">
         <AnimatedSection>
           <div className="text-center mb-12">
