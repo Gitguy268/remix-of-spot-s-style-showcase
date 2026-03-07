@@ -179,7 +179,6 @@ const Products = () => {
 
   return (
     <section id="products" className="py-24 overflow-hidden relative" aria-labelledby="products-heading">
-      <ParticleBackground />
       <div className="section-container relative z-10">
         {/* Birthday Countdown */}
         <AnimatedSection animation="fade-up">

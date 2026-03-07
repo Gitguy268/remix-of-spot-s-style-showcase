@@ -25,7 +25,6 @@ const PhotoStories = () => {
 
   return (
     <section id="story" className="py-24 overflow-hidden relative">
-      <ParticleBackground />
       <div className="section-container relative z-10">
         {/* Header */}
         <AnimatedSection animation="fade-up">
