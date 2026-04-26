@@ -1,143 +1,60 @@
+## Plan: Upgrade Liquid Glass Components to kube.io-Style Refraction
 
+The kube.io article demonstrates Apple-quality "Liquid Glass" using **SVG displacement-map filters as `backdrop-filter`** to bend the pixels behind a panel, plus a **specular rim highlight** for a wet-glass edge. Today our `LiquidGlassCard`, `LiquidGlassButton`, and `GlassEffect` rely on plain `backdrop-blur` + radial gradients — they look flat compared to kube.io's refractive look.
 
-## Four Enhancements: Axolotl Pet, Product Links, Minecraft Mode, and Yeezy Grill Easter Egg
+This upgrade reworks our three glass primitives to use real SVG-filter refraction, a convex bezel highlight, and a soft inner specular shine, while keeping the existing turquoise tint (`hsl(183 63% 47%)`) and all current props/sizes so nothing else has to change.
 
----
+### What will look different
 
-### 1. Interactive Axolotl Pet on Terms & Conditions Page
+- **Edges bend the background** behind the glass (visible warp on text, photos, the 3D background)
+- **Bright specular rim** runs along the top-left edge, fading around the shape (signature Apple look)
+- **Convex "lip" feel** — center looks slightly magnified, edges refract
+- **Turquoise tint stays** — only the lensing/highlights are new
+- Subtle hover: rim brightens, refraction strength ticks up, existing tilt preserved
 
-A reactive, animated axolotl SVG pet that follows the user's mouse cursor and bounces with floating hearts when clicked. It will be placed in the bottom-right corner of the Terms page, overlaying the content as a floating element.
+Browsers without SVG-filter `backdrop-filter` (Safari/Firefox) automatically fall back to the current blur + tint look — no broken UI.
 
-**How it works:**
-- The full SVG axolotl (head, body, gills, eyes) is rendered as a React component
-- The head and pupils track the mouse position using `mousemove` events with smooth lerp-based animation via `requestAnimationFrame`
-- Clicking the axolotl triggers a CSS bounce animation and spawns floating heart elements that fade upward
-- The background is transparent (no white rectangle) -- the axolotl sits naturally on the page's themed background
-- Positioned as a fixed/sticky element in the bottom-right so it doesn't interfere with reading the terms
+### Technical changes
 
-**Files to create:**
-- `src/components/AxolotlPet.tsx` -- React component converting the provided HTML/CSS/SVG/JS into a self-contained React component with `useRef`, `useEffect`, and `useState`
+**1. New file: `src/components/ui/liquid-glass-filter.tsx`**
+A single mounted-once component holding a hidden `<svg>` with the reusable filters:
+- `#lg-displacement` — `feImage` of a procedurally-generated displacement map (radial bezel gradient encoded into R/G channels) + `feDisplacementMap` for refraction
+- `#lg-specular` — `feGaussianBlur` + `feSpecularLighting` with a `feDistantLight` from top-left for the rim highlight
+- `#lg-glass` — composite of the two above via `feComposite`/`feBlend`
 
-**Files to modify:**
-- `src/pages/Terms.tsx` -- Add the `AxolotlPet` component at the bottom of the page
-- `src/index.css` -- Add the axolotl-specific CSS (bounce animation, floating hearts keyframes)
+Mounted once in `src/App.tsx` (next to existing providers) so all glass elements can reference the filter IDs.
 
----
+**2. Rewrite `src/components/ui/liquid-glass-card.tsx`**
+- Add a new absolute layer `.lg-refraction` with `backdrop-filter: url(#lg-glass) blur(2px) saturate(140%)` (Chrome) and graceful fallback to today's `backdrop-blur-xl` via `@supports`
+- Replace the radial highlight with an SVG-driven specular rim layer
+- Keep: turquoise border, mouse-tracked tilt, bottom ambient glow, intensity prop
+- Tint stays `hsl(183 63% 47%)` — just lowered to ~12% so refraction reads through
 
-### 2. Product-Specific Links to Printify Store
+**3. Rewrite `src/components/ui/liquid-glass-button.tsx`**
+- Same refraction layer scaled for buttons (smaller blur, higher refraction strength)
+- Keep all 4 size variants (`default | sm | lg | xl`), tilt, mouse-glow, drop shadow
+- Hover boosts displacement scale via CSS variable for a subtle "press into glass" feel
 
-Currently, every product card and the Quick View modal link to the generic store homepage (`https://blacklabspotsshop.printify.me/`). Each product should link to its own specific page on the Printify store.
+**4. Update `src/components/ui/liquid-glass.tsx` (`GlassEffect` / `GlassFilter`)**
+- Point `GlassEffect` to the new shared `#lg-glass` filter instead of the local `#glass-distortion`
+- Keep `GlassFilter` exported for backward compatibility but make it a no-op (filters now live in the shared mount)
+- Tint layer stays turquoise (`rgba(44, 187, 195, 0.08)`)
 
-**How it works:**
-- Add a `shopUrl` field to each product definition in `Products.tsx`
-- Each product gets a unique URL pointing to its Printify product page (using Printify's slug-based URL format: `https://blacklabspotsshop.printify.me/product/SLUG`)
-- The `shopUrl` is passed through to `ProductCard` and `ProductQuickView` so all "Shop Now" and card-click actions navigate to the correct product
-- Since exact Printify slugs may need adjustment, each URL is configured per-product and easy to update
+**5. Mount filters once in `src/App.tsx`**
+Add `<LiquidGlassFilter />` near the top of the tree so every glass element on every page can `url(#lg-glass)`.
 
-**Files to modify:**
-- `src/components/Products.tsx` -- Add `shopUrl` field to the `Product` interface and each product object
-- `src/components/ProductCard.tsx` -- Accept `shopUrl` prop and use it instead of the generic `SHOP_URL` constant
-- `src/components/ProductQuickView.tsx` -- Accept `shopUrl` prop and use it in the "Shop Now" CTA link
+### Files to create
+- `src/components/ui/liquid-glass-filter.tsx`
 
----
+### Files to modify
+- `src/components/ui/liquid-glass-card.tsx` — refraction + specular layers
+- `src/components/ui/liquid-glass-button.tsx` — refraction + specular layers
+- `src/components/ui/liquid-glass.tsx` — use shared filter
+- `src/App.tsx` — mount `<LiquidGlassFilter />` once
+- `src/index.css` — small `@supports (backdrop-filter: url(#x))` fallback rules
 
-### 3. Enhanced Minecraft Mode
-
-The current Minecraft mode applies pixel fonts, removes border-radius, and shifts colors. This enhancement makes it feel significantly more Minecraft-like.
-
-**Additions:**
-- **Dirt block background texture**: A CSS-generated repeating pattern that mimics the iconic Minecraft dirt texture using layered gradients
-- **Block-breaking cursor**: A custom pickaxe-style cursor (via CSS `cursor: url(...)` or `crosshair` refinement)
-- **Hotbar-style footer**: The payment method badges in the footer are styled to look like Minecraft inventory slots (dark grey squares with lighter borders, like the hotbar UI)
-- **Health/hunger bar decorations**: Subtle pixel-art heart and drumstick icons in the footer area using CSS pseudo-elements
-- **Creeper face favicon/icon hint**: A tiny creeper face rendered via CSS box-shadow pixel art near the Minecraft toggle
-- **Tooltip styling**: Minecraft-style dark purple/grey tooltips with pixelated borders
-- **Thicker, stepped borders**: 3px solid borders with hard pixel shadows on more elements
-- **Button hover effect**: Buttons lighten in color on hover (like Minecraft menu buttons) instead of scaling
-
-**Files to modify:**
-- `src/index.css` -- Expand the `.minecraft-mode` CSS section with new rules for dirt background, hotbar slots, tooltip overrides, and enhanced button/card styling
-- `src/components/MinecraftModeToggle.tsx` -- Add a small creeper face pixel art next to the toggle, and a fun "Survival Mode" or "Creative Mode" label variation
-
----
-
-### 4. Yeezy Grill Paper Cutout Easter Egg on Contact Page
-
-An interactive, slightly tilted image of the Yeezy grill paper cutout placed in the bottom-right corner of the Contact page.
-
-**How it works:**
-- The uploaded PNG (`yzygrillpaper1.png`) is copied into `src/assets/`
-- A new `YeezyGrillEasterEgg` component renders the image with:
-  - Fixed positioning in the bottom-right corner
-  - A slight CSS tilt (`rotate(8deg)`) for a "paper cutout" feel
-  - Interactive hover effects: the image scales up slightly, removes tilt (flattens), and applies a subtle glow/shadow
-  - Click interaction: triggers a fun wobble animation and maybe a brief sparkle effect
-  - Drag-to-reposition: users can drag the cutout around the page for a playful feel
-  - The image uses `mix-blend-mode: multiply` to remove the white background from the PNG, making it blend naturally
-
-**Files to create:**
-- `src/components/YeezyGrillEasterEgg.tsx` -- Interactive component with tilt, hover, click, and optional drag behavior
-
-**Files to modify:**
-- `src/pages/Contact.tsx` -- Import and render the `YeezyGrillEasterEgg` component inside the page layout
-- Copy `user-uploads://yzygrillpaper1.png` to `src/assets/yeezy-grill.png`
-
----
-
-### Technical Details
-
-**Axolotl mouse tracking (React conversion):**
-
-```text
-useEffect:
-  - addEventListener('mousemove') on document
-  - Calculate dx/dy from component center
-  - Lerp currentX/Y toward targetX/Y in rAF loop
-  - Apply transform to head SVG group via ref
-  - Move pupil cx/cy attributes for "looking" effect
-
-onClick:
-  - Add 'joy-bounce' class to head group
-  - Spawn heart div elements that animate upward and self-remove
-```
-
-**Product URL strategy:**
-
-```text
-Product Interface:
-  + shopUrl: string  (new field)
-
-Each product definition includes:
-  shopUrl: "https://blacklabspotsshop.printify.me/product/spot-tee"
-  (URL format follows Printify slug convention -- easy to update if slugs differ)
-```
-
-**Minecraft Mode CSS additions:**
-
-```text
-.minecraft-mode body {
-  background-image: repeating dirt-block pattern (CSS gradients);
-}
-
-.minecraft-mode [class*="payment"] {
-  Minecraft hotbar slot styling (dark bg, inset borders)
-}
-
-.minecraft-mode [data-radix-tooltip] {
-  Dark purple tooltip with pixel border
-}
-```
-
-**Yeezy Grill interaction:**
-
-```text
-- Position: fixed, bottom: 2rem, right: 2rem
-- Transform: rotate(8deg)
-- Hover: scale(1.1) rotate(0deg)
-- Click: wobble keyframe animation
-- mix-blend-mode: multiply (removes white background)
-- Optional: draggable via mousedown/mousemove/mouseup
-```
-
-**No new npm dependencies** are needed. All features use CSS animations, vanilla React state/refs, and SVG.
-
+### What does NOT change
+- All consumer components (`ProductCard`, `Hero`, `Newsletter`, `FAQ`, `Reviews`, `SpotGameShowcase`, `SpotTeeGenerator`, `Footer`, `GlassDock`, `BirthdayCountdown`, `PhotoScanner`, `ProductQuickView`) — they keep using the same `<LiquidGlassCard>` / `<LiquidGlassButton>` / `<GlassEffect>` props
+- Turquoise brand color
+- The combined 3D background (it'll actually look better — you'll see it bend through the glass)
+- Theme toggle, mobile layout, accessibility
