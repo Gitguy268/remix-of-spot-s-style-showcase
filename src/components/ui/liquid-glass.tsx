@@ -40,23 +40,36 @@ const GlassEffect: React.FC<GlassEffectProps> = ({
       )}
       style={glassStyle}
     >
-      {/* Glass Layers */}
+      {/* Glass refraction layer (shared SVG filter) */}
       <div
-        className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
+        className="absolute inset-0 z-0 overflow-hidden rounded-3xl pointer-events-none"
         style={{
-          backdropFilter: "blur(8px)",
-          filter: "url(#glass-distortion)",
+          backdropFilter: "url(#lg-glass) blur(8px) saturate(160%)",
+          WebkitBackdropFilter: "blur(10px) saturate(160%)",
           isolation: "isolate",
         }}
       />
 
+      {/* Turquoise tint */}
       <div
-        className="absolute inset-0 z-10 rounded-3xl"
+        className="absolute inset-0 z-10 rounded-3xl pointer-events-none"
         style={{ background: "rgba(44, 187, 195, 0.08)" }}
       />
 
+      {/* Specular rim highlight */}
       <div
-        className="absolute inset-0 z-20 rounded-3xl overflow-hidden"
+        aria-hidden="true"
+        className="absolute inset-0 z-20 rounded-3xl pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(120% 90% at 14% 10%, hsl(183 80% 92% / 0.5) 0%, hsl(183 80% 92% / 0.15) 20%, transparent 45%)",
+          mixBlendMode: "screen",
+        }}
+      />
+
+      {/* Inner bezel highlights */}
+      <div
+        className="absolute inset-0 z-20 rounded-3xl overflow-hidden pointer-events-none"
         style={{
           boxShadow:
             "inset 2px 2px 1px 0 rgba(255, 255, 255, 0.3), inset -1px -1px 1px 1px rgba(255, 255, 255, 0.2)",
@@ -112,30 +125,9 @@ const GlassButton: React.FC<{ children: React.ReactNode; href?: string }> = ({
   </GlassEffect>
 );
 
-// SVG Filter Component
-const GlassFilter: React.FC = () => (
-  <svg className="hidden" aria-hidden="true">
-    <defs>
-      <filter id="glass-distortion">
-        <feTurbulence
-          type="fractalNoise"
-          baseFrequency="0.01"
-          numOctaves="3"
-          result="noise"
-        />
-        <feDisplacementMap
-          in="SourceGraphic"
-          in2="noise"
-          scale="3"
-          xChannelSelector="R"
-          yChannelSelector="G"
-        />
-        <feGaussianBlur stdDeviation="0.5" />
-        <feComposite in="SourceGraphic" operator="over" />
-      </filter>
-    </defs>
-  </svg>
-);
+// SVG Filter Component — kept for backward compatibility.
+// Real filters now live in <LiquidGlassFilter /> (mounted once in App.tsx).
+const GlassFilter: React.FC = () => null;
 
 export { GlassEffect, GlassDock, GlassButton, GlassFilter };
 export type { GlassEffectProps, DockIcon };
