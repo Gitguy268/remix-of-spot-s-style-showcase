@@ -87,18 +87,39 @@ const LiquidGlassButton = React.forwardRef<HTMLButtonElement, LiquidGlassButtonP
         onMouseLeave={handleMouseLeave}
         {...props}
       >
+        {/* SVG refraction — bends background pixels through the button (Chrome). Falls back gracefully. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          style={{
+            backdropFilter: `url(#lg-glass-sm) blur(${isHovered ? 14 : 10}px) saturate(180%)`,
+            WebkitBackdropFilter: `blur(${isHovered ? 18 : 14}px) saturate(180%)`,
+            transition: "backdrop-filter 300ms ease",
+          }}
+        />
+
         {/* Base layer - turquoise tinted glass */}
         <div 
           className="absolute inset-0 rounded-2xl transition-all duration-300"
           style={{
             background: `linear-gradient(
               ${135 + (mousePosition.x - 0.5) * 30}deg,
-              hsl(183 63% 47% / ${isHovered ? 0.25 : 0.2}),
-              hsl(183 63% 55% / ${isHovered ? 0.15 : 0.1}),
-              hsl(183 63% 47% / ${isHovered ? 0.2 : 0.15})
+              hsl(183 63% 47% / ${isHovered ? 0.22 : 0.16}),
+              hsl(183 63% 55% / ${isHovered ? 0.12 : 0.08}),
+              hsl(183 63% 47% / ${isHovered ? 0.18 : 0.12})
             )`,
-            backdropFilter: "blur(20px) saturate(180%)",
-            WebkitBackdropFilter: "blur(20px) saturate(180%)",
+          }}
+        />
+
+        {/* Specular rim — Apple-style top-left convex shine */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-300"
+          style={{
+            background:
+              "radial-gradient(120% 90% at 14% 10%, hsl(183 80% 92% / 0.55) 0%, hsl(183 80% 92% / 0.18) 22%, transparent 45%)",
+            mixBlendMode: "screen",
+            opacity: isHovered ? 1 : 0.75,
           }}
         />
 
