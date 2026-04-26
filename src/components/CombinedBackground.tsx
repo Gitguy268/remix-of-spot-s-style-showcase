@@ -30,12 +30,12 @@ const CONFIG = {
   idleEase: 0.02,
   idleDelay: 1500,
   // Three.js plane
-  planeSize: 200,
-  planeSegments: 60,
-  wireframeOpacity: 0.25,
-  fogDensity: 0.003,
-  cameraZ: 50,
-  cameraY: 10,
+  planeSize: 400,
+  planeSegments: 80,
+  wireframeOpacity: 0.22,
+  fogDensity: 0.0035,
+  cameraZ: 55,
+  cameraY: 12,
   waveSpeed: 0.005,
   // Grid reactivity
   gridCameraFollowX: 7,
