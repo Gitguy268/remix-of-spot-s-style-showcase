@@ -346,7 +346,9 @@ const CombinedBackground = () => {
       resizeTimer = window.setTimeout(() => {
         resizeCanvas();
         rebuildVignetteGrad();
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = aspect;
+        camera.fov = computeFov(aspect);
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
