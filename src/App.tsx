@@ -12,6 +12,7 @@ import PageTransition from "./components/PageTransition";
 // import PullToRefresh from "./components/PullToRefresh";
 import CookieConsent from "./components/CookieConsent";
 import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import LiquidGlassFilter from "./components/ui/liquid-glass-filter";
 
 const Index = lazy(() => import("./pages/Index"));
 const About = lazy(() => import("./pages/About"));
@@ -30,6 +31,7 @@ const App = () => (
         <WishlistProvider>
           <MinecraftModeProvider>
             <TooltipProvider>
+              <LiquidGlassFilter />
               <Toaster />
               <Sonner />
               <BrowserRouter>
