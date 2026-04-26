@@ -30,12 +30,12 @@ const CONFIG = {
   idleEase: 0.02,
   idleDelay: 1500,
   // Three.js plane
-  planeSize: 200,
-  planeSegments: 60,
-  wireframeOpacity: 0.25,
-  fogDensity: 0.003,
-  cameraZ: 50,
-  cameraY: 10,
+  planeSize: 400,
+  planeSegments: 80,
+  wireframeOpacity: 0.22,
+  fogDensity: 0.0035,
+  cameraZ: 55,
+  cameraY: 12,
   waveSpeed: 0.005,
   // Grid reactivity
   gridCameraFollowX: 7,
@@ -262,7 +262,14 @@ const CombinedBackground = () => {
     scene.background = null;
     scene.fog = new THREE.FogExp2(0x0a1628, CONFIG.fogDensity);
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const computeFov = (aspect: number) => {
+      // Widen FOV on tall viewports, narrow on ultrawide so plane doesn't look stretched
+      if (aspect < 1) return 90;
+      if (aspect > 2) return 60;
+      return 75;
+    };
+    const initialAspect = window.innerWidth / window.innerHeight;
+    const camera = new THREE.PerspectiveCamera(computeFov(initialAspect), initialAspect, 0.1, 2000);
     camera.position.set(0, CONFIG.cameraY, CONFIG.cameraZ);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -339,7 +346,9 @@ const CombinedBackground = () => {
       resizeTimer = window.setTimeout(() => {
         resizeCanvas();
         rebuildVignetteGrad();
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const aspect = window.innerWidth / window.innerHeight;
+        camera.aspect = aspect;
+        camera.fov = computeFov(aspect);
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
