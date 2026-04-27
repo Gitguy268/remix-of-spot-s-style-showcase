@@ -13,8 +13,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import spotTeeModel from "@/assets/spot-tee-model.png";
-import spotCozy from "@/assets/spot-cozy.png";
+const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
+const SPOT_WARM_IMAGE = "https://images-api.printify.com/mockup/69352a18282b17ae9609258e/94945/101396/warm-spot.jpg?camera_label=front&revision=1765111794521&s=1024";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
