@@ -7,7 +7,7 @@ import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import spotTeeProduct from "@/assets/spot-tee-product.png";
+const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
 
 // Loading component
 const Loader = () => {
@@ -166,7 +166,7 @@ const Spot3DViewer = () => {
           </AnimatedSection>
           <AnimatedSection animation="scale-in" delay={200}>
             <div className="max-w-2xl mx-auto">
-              <img src={spotTeeProduct} alt="Spot Tee product showcase" className="w-full rounded-2xl shadow-xl" />
+              <img src={SPOT_TEE_IMAGE} alt="Spot Tee product showcase" className="w-full rounded-2xl shadow-xl" />
               <p className="text-center text-sm text-muted-foreground mt-4">3D viewer unavailable. Showing product image instead.</p>
             </div>
           </AnimatedSection>
@@ -192,7 +192,7 @@ const Spot3DViewer = () => {
                 fallback={
                   <div className="w-full h-full flex items-center justify-center bg-muted">
                     <div className="text-center p-8">
-                      <img src={spotTeeProduct} alt="Spot Tee Product" className="w-full max-w-md mx-auto mb-4 rounded-lg" />
+                      <img src={SPOT_TEE_IMAGE} alt="Spot Tee Product" className="w-full max-w-md mx-auto mb-4 rounded-lg" />
                       <p className="text-muted-foreground text-sm">3D viewer unavailable.</p>
                     </div>
                   </div>

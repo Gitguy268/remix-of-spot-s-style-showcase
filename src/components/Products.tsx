@@ -11,12 +11,18 @@ import BirthdayCountdown from "@/components/BirthdayCountdown";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowRight, Ruler } from "lucide-react";
-import spotTeeProduct from "@/assets/spot-tee-product.png";
-import spotHoodie from "@/assets/spot-hoodie.png";
-import spotCap from "@/assets/spot-cap.png";
-import spotNecklace from "@/assets/spot-necklace.png";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+
+// Live Printify mockup images (kept at s=1024 for crisp grid thumbnails)
+const IMG_SPOT_TEE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
+const IMG_SPOT_HOODIE = "https://images-api.printify.com/mockup/6931d763af55177fda0d5f67/68053/99231/minimal-black-labrador-embroidered-hoodie.jpg?camera_label=front&revision=1764882839842&s=1024";
+const IMG_SPOT_POLO = "https://images-api.printify.com/mockup/697f2f66bb695bec2a04e52c/118322/109526/spot-polo.jpg?camera_label=front&revision=1769943300786&s=1024";
+const IMG_DAD_HAT = "https://images-api.printify.com/mockup/6931da472abb939a920d71ef/118240/109493/dad-hat-embroidered-black-lab-dog-portrait.jpg?camera_label=front&revision=1764874903251&s=1024";
+const IMG_NECKLACE = "https://images-api.printify.com/mockup/6931d16d2abb939a920d6ef1/147718/111754/personalised-spot-necklace.jpg?camera_label=front&revision=1765092991375&s=1024";
+const IMG_KIDS_TEE = "https://images-api.printify.com/mockup/6931d4448238115b130e6a7a/42727/105377/spot-funny-kids-t-shirt.jpg?camera_label=front&revision=1765091511573&s=1024";
+const IMG_WARM_SPOT = "https://images-api.printify.com/mockup/69352a18282b17ae9609258e/94945/101396/warm-spot.jpg?camera_label=front&revision=1765111794521&s=1024";
+const IMG_PILLOW = "https://images-api.printify.com/mockup/697f3cbabb695bec2a04e7a2/104323/101194/spot-pillow.jpg?camera_label=front&revision=1769946477041&s=1024";
 
 interface Product {
   name: string;
@@ -40,6 +46,7 @@ const Products = () => {
     { key: "Hoodies", label: t("products.catHoodies") },
     { key: "Accessories", label: t("products.catAccessories") },
     { key: "Kids", label: t("products.catKids") },
+    { key: "Home", label: "Home" },
   ];
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
@@ -50,91 +57,103 @@ const Products = () => {
 
   const products: Product[] = [
     {
-      name: "Spot Tee",
-      price: "$41.47 – $45.99",
-      image: spotTeeProduct,
-      badge: "New",
+      name: "Spot TEE",
+      price: "$41.47",
+      image: IMG_SPOT_TEE,
+      badge: "Bestseller",
       category: "T-Shirts",
       fabric: "100% ring-spun cotton, 180 GSM",
       fit: "Relaxed unisex fit",
       colors: ["Black", "White", "Navy", "Red"],
       delivery: "Ships in 5-7 days",
       sizes: "XS – 3XL",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797138/spot-tee",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25456436/spot-tee",
     },
     {
-      name: "Minimal Spot Hoodie",
-      price: "$40.60 – $52.00",
-      image: spotHoodie,
-      badge: "Bestseller",
+      name: "Minimal Black Labrador Embroidered Hoodie",
+      price: "$40.60",
+      image: IMG_SPOT_HOODIE,
+      badge: "New",
       category: "Hoodies",
       fabric: "80% cotton / 20% polyester, 320 GSM",
       fit: "Regular fit with kangaroo pocket",
       colors: ["Black", "Charcoal", "Forest Green", "Royal Blue"],
       delivery: "Ships in 5-7 days",
       sizes: "S – 2XL",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797139/minimal-spot-hoodie",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25392440/minimal-black-labrador-embroidered-hoodie",
     },
     {
-      name: "Spot Dad Hat",
-      price: "$36.43 – $39.00",
-      image: spotCap,
+      name: "Spot Polo",
+      price: "$37.90",
+      image: IMG_SPOT_POLO,
+      category: "T-Shirts",
+      fabric: "Performance pique, breathable knit",
+      fit: "Modern slim cut",
+      colors: ["Black", "White", "Navy"],
+      delivery: "Ships in 5-7 days",
+      sizes: "S – 2XL",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/26576768/spot-polo",
+    },
+    {
+      name: "Dad Hat — Embroidered Black Lab Portrait",
+      price: "$36.43",
+      image: IMG_DAD_HAT,
       category: "Accessories",
       fabric: "Cotton twill, embroidered logo",
       fit: "Adjustable strap, one size fits most",
       colors: ["Black", "Khaki", "Navy", "Charcoal"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797140/spot-dad-hat",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25392718/dad-hat-embroidered-black-lab-dog-portrait",
     },
     {
-      name: "Spot Heart Necklace",
-      price: "$24.99 – $32.00",
-      image: spotNecklace,
-      badge: "New",
+      name: "Personalised Spot Necklace",
+      price: "$28.37",
+      image: IMG_NECKLACE,
+      badge: "Personalize",
       category: "Accessories",
       fabric: "Gold-plated stainless steel",
       fit: "18-inch chain with 2-inch extender",
       colors: ["Gold", "Silver", "Rose Gold"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797141/spot-heart-necklace",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25391915/personalised-spot-necklace",
     },
     {
-      name: "Kids Spot Tee",
-      price: "$28.99 – $32.00",
-      image: spotTeeProduct,
+      name: "Spot Funny Kids T-Shirt",
+      price: "$14.98",
+      image: IMG_KIDS_TEE,
       category: "Kids",
       fabric: "100% organic cotton, 160 GSM",
       fit: "Kids regular fit",
       colors: ["White", "Light Blue", "Pink"],
       delivery: "Ships in 5-7 days",
       sizes: "2T – 12Y",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797142/kids-spot-tee",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25392168/spot-funny-kids-t-shirt",
     },
     {
-      name: "Classic Spot Hoodie",
-      price: "$45.00 – $55.00",
-      image: spotHoodie,
+      name: "Warm Spot Sweater",
+      price: "$29.24",
+      image: IMG_WARM_SPOT,
       category: "Hoodies",
-      fabric: "80% cotton / 20% polyester, 320 GSM",
-      fit: "Oversized fit with drawstring hood",
-      colors: ["Black", "Grey Heather", "Royal Blue"],
+      fabric: "Heavyweight cotton blend, brushed inside",
+      fit: "Cozy oversized fit",
+      colors: ["Cream", "Charcoal", "Olive"],
       delivery: "Ships in 5-7 days",
-      sizes: "S – 3XL",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797143/classic-spot-hoodie",
+      sizes: "S – 2XL",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/25456666/warm-spot",
     },
     {
-      name: "Spot Snapback",
-      price: "$32.00 – $36.00",
-      image: spotCap,
-      category: "Accessories",
-      fabric: "Acrylic wool blend",
-      fit: "Flat brim, adjustable snap closure",
-      colors: ["Black", "Navy", "Charcoal"],
+      name: "Spot Pillow",
+      price: "$16.10",
+      image: IMG_PILLOW,
+      category: "Home",
+      fabric: "Spun polyester cover with hidden zipper",
+      fit: "18 × 18 inch with insert",
+      colors: ["White / Black Print"],
       delivery: "Ships in 5-7 days",
       sizes: "One Size",
-      shopUrl: "https://blacklabspotsshop.printify.me/product/4797144/spot-snapback",
+      shopUrl: "https://blacklabspotsshop.printify.me/product/26577129/spot-pillow",
     },
   ];
 

@@ -1,24 +1,24 @@
 import AnimatedSection from "@/components/AnimatedSection";
 
-import spotCozy from "@/assets/spot-cozy.png";
-import spotFestive from "@/assets/spot-festive.png";
-import spotSweater from "@/assets/spot-sweater.png";
+const IMG_HOODIE = "https://images-api.printify.com/mockup/6931d763af55177fda0d5f67/68053/99231/minimal-black-labrador-embroidered-hoodie.jpg?camera_label=front&revision=1764882839842&s=1024";
+const IMG_WARM_SPOT = "https://images-api.printify.com/mockup/69352a18282b17ae9609258e/94945/101396/warm-spot.jpg?camera_label=front&revision=1765111794521&s=1024";
+const IMG_POLO = "https://images-api.printify.com/mockup/697f2f66bb695bec2a04e52c/118322/109526/spot-polo.jpg?camera_label=front&revision=1769943300786&s=1024";
 
 const PhotoStories = () => {
   const stories = [
     {
-      image: spotCozy,
-      alt: "Premium Spot hoodie showcasing cozy fabric and relaxed fit",
+      image: IMG_HOODIE,
+      alt: "Minimal Black Labrador embroidered hoodie showing soft fabric and tasteful stitching",
       text: "Premium fabrics, cozy on cool days, breathable when it matters.",
     },
     {
-      image: spotFestive,
-      alt: "Close-up of Spot embroidery showing crisp edges and quality stitching",
+      image: IMG_WARM_SPOT,
+      alt: "Warm Spot sweater close-up highlighting embroidery quality",
       text: "Thoughtful embroidery—crisp edges and durable stitching for long-term wear.",
     },
     {
-      image: spotSweater,
-      alt: "Spot sweater in everyday setting demonstrating durability and style",
+      image: IMG_POLO,
+      alt: "Spot Polo styled for everyday wear demonstrating modern fit",
       text: "Designed for real life: playful, resilient, and always photogenic.",
     },
   ];

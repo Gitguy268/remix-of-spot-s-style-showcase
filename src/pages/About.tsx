@@ -13,8 +13,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import spotTeeModel from "@/assets/spot-tee-model.png";
-import spotCozy from "@/assets/spot-cozy.png";
+const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
+const SPOT_WARM_IMAGE = "https://images-api.printify.com/mockup/69352a18282b17ae9609258e/94945/101396/warm-spot.jpg?camera_label=front&revision=1765111794521&s=1024";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
 
@@ -88,7 +88,7 @@ const About = () => {
               <AnimatedSection animation="slide-left">
                 <div className="aspect-square rounded-2xl overflow-hidden glow-border">
                   <img
-                    src={spotTeeModel}
+                    src={SPOT_TEE_IMAGE}
                     alt="Spot the black Labrador, the inspiration behind Blacklabspotsshop"
                     className="w-full h-full object-cover"
                   />
@@ -170,7 +170,7 @@ const About = () => {
               <AnimatedSection animation="slide-right" delay={200} className="order-1 md:order-2">
                 <div className="aspect-square rounded-2xl overflow-hidden glow-border">
                   <img
-                    src={spotCozy}
+                    src={SPOT_WARM_IMAGE}
                     alt="Premium Spot apparel crafted with care and quality materials"
                     className="w-full h-full object-cover"
                   />

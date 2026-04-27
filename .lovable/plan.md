@@ -1,60 +1,53 @@
-## Plan: Upgrade Liquid Glass Components to kube.io-Style Refraction
+## Plan: Sync site product imagery with the live Printify shop
 
-The kube.io article demonstrates Apple-quality "Liquid Glass" using **SVG displacement-map filters as `backdrop-filter`** to bend the pixels behind a panel, plus a **specular rim highlight** for a wet-glass edge. Today our `LiquidGlassCard`, `LiquidGlassButton`, and `GlassEffect` rely on plain `backdrop-blur` + radial gradients — they look flat compared to kube.io's refractive look.
+The Printify shop (`blacklabspotsshop.printify.me`) now lists 32 products with new names, mockup images, and prices. The site still references a small set of hardcoded local PNGs (`spot-tee-product.png`, `spot-hoodie.png`, `spot-cap.png`, `spot-necklace.png`, `spot-cozy.png`, `spot-festive.png`, `spot-sweater.png`). This plan refreshes those product images — and the catalog around them — using the official Printify mockups so the website stays in sync with what's actually for sale.
 
-This upgrade reworks our three glass primitives to use real SVG-filter refraction, a convex bezel highlight, and a soft inner specular shine, while keeping the existing turquoise tint (`hsl(183 63% 47%)`) and all current props/sizes so nothing else has to change.
+### What changes (visible to users)
 
-### What will look different
+- **Spot Collection grid** (`Products.tsx`) — Replaced with a curated set of 8 real products pulled directly from the Printify catalog. Each card uses the official Printify mockup image, real product name, real price, and a direct link to that product's page on the Printify shop. Categories (T-Shirts, Hoodies, Accessories, Kids, Home) match the new lineup.
+- **Spot in Motion section** (`VideoSection.tsx`) — Hero product image and video poster updated from `spot-tee-product.png` to the new Printify "Spot TEE" front mockup.
+- **Meet Spot in 3D** (`Spot3DViewer.tsx`) — Showcase image and lightbox preview updated to the new Printify Spot TEE mockup.
+- **Spot's Photo Book** (`PhotoStories.tsx`) — The three lifestyle stills currently shown (`spotCozy`, `spotFestive`, `spotSweater`) are swapped to matching Printify lifestyle/product mockups (warm spot, festive sweater equivalent, cozy hoodie) so the imagery is consistent with the merch you can actually buy.
+- **About page** product photos updated to match the new Spot TEE and warm-spot mockups.
 
-- **Edges bend the background** behind the glass (visible warp on text, photos, the 3D background)
-- **Bright specular rim** runs along the top-left edge, fading around the shape (signature Apple look)
-- **Convex "lip" feel** — center looks slightly magnified, edges refract
-- **Turquoise tint stays** — only the lensing/highlights are new
-- Subtle hover: rim brightens, refraction strength ticks up, existing tilt preserved
+### Featured products that will populate the new grid
 
-Browsers without SVG-filter `backdrop-filter` (Safari/Firefox) automatically fall back to the current blur + tint look — no broken UI.
+Pulled from the live Printify shop, with image URL, name, price, and shop URL preserved as-is:
+
+1. Spot TEE — $41.47 — T-Shirts
+2. Minimal Black Labrador Embroidered Hoodie — $40.60 — Hoodies
+3. Spot Polo — $37.90 — T-Shirts
+4. Dad Hat Embroidered Black Lab Dog Portrait — $36.43 — Accessories
+5. Personalised Spot Necklace — $28.37 — Accessories
+6. Spot Funny Kids T-Shirt — $14.98 — Kids
+7. warm spot :) (sweater) — $29.24 — Hoodies
+8. Spot Pillow — $16.10 — Home
+
+(All other Printify products remain reachable via the existing "View All" CTA that already points at the Printify storefront root.)
 
 ### Technical changes
 
-**1. New file: `src/components/ui/liquid-glass-filter.tsx`**
-A single mounted-once component holding a hidden `<svg>` with the reusable filters:
-- `#lg-displacement` — `feImage` of a procedurally-generated displacement map (radial bezel gradient encoded into R/G channels) + `feDisplacementMap` for refraction
-- `#lg-specular` — `feGaussianBlur` + `feSpecularLighting` with a `feDistantLight` from top-left for the rim highlight
-- `#lg-glass` — composite of the two above via `feComposite`/`feBlend`
+- **`src/components/Products.tsx`**: Replace the local PNG imports (`spotTeeProduct`, `spotHoodie`, `spotCap`, `spotNecklace`) and the hardcoded `products` array with the 8 entries above. Each entry uses the absolute Printify mockup URL (e.g. `https://images-api.printify.com/mockup/.../spot-tee.jpg?...&s=1024`) directly as `image`, the real `shopUrl`, and price strings exactly as displayed on Printify. Keep the existing `Product` interface, category tabs, filter logic, quick-view, comparison, and mobile carousel untouched.
+- **`src/components/VideoSection.tsx`**: Remove the `spot-tee-product.png` import; reference the new Spot TEE Printify mockup URL via a top-level `const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/.../spot-tee.jpg?...&s=1024";` and use it for both the `<img>` and the `<video poster>`.
+- **`src/components/Spot3DViewer.tsx`**: Same swap — remove the local PNG import, point the showcase `<img>` and lightbox `<img>` at the new Printify mockup URL.
+- **`src/components/PhotoStories.tsx`**: Replace the 3 local PNG imports with 3 Printify lifestyle mockup URLs (warm spot, hoodie, polo). Keep captions but tighten alt text to reflect the actual product.
+- **`src/pages/About.tsx`**: Replace `spotTeeModel` and `spotCozy` imports with the same Printify URLs used elsewhere so imagery stays consistent.
+- **No changes** to `PhotoScanner.tsx`, `SpotBook.tsx` (those already use curated lifestyle photos), `SpotGameShowcase.tsx`, `Celebs.tsx`, or any other section.
 
-Mounted once in `src/App.tsx` (next to existing providers) so all glass elements can reference the filter IDs.
+### Loading & performance notes
 
-**2. Rewrite `src/components/ui/liquid-glass-card.tsx`**
-- Add a new absolute layer `.lg-refraction` with `backdrop-filter: url(#lg-glass) blur(2px) saturate(140%)` (Chrome) and graceful fallback to today's `backdrop-blur-xl` via `@supports`
-- Replace the radial highlight with an SVG-driven specular rim layer
-- Keep: turquoise border, mouse-tracked tilt, bottom ambient glow, intensity prop
-- Tint stays `hsl(183 63% 47%)` — just lowered to ~12% so refraction reads through
-
-**3. Rewrite `src/components/ui/liquid-glass-button.tsx`**
-- Same refraction layer scaled for buttons (smaller blur, higher refraction strength)
-- Keep all 4 size variants (`default | sm | lg | xl`), tilt, mouse-glow, drop shadow
-- Hover boosts displacement scale via CSS variable for a subtle "press into glass" feel
-
-**4. Update `src/components/ui/liquid-glass.tsx` (`GlassEffect` / `GlassFilter`)**
-- Point `GlassEffect` to the new shared `#lg-glass` filter instead of the local `#glass-distortion`
-- Keep `GlassFilter` exported for backward compatibility but make it a no-op (filters now live in the shared mount)
-- Tint layer stays turquoise (`rgba(44, 187, 195, 0.08)`)
-
-**5. Mount filters once in `src/App.tsx`**
-Add `<LiquidGlassFilter />` near the top of the tree so every glass element on every page can `url(#lg-glass)`.
-
-### Files to create
-- `src/components/ui/liquid-glass-filter.tsx`
+- Printify mockup URLs serve responsive sizes (`?s=1024`); we'll keep `?s=1024` for hero shots and `?s=512` for grid thumbnails to keep page weight reasonable.
+- All `<img>` tags retain `loading="lazy"` (or already do via `ProductCard`).
+- No new dependencies, no build/config changes.
 
 ### Files to modify
-- `src/components/ui/liquid-glass-card.tsx` — refraction + specular layers
-- `src/components/ui/liquid-glass-button.tsx` — refraction + specular layers
-- `src/components/ui/liquid-glass.tsx` — use shared filter
-- `src/App.tsx` — mount `<LiquidGlassFilter />` once
-- `src/index.css` — small `@supports (backdrop-filter: url(#x))` fallback rules
 
-### What does NOT change
-- All consumer components (`ProductCard`, `Hero`, `Newsletter`, `FAQ`, `Reviews`, `SpotGameShowcase`, `SpotTeeGenerator`, `Footer`, `GlassDock`, `BirthdayCountdown`, `PhotoScanner`, `ProductQuickView`) — they keep using the same `<LiquidGlassCard>` / `<LiquidGlassButton>` / `<GlassEffect>` props
-- Turquoise brand color
-- The combined 3D background (it'll actually look better — you'll see it bend through the glass)
-- Theme toggle, mobile layout, accessibility
+- `src/components/Products.tsx`
+- `src/components/VideoSection.tsx`
+- `src/components/Spot3DViewer.tsx`
+- `src/components/PhotoStories.tsx`
+- `src/pages/About.tsx`
+
+### Files NOT touched
+
+- Local PNG assets in `src/assets/` are left in place (not deleted) as a fallback; nothing will reference them after the swap.
