@@ -46,6 +46,7 @@ const Products = () => {
     { key: "Hoodies", label: t("products.catHoodies") },
     { key: "Accessories", label: t("products.catAccessories") },
     { key: "Kids", label: t("products.catKids") },
+    { key: "Home", label: "Home" },
   ];
   const [activeCategory, setActiveCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
