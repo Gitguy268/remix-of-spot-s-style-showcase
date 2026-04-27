@@ -1,7 +1,6 @@
-import { Suspense, useRef, useState, useCallback } from "react";
+import { Suspense, useRef, useState, useCallback, type ComponentRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useProgress, Html, useGLTF, ContactShadows, OrbitControls } from "@react-three/drei";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
@@ -137,7 +136,7 @@ const Spot3DViewer = () => {
   const [activeModel, setActiveModel] = useState("spot");
   const [isRotating, setIsRotating] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const controlsRef = useRef<ComponentRef<typeof OrbitControls>>(null);
 
   const activeModelConfig = defaultModels.find(m => m.id === activeModel);
 
