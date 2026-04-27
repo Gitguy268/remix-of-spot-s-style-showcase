@@ -88,7 +88,7 @@ const About = () => {
               <AnimatedSection animation="slide-left">
                 <div className="aspect-square rounded-2xl overflow-hidden glow-border">
                   <img
-                    src={spotTeeModel}
+                    src={SPOT_TEE_IMAGE}
                     alt="Spot the black Labrador, the inspiration behind Blacklabspotsshop"
                     className="w-full h-full object-cover"
                   />
@@ -170,7 +170,7 @@ const About = () => {
               <AnimatedSection animation="slide-right" delay={200} className="order-1 md:order-2">
                 <div className="aspect-square rounded-2xl overflow-hidden glow-border">
                   <img
-                    src={spotCozy}
+                    src={SPOT_WARM_IMAGE}
                     alt="Premium Spot apparel crafted with care and quality materials"
                     className="w-full h-full object-cover"
                   />
