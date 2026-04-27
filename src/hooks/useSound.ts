@@ -48,7 +48,8 @@ export function useSound() {
 
   const getAudioCtx = useCallback(() => {
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const Ctx = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      audioCtxRef.current = new Ctx();
     }
     // Resume if suspended (browser autoplay policy)
     if (audioCtxRef.current.state === "suspended") {
@@ -59,12 +60,12 @@ export function useSound() {
 
   const playClick = useCallback(() => {
     if (!isSoundEnabled) return;
-    try { createClickSound(getAudioCtx()); } catch {}
+    try { createClickSound(getAudioCtx()); } catch { /* audio unavailable */ }
   }, [isSoundEnabled, getAudioCtx]);
 
   const playHover = useCallback(() => {
     if (!isSoundEnabled) return;
-    try { createHoverSound(getAudioCtx()); } catch {}
+    try { createHoverSound(getAudioCtx()); } catch { /* audio unavailable */ }
   }, [isSoundEnabled, getAudioCtx]);
 
   const toggleSound = useCallback(() => {

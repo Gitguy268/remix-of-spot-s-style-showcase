@@ -199,7 +199,8 @@ const PhotoScanner = () => {
   const cleanupRef = useRef<(() => void) | null>(null);
 
   const handleReset = useCallback(() => {
-    if ((window as any).__psReset) (window as any).__psReset();
+    const w = window as Window & { __psReset?: () => void };
+    if (w.__psReset) w.__psReset();
   }, []);
 
   useEffect(() => {
@@ -423,7 +424,7 @@ const PhotoScanner = () => {
     eventCleanups.push(() => window.removeEventListener("resize", onResize));
 
     // Reset
-    (window as any).__psReset = () => {
+    (window as Window & { __psReset?: () => void }).__psReset = () => {
       position = containerW;
       velocity = CRUISE_SPEED;
       isAnimating = true;
@@ -715,7 +716,7 @@ const PhotoScanner = () => {
       rafs.forEach(id => cancelAnimationFrame(id));
       intervals.forEach(id => clearInterval(id));
       eventCleanups.forEach(fn => fn());
-      delete (window as any).__psReset;
+      delete (window as Window & { __psReset?: () => void }).__psReset;
     };
 
     return () => { if (cleanupRef.current) cleanupRef.current(); };

@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState, useCallback } from "react";
+import { Suspense, useRef, useState, useCallback, type ComponentRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useProgress, Html, useGLTF, ContactShadows, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -136,23 +136,25 @@ const Spot3DViewer = () => {
   const [activeModel, setActiveModel] = useState("spot");
   const [isRotating, setIsRotating] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<ComponentRef<typeof OrbitControls>>(null);
 
   const activeModelConfig = defaultModels.find(m => m.id === activeModel);
 
   const handleReset = useCallback(() => { controlsRef.current?.reset(); }, []);
-  const handleZoomIn = useCallback(() => {
-    if (controlsRef.current) {
-      const d = controlsRef.current.getDistance();
-      controlsRef.current.dollyTo(Math.max(d - 1, 2), true);
-    }
+  const zoomBy = useCallback((delta: number, min: number, max: number) => {
+    const c = controlsRef.current;
+    if (!c) return;
+    const cam = c.object;
+    const target = c.target;
+    const offset = cam.position.clone().sub(target);
+    const dist = offset.length();
+    const next = Math.min(Math.max(dist + delta, min), max);
+    offset.setLength(next);
+    cam.position.copy(target).add(offset);
+    c.update();
   }, []);
-  const handleZoomOut = useCallback(() => {
-    if (controlsRef.current) {
-      const d = controlsRef.current.getDistance();
-      controlsRef.current.dollyTo(Math.min(d + 1, 6), true);
-    }
-  }, []);
+  const handleZoomIn = useCallback(() => zoomBy(-1, 2, 6), [zoomBy]);
+  const handleZoomOut = useCallback(() => zoomBy(1, 2, 6), [zoomBy]);
 
   if (hasError) {
     return (
