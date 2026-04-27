@@ -7,7 +7,7 @@ import { RotateCcw, Box, ZoomIn, ZoomOut, Maximize2 } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 
 import ErrorBoundary from "@/components/ErrorBoundary";
-import spotTeeProduct from "@/assets/spot-tee-product.png";
+const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
 
 // Loading component
 const Loader = () => {

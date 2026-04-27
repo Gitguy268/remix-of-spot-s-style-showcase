@@ -54,7 +54,7 @@ const VideoSection = () => {
           >
             {hasError ? (
               <img
-                src={spotTeeProduct}
+                src={SPOT_TEE_IMAGE}
                 alt="Spot collection preview"
                 className="w-full h-full object-cover"
               />
@@ -67,7 +67,7 @@ const VideoSection = () => {
                 loop
                 playsInline
                 preload="metadata"
-                poster={spotTeeProduct}
+                poster={SPOT_TEE_IMAGE}
                 onError={() => setHasError(true)}
               />
             )}
