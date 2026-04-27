@@ -11,12 +11,18 @@ import BirthdayCountdown from "@/components/BirthdayCountdown";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ArrowRight, Ruler } from "lucide-react";
-import spotTeeProduct from "@/assets/spot-tee-product.png";
-import spotHoodie from "@/assets/spot-hoodie.png";
-import spotCap from "@/assets/spot-cap.png";
-import spotNecklace from "@/assets/spot-necklace.png";
 
 const SHOP_URL = "https://blacklabspotsshop.printify.me/";
+
+// Live Printify mockup images (kept at s=1024 for crisp grid thumbnails)
+const IMG_SPOT_TEE = "https://images-api.printify.com/mockup/69352550a5ea87e0730ef6e1/73207/98445/spot-tee.jpg?camera_label=front&revision=1765091259729&s=1024";
+const IMG_SPOT_HOODIE = "https://images-api.printify.com/mockup/6931d763af55177fda0d5f67/68053/99231/minimal-black-labrador-embroidered-hoodie.jpg?camera_label=front&revision=1764882839842&s=1024";
+const IMG_SPOT_POLO = "https://images-api.printify.com/mockup/697f2f66bb695bec2a04e52c/118322/109526/spot-polo.jpg?camera_label=front&revision=1769943300786&s=1024";
+const IMG_DAD_HAT = "https://images-api.printify.com/mockup/6931da472abb939a920d71ef/118240/109493/dad-hat-embroidered-black-lab-dog-portrait.jpg?camera_label=front&revision=1764874903251&s=1024";
+const IMG_NECKLACE = "https://images-api.printify.com/mockup/6931d16d2abb939a920d6ef1/147718/111754/personalised-spot-necklace.jpg?camera_label=front&revision=1765092991375&s=1024";
+const IMG_KIDS_TEE = "https://images-api.printify.com/mockup/6931d4448238115b130e6a7a/42727/105377/spot-funny-kids-t-shirt.jpg?camera_label=front&revision=1765091511573&s=1024";
+const IMG_WARM_SPOT = "https://images-api.printify.com/mockup/69352a18282b17ae9609258e/94945/101396/warm-spot.jpg?camera_label=front&revision=1765111794521&s=1024";
+const IMG_PILLOW = "https://images-api.printify.com/mockup/697f3cbabb695bec2a04e7a2/104323/101194/spot-pillow.jpg?camera_label=front&revision=1769946477041&s=1024";
 
 interface Product {
   name: string;
