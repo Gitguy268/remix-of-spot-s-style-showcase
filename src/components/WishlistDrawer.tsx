@@ -66,7 +66,7 @@ const WishlistDrawer = () => {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-20 h-20 object-cover rounded-md"
+                      className="w-20 h-20 object-contain rounded-md bg-muted/10"
                     />
                     <div className="flex-1 min-w-0">
                       <h4 className="font-medium truncate">{item.name}</h4>

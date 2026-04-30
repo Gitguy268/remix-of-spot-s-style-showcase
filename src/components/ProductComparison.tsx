@@ -96,7 +96,7 @@ const ProductComparison = ({
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full aspect-square object-cover rounded-lg mb-2"
+                      className="w-full aspect-square object-contain rounded-lg mb-2 bg-muted/10"
                     />
                     <h4 className="font-semibold text-sm">{product.name}</h4>
                   </div>
