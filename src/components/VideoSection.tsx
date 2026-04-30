@@ -50,13 +50,13 @@ const VideoSection = () => {
         <AnimatedSection animation="scale-in" delay={200} parallax parallaxSpeed={0.15}>
           <div
             ref={containerRef}
-            className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto"
+            className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto bg-muted/10"
           >
             {hasError ? (
               <img
                 src={SPOT_TEE_IMAGE}
                 alt="Spot collection preview"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             ) : (
               <video
