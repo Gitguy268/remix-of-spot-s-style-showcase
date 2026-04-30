@@ -51,11 +51,11 @@ const PhotoStories = () => {
                 parallax
                 parallaxSpeed={0.2}
               >
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border">
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden glow-border bg-muted/10 flex items-center justify-center">
                   <img
                     src={story.image}
                     alt={story.alt}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-4"
                     loading="lazy"
                   />
                 </div>
