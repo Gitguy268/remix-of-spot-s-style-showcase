@@ -32,7 +32,7 @@ const structuredData = {
       "description": "Premium apparel featuring Spot, the black Labrador. Soft fabrics, playful designs, worldwide shipping.",
       "contactPoint": {
         "@type": "ContactPoint",
-        "email": "hello@blacklabspotsshop.com",
+        "email": "hitlijsten_demping_7b@icloud.com",
         "contactType": "customer service"
       }
     },

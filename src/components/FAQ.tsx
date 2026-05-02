@@ -45,7 +45,7 @@ const FAQ = () => {
         </AnimatedSection>
         <AnimatedSection animation="fade-in" delay={80}>
           <div className="text-center mt-12">
-            <p className="text-muted-foreground">{t("faq.stillQuestions")} <a href="mailto:support@blacklabspotsshop.com" className="text-primary hover:underline">{t("faq.contactUs")}</a></p>
+            <p className="text-muted-foreground">{t("faq.stillQuestions")} <a href="mailto:hitlijsten_demping_7b@icloud.com" className="text-primary hover:underline">{t("faq.contactUs")}</a></p>
           </div>
         </AnimatedSection>
       </div>
