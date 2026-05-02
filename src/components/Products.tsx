@@ -158,9 +158,7 @@ const Products = () => {
   ];
 
   const handleCategoryChange = useCallback((category: string) => {
-    setIsLoading(true);
     setActiveCategory(category);
-    setTimeout(() => setIsLoading(false), 300);
   }, []);
 
   const handleQuickView = useCallback((product: Product) => {
@@ -278,7 +276,7 @@ const Products = () => {
                 <AnimatedSection
                   key={product.name + index}
                   animation="fade-up"
-                  delay={index * 100}
+                  delay={index * 40}
                 >
                   {renderProductCard(product, index)}
                 </AnimatedSection>

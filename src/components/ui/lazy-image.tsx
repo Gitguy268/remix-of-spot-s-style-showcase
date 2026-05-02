@@ -32,7 +32,7 @@ const LazyImage = ({
         }
       },
       {
-        rootMargin: "100px", // Start loading 100px before entering viewport
+        rootMargin: "300px",
         threshold: 0,
       }
     );

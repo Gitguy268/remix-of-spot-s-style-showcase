@@ -46,7 +46,7 @@ const Celebs = () => {
             <AnimatedSection
               key={celeb.name}
               animation="scale-in"
-              delay={index * 150}
+              delay={index * 50}
             >
               <article className="group relative aspect-square rounded-2xl overflow-hidden border border-border card-hover">
                 <img
