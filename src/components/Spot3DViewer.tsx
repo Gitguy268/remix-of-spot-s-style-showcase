@@ -203,16 +203,18 @@ const Spot3DViewer = () => {
               >
                 <Canvas camera={{ position: [3, 2, 3], fov: 45 }} shadows dpr={[1, 2]} onError={() => setHasError(true)}>
                   <Suspense fallback={<Loader />}>
-                    <ambientLight intensity={0.4} />
-                    <spotLight position={[5, 5, 5]} angle={0.3} penumbra={1} intensity={1} castShadow shadow-mapSize={1024} />
-                    <spotLight position={[-5, 5, -5]} angle={0.3} penumbra={1} intensity={0.5} />
+                    <ambientLight intensity={1.2} />
+                    <hemisphereLight args={["#ffffff", "#444444", 0.8]} />
+                    <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow shadow-mapSize={1024} />
+                    <directionalLight position={[-5, 3, -5]} intensity={0.8} />
+                    <directionalLight position={[0, -3, 0]} intensity={0.4} />
                     {activeModelConfig?.type === "glb" && activeModelConfig.url ? (
                       <GLBModel url={activeModelConfig.url} isRotating={isRotating} />
                     ) : (
                       <SpotModel isRotating={isRotating} />
                     )}
                     <ContactShadows position={[0, -1, 0]} opacity={0.4} scale={5} blur={2.5} />
-                    <OrbitControls ref={controlsRef} enablePan={false} minDistance={2} maxDistance={6} minPolarAngle={Math.PI / 4} maxPolarAngle={Math.PI / 2} />
+                    <OrbitControls ref={controlsRef} enablePan={false} minDistance={2} maxDistance={6} minPolarAngle={0.1} maxPolarAngle={Math.PI - 0.1} />
                   </Suspense>
                 </Canvas>
               </ErrorBoundary>
