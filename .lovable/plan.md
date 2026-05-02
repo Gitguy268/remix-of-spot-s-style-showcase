@@ -1,53 +1,56 @@
-## Plan: Sync site product imagery with the live Printify shop
+## Goal
 
-The Printify shop (`blacklabspotsshop.printify.me`) now lists 32 products with new names, mockup images, and prices. The site still references a small set of hardcoded local PNGs (`spot-tee-product.png`, `spot-hoodie.png`, `spot-cap.png`, `spot-necklace.png`, `spot-cozy.png`, `spot-festive.png`, `spot-sweater.png`). This plan refreshes those product images — and the catalog around them — using the official Printify mockups so the website stays in sync with what's actually for sale.
+Make the app feel snappier by cutting artificial delays, shortening transition durations, and reducing staggered animation offsets.
 
-### What changes (visible to users)
+## Changes
 
-- **Spot Collection grid** (`Products.tsx`) — Replaced with a curated set of 8 real products pulled directly from the Printify catalog. Each card uses the official Printify mockup image, real product name, real price, and a direct link to that product's page on the Printify shop. Categories (T-Shirts, Hoodies, Accessories, Kids, Home) match the new lineup.
-- **Spot in Motion section** (`VideoSection.tsx`) — Hero product image and video poster updated from `spot-tee-product.png` to the new Printify "Spot TEE" front mockup.
-- **Meet Spot in 3D** (`Spot3DViewer.tsx`) — Showcase image and lightbox preview updated to the new Printify Spot TEE mockup.
-- **Spot's Photo Book** (`PhotoStories.tsx`) — The three lifestyle stills currently shown (`spotCozy`, `spotFestive`, `spotSweater`) are swapped to matching Printify lifestyle/product mockups (warm spot, festive sweater equivalent, cozy hoodie) so the imagery is consistent with the merch you can actually buy.
-- **About page** product photos updated to match the new Spot TEE and warm-spot mockups.
+### 1. Page transition (`src/components/PageTransition.tsx`)
+- Drop the 150ms transition timer to 0 (use `requestAnimationFrame`) so route changes don't blank for 150ms.
+- Reduce `duration-300` → `duration-150`.
 
-### Featured products that will populate the new grid
+### 2. Animated sections (`src/components/AnimatedSection.tsx`)
+- Reduce base transition `duration-700` → `duration-300`.
+- This affects every fade/slide section across the site.
 
-Pulled from the live Printify shop, with image URL, name, price, and shop URL preserved as-is:
+### 3. Products grid (`src/components/Products.tsx`)
+- Remove the 300ms artificial `setTimeout` skeleton flash on category change (set loading false immediately, or skip skeleton entirely since filtering is synchronous).
+- Reduce per-card stagger `delay={index * 100}` → `delay={index * 40}`.
 
-1. Spot TEE — $41.47 — T-Shirts
-2. Minimal Black Labrador Embroidered Hoodie — $40.60 — Hoodies
-3. Spot Polo — $37.90 — T-Shirts
-4. Dad Hat Embroidered Black Lab Dog Portrait — $36.43 — Accessories
-5. Personalised Spot Necklace — $28.37 — Accessories
-6. Spot Funny Kids T-Shirt — $14.98 — Kids
-7. warm spot :) (sweater) — $29.24 — Hoodies
-8. Spot Pillow — $16.10 — Home
+### 4. Cookie consent (`src/components/CookieConsent.tsx`)
+- Lower the 1500ms appearance delay to 600ms.
 
-(All other Printify products remain reachable via the existing "View All" CTA that already points at the Printify storefront root.)
+### 5. Other staggered delays
+- `Celebs.tsx` `delay={index * 150}` → `delay={index * 50}`.
+- `Reviews.tsx` `delay={index * 100}` → `delay={index * 40}`.
+- About/PhotoStories/FAQ/VideoSection/Spot3DViewer big `delay={200|400}` values → `delay={80}` max.
 
-### Technical changes
+### 6. Suspense fallback (`src/App.tsx`)
+- Keep blank fallback (already minimal). No change needed.
 
-- **`src/components/Products.tsx`**: Replace the local PNG imports (`spotTeeProduct`, `spotHoodie`, `spotCap`, `spotNecklace`) and the hardcoded `products` array with the 8 entries above. Each entry uses the absolute Printify mockup URL (e.g. `https://images-api.printify.com/mockup/.../spot-tee.jpg?...&s=1024`) directly as `image`, the real `shopUrl`, and price strings exactly as displayed on Printify. Keep the existing `Product` interface, category tabs, filter logic, quick-view, comparison, and mobile carousel untouched.
-- **`src/components/VideoSection.tsx`**: Remove the `spot-tee-product.png` import; reference the new Spot TEE Printify mockup URL via a top-level `const SPOT_TEE_IMAGE = "https://images-api.printify.com/mockup/.../spot-tee.jpg?...&s=1024";` and use it for both the `<img>` and the `<video poster>`.
-- **`src/components/Spot3DViewer.tsx`**: Same swap — remove the local PNG import, point the showcase `<img>` and lightbox `<img>` at the new Printify mockup URL.
-- **`src/components/PhotoStories.tsx`**: Replace the 3 local PNG imports with 3 Printify lifestyle mockup URLs (warm spot, hoodie, polo). Keep captions but tighten alt text to reflect the actual product.
-- **`src/pages/About.tsx`**: Replace `spotTeeModel` and `spotCozy` imports with the same Printify URLs used elsewhere so imagery stays consistent.
-- **No changes** to `PhotoScanner.tsx`, `SpotBook.tsx` (those already use curated lifestyle photos), `SpotGameShowcase.tsx`, `Celebs.tsx`, or any other section.
+### 7. Lazy image (`src/components/ui/lazy-image.tsx`)
+- Reduce `transition-opacity duration-500` → `duration-200` for both placeholder fade and image fade-in so images appear faster once loaded.
+- Increase IntersectionObserver `rootMargin` from `100px` → `300px` so images start loading sooner before scrolling into view.
 
-### Loading & performance notes
+### 8. Skip unnecessary spinners
+- `Products.tsx`: filtering is synchronous — remove `isLoading` state entirely and render filtered list directly (no skeleton flash on tab switch).
 
-- Printify mockup URLs serve responsive sizes (`?s=1024`); we'll keep `?s=1024` for hero shots and `?s=512` for grid thumbnails to keep page weight reasonable.
-- All `<img>` tags retain `loading="lazy"` (or already do via `ProductCard`).
-- No new dependencies, no build/config changes.
+## Out of scope
 
-### Files to modify
+- Keep `BirthdayCelebration` and `useBirthdayMusic` timings (intentional UX).
+- Keep toast/sheet/dialog animation defaults (shadcn).
+- No changes to actual network loading (Printify mockups, Supabase calls) — only perceived UI loading.
 
+## Files touched
+
+- `src/components/PageTransition.tsx`
+- `src/components/AnimatedSection.tsx`
 - `src/components/Products.tsx`
+- `src/components/CookieConsent.tsx`
+- `src/components/Celebs.tsx`
+- `src/components/Reviews.tsx`
+- `src/components/PhotoStories.tsx`
 - `src/components/VideoSection.tsx`
 - `src/components/Spot3DViewer.tsx`
-- `src/components/PhotoStories.tsx`
+- `src/components/FAQ.tsx`
 - `src/pages/About.tsx`
-
-### Files NOT touched
-
-- Local PNG assets in `src/assets/` are left in place (not deleted) as a fallback; nothing will reference them after the swap.
+- `src/components/ui/lazy-image.tsx`
