@@ -64,7 +64,7 @@ const PhotoStories = () => {
               {/* Text */}
               <AnimatedSection
                 animation={index % 2 === 0 ? "slide-right" : "slide-left"}
-                delay={200}
+                delay={80}
                 className="w-full lg:w-1/2"
               >
                 <p className="text-2xl md:text-3xl font-medium text-foreground leading-relaxed">

@@ -166,7 +166,7 @@ const Spot3DViewer = () => {
               <p className="text-lg text-muted-foreground max-w-xl mx-auto">Explore our products from every angle.</p>
             </div>
           </AnimatedSection>
-          <AnimatedSection animation="scale-in" delay={200}>
+          <AnimatedSection animation="scale-in" delay={80}>
             <div className="max-w-2xl mx-auto">
               <img src={SPOT_TEE_IMAGE} alt="Spot Tee product showcase" className="w-full rounded-2xl shadow-xl" />
               <p className="text-center text-sm text-muted-foreground mt-4">3D viewer unavailable. Showing product image instead.</p>
@@ -187,7 +187,7 @@ const Spot3DViewer = () => {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection animation="scale-in" delay={200}>
+        <AnimatedSection animation="scale-in" delay={80}>
           <div className="relative max-w-4xl mx-auto">
             <div className="aspect-square md:aspect-video rounded-2xl overflow-hidden glow-border bg-card relative">
               <ErrorBoundary

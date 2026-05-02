@@ -47,7 +47,7 @@ const VideoSection = () => {
         </AnimatedSection>
 
         {/* Video Container */}
-        <AnimatedSection animation="scale-in" delay={200} parallax parallaxSpeed={0.15}>
+        <AnimatedSection animation="scale-in" delay={80} parallax parallaxSpeed={0.15}>
           <div
             ref={containerRef}
             className="relative rounded-2xl overflow-hidden glow-border aspect-video max-w-4xl mx-auto bg-muted/10"

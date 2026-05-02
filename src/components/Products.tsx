@@ -286,7 +286,7 @@ const Products = () => {
         </div>
 
         {/* CTA */}
-        <AnimatedSection animation="fade-in" delay={400}>
+        <AnimatedSection animation="fade-in" delay={80}>
           <div className="text-center">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="glass-outline" size="xl">
