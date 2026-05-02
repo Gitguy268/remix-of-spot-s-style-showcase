@@ -69,7 +69,7 @@ const LazyImage = ({
       {/* Blur placeholder */}
       <div
         className={cn(
-          "absolute inset-0 bg-cover bg-center transition-opacity duration-500",
+          "absolute inset-0 bg-cover bg-center transition-opacity duration-200",
           isLoaded ? "opacity-0" : "opacity-100"
         )}
         style={{
@@ -105,7 +105,7 @@ const LazyImage = ({
           onLoad={handleLoad}
           onError={handleError}
           className={cn(
-            "w-full h-full object-contain transition-opacity duration-500",
+            "w-full h-full object-contain transition-opacity duration-200",
             isLoaded ? "opacity-100" : "opacity-0"
           )}
           loading="lazy"
