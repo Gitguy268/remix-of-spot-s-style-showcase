@@ -49,7 +49,7 @@ const Products = () => {
     { key: "Home", label: "Home" },
   ];
   const [activeCategory, setActiveCategory] = useState("All");
-  const [isLoading, setIsLoading] = useState(false);
+  const [quickViewOpen_unused_placeholder, _set] = useState(false);
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [compareProducts, setCompareProducts] = useState<string[]>([]);
