@@ -93,7 +93,7 @@ const Reviews = () => {
           {/* Reviews Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-300">
             {visibleReviews.map((review, index) => (
-              <AnimatedSection key={review.name + review.date} animation="fade-up" delay={index * 100}>
+              <AnimatedSection key={review.name + review.date} animation="fade-up" delay={index * 40}>
                 <LiquidGlassCard className="h-full">
                   <article className="p-6 flex flex-col h-full">
                     <Quote className="w-8 h-8 text-primary/50 mb-4" />

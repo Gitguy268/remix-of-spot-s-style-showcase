@@ -12,19 +12,14 @@ const PageTransition = ({ children }: PageTransitionProps) => {
 
   useEffect(() => {
     setIsTransitioning(true);
-    
-    // Short delay before updating content
-    const transitionTimer = setTimeout(() => {
-      setDisplayChildren(children);
-      setIsTransitioning(false);
-    }, 150);
-
-    return () => clearTimeout(transitionTimer);
+    setDisplayChildren(children);
+    const raf = requestAnimationFrame(() => setIsTransitioning(false));
+    return () => cancelAnimationFrame(raf);
   }, [location.pathname, children]);
 
   return (
     <div
-      className={`transition-all duration-300 ease-out ${
+      className={`transition-all duration-150 ease-out ${
         isTransitioning
           ? "opacity-0 translate-y-2"
           : "opacity-100 translate-y-0"

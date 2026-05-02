@@ -49,7 +49,7 @@ const Products = () => {
     { key: "Home", label: "Home" },
   ];
   const [activeCategory, setActiveCategory] = useState("All");
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = false;
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [compareProducts, setCompareProducts] = useState<string[]>([]);
@@ -158,9 +158,7 @@ const Products = () => {
   ];
 
   const handleCategoryChange = useCallback((category: string) => {
-    setIsLoading(true);
     setActiveCategory(category);
-    setTimeout(() => setIsLoading(false), 300);
   }, []);
 
   const handleQuickView = useCallback((product: Product) => {
@@ -278,7 +276,7 @@ const Products = () => {
                 <AnimatedSection
                   key={product.name + index}
                   animation="fade-up"
-                  delay={index * 100}
+                  delay={index * 40}
                 >
                   {renderProductCard(product, index)}
                 </AnimatedSection>
@@ -288,7 +286,7 @@ const Products = () => {
         </div>
 
         {/* CTA */}
-        <AnimatedSection animation="fade-in" delay={400}>
+        <AnimatedSection animation="fade-in" delay={80}>
           <div className="text-center">
             <a href={SHOP_URL} target="_blank" rel="noopener noreferrer">
               <Button variant="glass-outline" size="xl">

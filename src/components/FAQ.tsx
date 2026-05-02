@@ -25,7 +25,7 @@ const FAQ = () => {
             <p className="text-lg text-muted-foreground">{t("faq.subtitle")}</p>
           </div>
         </AnimatedSection>
-        <AnimatedSection animation="fade-in" delay={200}>
+        <AnimatedSection animation="fade-in" delay={80}>
           <div className="max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
               {faqs.map((faq, index) => (
@@ -43,7 +43,7 @@ const FAQ = () => {
             </Accordion>
           </div>
         </AnimatedSection>
-        <AnimatedSection animation="fade-in" delay={400}>
+        <AnimatedSection animation="fade-in" delay={80}>
           <div className="text-center mt-12">
             <p className="text-muted-foreground">{t("faq.stillQuestions")} <a href="mailto:support@blacklabspotsshop.com" className="text-primary hover:underline">{t("faq.contactUs")}</a></p>
           </div>

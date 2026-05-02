@@ -10,7 +10,7 @@ const CookieConsent = () => {
     const consent = localStorage.getItem("cookie-consent");
     if (!consent) {
       // Delay showing the banner slightly for better UX
-      const timer = setTimeout(() => setIsVisible(true), 1500);
+      const timer = setTimeout(() => setIsVisible(true), 600);
       return () => clearTimeout(timer);
     }
   }, []);

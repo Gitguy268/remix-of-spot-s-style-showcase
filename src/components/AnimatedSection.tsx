@@ -41,7 +41,7 @@ const AnimatedSection = ({
         }
       }}
       className={cn(
-        "transition-all duration-700 ease-out",
+        "transition-all duration-300 ease-out",
         isVisible ? visibleClasses : animationClasses[animation],
         className
       )}

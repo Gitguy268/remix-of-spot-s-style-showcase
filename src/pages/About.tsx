@@ -95,7 +95,7 @@ const About = () => {
                 </div>
               </AnimatedSection>
 
-              <AnimatedSection animation="slide-right" delay={200}>
+              <AnimatedSection animation="slide-right" delay={80}>
                 <div className="space-y-6">
                   <h2 className="text-3xl font-bold text-foreground">The Spot Story</h2>
                   <p className="text-muted-foreground leading-relaxed">
@@ -167,7 +167,7 @@ const About = () => {
                 </div>
               </AnimatedSection>
 
-              <AnimatedSection animation="slide-right" delay={200} className="order-1 md:order-2">
+              <AnimatedSection animation="slide-right" delay={80} className="order-1 md:order-2">
                 <div className="aspect-square rounded-2xl overflow-hidden glow-border">
                   <img
                     src={SPOT_WARM_IMAGE}
