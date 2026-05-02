@@ -38,7 +38,7 @@ const About = () => {
     {
       icon: Globe,
       title: "Worldwide Shipping",
-      description: "From our print partners to your doorstep, anywhere in the world. 5-7 day delivery guaranteed.",
+      description: "From our print partners to your doorstep, anywhere in the world. US/UK in 5–7 days, international in 7–14.",
     },
   ];
 
