@@ -16,9 +16,9 @@ const Hero = () => {
     }
     const win = window as WindowWithUnicornStudio;
     if (!win.UnicornStudio) {
+      win.UnicornStudio = { isInitialized: false };
       const script = document.createElement("script");
-      script.src = "https://cdn.unicorn.studio/v1.3.2/unicornStudio.umd.js";
-      script.async = true;
+      script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
       script.onload = () => {
         const us = (window as WindowWithUnicornStudio).UnicornStudio;
         if (us && !us.isInitialized) { us.init?.(); us.isInitialized = true; }
