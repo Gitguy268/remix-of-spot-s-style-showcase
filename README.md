@@ -7,6 +7,11 @@
 An interactive product showcase for Spot’s dog-inspired apparel brand, built with Vite, React, TypeScript, Tailwind CSS, and shadcn-ui.  
 The app focuses on smooth animations, performant scrolling, and a premium “style lookbook” experience for browsing products, saving favorites, and exploring different styles.
 
+**Language Composition:**
+- TypeScript: 96.1%
+- CSS: 3.1%
+- Other: 0.8%
+
 ---
 
 ## Features
@@ -95,8 +100,8 @@ Key directories and files:
 
 ### 1. Prerequisites
 
-- Node.js and npm installed  
-  (Node 18+ recommended)
+- Node.js installed (Node 18+ recommended)
+- **Bun** installed (the project uses a `bun.lockb` file) or npm.
 
 ### 2. Clone the repository
 
@@ -108,14 +113,16 @@ cd remix-of-spot-s-style-showcase
 ### 3. Install dependencies
 
 ```bash
+bun install
+# or if using npm:
 npm install
-# or
-npm i
 ```
 
 ### 4. Run the development server
 
 ```bash
+bun run dev
+# or:
 npm run dev
 ```
 
@@ -127,16 +134,16 @@ Then open the URL shown in your terminal (typically `http://localhost:5173`) in 
 
 In the project directory, you can run:
 
-- `npm run dev`  
+- `bun run dev` (or `npm run dev`)  
   Start the Vite dev server with hot reload.
 
-- `npm run build`  
+- `bun run build` (or `npm run build`)  
   Create a production build.
 
-- `npm run preview`  
+- `bun run preview` (or `npm run preview`)  
   Preview the production build locally.
 
-- `npm run lint`  
+- `bun run lint` (or `npm run lint`)  
   Run ESLint over the codebase (if configured in `package.json`).
 
 Exact scripts may vary slightly depending on `package.json`.
