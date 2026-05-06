@@ -1,5 +1,9 @@
 # Remix of Spot’s Style Showcase
 
+**Live Demos:**
+- [Vercel Deployment](https://remix-of-spot-s-style-showcase1.vercel.app)
+- [Lovable App](https://blacklabspotsshop.lovable.app/)
+
 An interactive product showcase for Spot’s dog-inspired apparel brand, built with Vite, React, TypeScript, Tailwind CSS, and shadcn-ui.  
 The app focuses on smooth animations, performant scrolling, and a premium “style lookbook” experience for browsing products, saving favorites, and exploring different styles.
 
