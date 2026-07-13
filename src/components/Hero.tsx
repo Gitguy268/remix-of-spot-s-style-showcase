@@ -15,15 +15,23 @@ const Hero = () => {
       UnicornStudio?: { isInitialized?: boolean; init?: () => void; };
     }
     const win = window as WindowWithUnicornStudio;
-    if (!win.UnicornStudio) {
+    const load = () => {
+      if (win.UnicornStudio) return;
       win.UnicornStudio = { isInitialized: false };
       const script = document.createElement("script");
       script.src = "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.5.3/dist/unicornStudio.umd.js";
+      script.async = true;
       script.onload = () => {
         const us = (window as WindowWithUnicornStudio).UnicornStudio;
         if (us && !us.isInitialized) { us.init?.(); us.isInitialized = true; }
       };
       document.head.appendChild(script);
+    };
+    const ric = (window as Window & { requestIdleCallback?: typeof requestIdleCallback }).requestIdleCallback;
+    if (ric) {
+      ric(load, { timeout: 2000 });
+    } else {
+      setTimeout(load, 1200);
     }
   }, []);
 

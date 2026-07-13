@@ -1,25 +1,27 @@
+import { lazy, Suspense } from "react";
 import { Helmet } from "react-helmet";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Celebs from "@/components/Celebs";
-import CombinedBackground from "@/components/CombinedBackground";
-import Products from "@/components/Products";
-import Spot3DViewer from "@/components/Spot3DViewer";
-import VideoSection from "@/components/VideoSection";
-import PhotoScanner from "@/components/PhotoScanner";
-import PhotoStories from "@/components/PhotoStories";
-import Reviews from "@/components/Reviews";
-import FAQ from "@/components/FAQ";
-import Newsletter from "@/components/Newsletter";
+import ScrollProgress from "@/components/ScrollProgress";
 import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
-import ScrollProgress from "@/components/ScrollProgress";
 import FloatingShopButton from "@/components/FloatingShopButton";
-import SpotTeeGenerator from "@/components/SpotTeeGenerator";
-import SpotGameShowcase from "@/components/SpotGameShowcase";
-import SpotBook from "@/components/SpotBook";
-import BirthdayCelebration from "@/components/BirthdayCelebration";
 import { isBirthday } from "@/utils/birthdayUtils";
+
+const CombinedBackground = lazy(() => import("@/components/CombinedBackground"));
+const Celebs = lazy(() => import("@/components/Celebs"));
+const Products = lazy(() => import("@/components/Products"));
+const Spot3DViewer = lazy(() => import("@/components/Spot3DViewer"));
+const VideoSection = lazy(() => import("@/components/VideoSection"));
+const PhotoScanner = lazy(() => import("@/components/PhotoScanner"));
+const PhotoStories = lazy(() => import("@/components/PhotoStories"));
+const Reviews = lazy(() => import("@/components/Reviews"));
+const FAQ = lazy(() => import("@/components/FAQ"));
+const Newsletter = lazy(() => import("@/components/Newsletter"));
+const SpotTeeGenerator = lazy(() => import("@/components/SpotTeeGenerator"));
+const SpotGameShowcase = lazy(() => import("@/components/SpotGameShowcase"));
+const SpotBook = lazy(() => import("@/components/SpotBook"));
+const BirthdayCelebration = lazy(() => import("@/components/BirthdayCelebration"));
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
@@ -106,7 +108,9 @@ const Index = () => {
 
   return (
     <>
-      {showBirthdayCelebration && <BirthdayCelebration />}
+      {showBirthdayCelebration && (
+        <Suspense fallback={null}><BirthdayCelebration /></Suspense>
+      )}
       <Helmet>
         <title>Blacklabspotsshop — Spot-inspired T-Shirts & Hoodies | Premium Dog Apparel</title>
         <meta
@@ -124,34 +128,30 @@ const Index = () => {
         <meta name="twitter:description" content="Premium apparel featuring Spot, the beloved black Labrador." />
         <meta name="theme-color" content="#2cbbc3" />
         <link rel="canonical" href="https://blacklabspotsshop.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
       <ScrollProgress />
-      <CombinedBackground />
+      <Suspense fallback={null}><CombinedBackground /></Suspense>
       <div className="min-h-screen relative" style={{ zIndex: 2 }}>
         <Navbar />
         <main>
           <Hero />
-          <Celebs />
-          <Products />
-          <SpotTeeGenerator />
-          <SpotGameShowcase />
-          <Spot3DViewer />
-          <VideoSection />
-          <PhotoScanner />
-          <PhotoStories />
-          <SpotBook />
-          <Reviews />
-          <FAQ />
-          <Newsletter />
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <Celebs />
+            <Products />
+            <SpotTeeGenerator />
+            <SpotGameShowcase />
+            <Spot3DViewer />
+            <VideoSection />
+            <PhotoScanner />
+            <PhotoStories />
+            <SpotBook />
+            <Reviews />
+            <FAQ />
+            <Newsletter />
+          </Suspense>
         </main>
         <Footer />
         <BackToTop />
