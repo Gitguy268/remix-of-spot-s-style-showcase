@@ -13,7 +13,6 @@ const Hero = () => {
   useEffect(() => {
     interface WindowWithUnicornStudio extends Window {
       UnicornStudio?: { isInitialized?: boolean; init?: () => void; };
-      requestIdleCallback?: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number;
     }
     const win = window as WindowWithUnicornStudio;
     const load = () => {
@@ -28,8 +27,9 @@ const Hero = () => {
       };
       document.head.appendChild(script);
     };
-    if (win.requestIdleCallback) {
-      win.requestIdleCallback(load, { timeout: 2000 });
+    const ric = (window as Window & { requestIdleCallback?: typeof requestIdleCallback }).requestIdleCallback;
+    if (ric) {
+      ric(load, { timeout: 2000 });
     } else {
       setTimeout(load, 1200);
     }
