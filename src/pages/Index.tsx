@@ -108,7 +108,9 @@ const Index = () => {
 
   return (
     <>
-      {showBirthdayCelebration && <BirthdayCelebration />}
+      {showBirthdayCelebration && (
+        <Suspense fallback={null}><BirthdayCelebration /></Suspense>
+      )}
       <Helmet>
         <title>Blacklabspotsshop — Spot-inspired T-Shirts & Hoodies | Premium Dog Apparel</title>
         <meta
@@ -126,34 +128,30 @@ const Index = () => {
         <meta name="twitter:description" content="Premium apparel featuring Spot, the beloved black Labrador." />
         <meta name="theme-color" content="#2cbbc3" />
         <link rel="canonical" href="https://blacklabspotsshop.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
         <script type="application/ld+json">
           {JSON.stringify(structuredData)}
         </script>
       </Helmet>
       <ScrollProgress />
-      <CombinedBackground />
+      <Suspense fallback={null}><CombinedBackground /></Suspense>
       <div className="min-h-screen relative" style={{ zIndex: 2 }}>
         <Navbar />
         <main>
           <Hero />
-          <Celebs />
-          <Products />
-          <SpotTeeGenerator />
-          <SpotGameShowcase />
-          <Spot3DViewer />
-          <VideoSection />
-          <PhotoScanner />
-          <PhotoStories />
-          <SpotBook />
-          <Reviews />
-          <FAQ />
-          <Newsletter />
+          <Suspense fallback={<div className="min-h-[400px]" />}>
+            <Celebs />
+            <Products />
+            <SpotTeeGenerator />
+            <SpotGameShowcase />
+            <Spot3DViewer />
+            <VideoSection />
+            <PhotoScanner />
+            <PhotoStories />
+            <SpotBook />
+            <Reviews />
+            <FAQ />
+            <Newsletter />
+          </Suspense>
         </main>
         <Footer />
         <BackToTop />
