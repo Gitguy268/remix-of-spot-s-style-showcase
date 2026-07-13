@@ -13,7 +13,7 @@ const Hero = () => {
   useEffect(() => {
     interface WindowWithUnicornStudio extends Window {
       UnicornStudio?: { isInitialized?: boolean; init?: () => void; };
-      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      requestIdleCallback?: (cb: IdleRequestCallback, opts?: IdleRequestOptions) => number;
     }
     const win = window as WindowWithUnicornStudio;
     const load = () => {
